@@ -14,11 +14,13 @@ return new class extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('information');
-            $table->float('price');
+            $table->text('information')->default('');
+            $table->float('price')->default(0);
             $table->timestamps();
-            $table->unsignedBigInteger('domain_id');
-            $table->foreign('domain_id')->references('id')->on('domains');
+            $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('category_id')->references('id')->on('categories');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

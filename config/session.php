@@ -148,7 +148,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Session Cookie Domain
+    | Session Cookie Category
     |--------------------------------------------------------------------------
     |
     | This value determines the domain and subdomains the session cookie is
