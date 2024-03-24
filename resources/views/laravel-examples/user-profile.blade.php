@@ -5,7 +5,7 @@
             style="background-image: url('/assets/img/header-blue-purple.jpg'); background-position: bottom;">
         </div>
         <x-app.navbar />
-        <div class="px-5 py-4 container-fluid ">
+        <div class="container-fluid py-4">
             <form action={{ route('users.update') }} method="POST">
                 @csrf
                 @method('PUT')

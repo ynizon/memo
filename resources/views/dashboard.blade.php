@@ -2,7 +2,7 @@
 
     <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
         <x-app.navbar />
-        <div class="container-fluid py-4 px-5">
+        <div class="container-fluid py-4">
             <div class="row">
                 <div class="col-md-12">
                     <div class="d-md-flex align-items-center mb-3 mx-2">
@@ -18,7 +18,7 @@
             </div>
             <hr class="my-0">
 
-            <div class="row my-4">
+            <div class="row">
                 <div class="col-lg-12 col-md-12">
                     @include("/tasks/table", compact('categories', 'tasks'))
                 </div>
@@ -26,7 +26,7 @@
             <div class="row">
                 @foreach ($transactions as $transaction)
                     @if ($transaction['now'] > 0 && !$transaction['category']->archive)
-                        <div class="col-xl-3 col-sm-6 mb-xl-0">
+                        <div class="col-xl-3 col-sm-6 mb-xl-0 px-3">
                             <div class="card border shadow-xs mb-4">
                                 <div class="card-body text-start p-3 w-100">
                                     <div
@@ -35,15 +35,14 @@
                                         <i class="fa {{$transaction['category']->icon}}"></i>
                                     </div>
                                     <div class="d-inline px-2" style="font-weight: bold">
-                                        <a href="/tasks?category_id={{$transaction['category']->id}}">{{$transaction['category']->name}}</a>
+                                        <a href="/tasks?category_id={{$transaction['category']->id}}">{{$transaction['category']->name}} ({{$transaction['now']}} €)</a>
                                     </div>
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="w-100">
                                                 <p class="text-sm text-secondary mb-1">{{__("Last expense")}} : {{formatDate($transaction['latest'])}}</p>
-                                                <h4 class="mb-2 font-weight-bold">{{$transaction['now']}} €</h4>
                                                 <div class="d-flexOLD align-items-center">
-                                                    <span class="text-sm ms-1">{{__("Previous")}} : {{$transaction['last']}} €</span>
+                                                    <span class="text-sm ms-0">{{__("Previous")}} : {{$transaction['last']}} €</span>
                                                     @if ($transaction['last'] > 0)
                                                         <span class="text-sm text-success font-weight-bolder" style="float:right">
                                                             <i class="fa fa-chevron-up text-xs me-1"></i>

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 function getReminders() : \Illuminate\Database\Eloquent\Collection
 {
@@ -22,6 +23,26 @@ function is_current_route($routeName)
     return request()->routeIs($routeName) ? 'active' : '';
 }
 
+function get_title()
+{
+    $title = Route::currentRouteName();
+    $title = str_replace(".index","",$title);
+    $title = str_replace(".edit","",$title);
+    $title = str_replace(".create","",$title);
+    return __(dashesToCamelCase($title,true));
+}
+
+function dashesToCamelCase($string, $capitalizeFirstCharacter = false)
+{
+
+    $str = str_replace(' ', '', ucwords(str_replace('-', ' ', $string)));
+
+    if (!$capitalizeFirstCharacter) {
+        $str[0] = strtolower($str[0]);
+    }
+
+    return $str;
+}
 
 function in_array_r($needle, $haystack, $strict = false)
 {
