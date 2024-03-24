@@ -57,6 +57,10 @@
                                                 class="text-xs font-weight-bold ms-auto">Forgot
                                                 password</a>
                                         </div>
+                                        <div class="text-center">
+                                            <button type="submit" class="btn btn-dark w-100 mt-4 mb-3">Sign in</button>
+                                        </div>
+
                                     </form>
                                 </div>
                                 <div class="card-footer text-center pt-0 px-lg-2 px-1">
@@ -70,7 +74,7 @@
                         <div class="col-md-6">
                             <div class="position-absolute w-40 top-0 end-0 h-100 d-md-block d-none">
                                 <div class="oblique-image position-absolute fixed-top ms-auto h-100 z-index-0 bg-cover ms-n8"
-                                    style="background-image:url('../assets/img/image-sign-in.jpg')">
+                                    style="background-image:url('/assets/img/image-sign-in.jpg')">
                                     <div
                                         class="blur mt-12 p-4 text-center border border-white border-radius-md position-absolute fixed-bottom m-4">
                                         <h2 class="mt-3 text-dark font-weight-bold">Enter our global community of

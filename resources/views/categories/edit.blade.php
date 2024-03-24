@@ -58,14 +58,43 @@
                                                value="{{$category->name}}" required>
                                     </div>
                                     <div class="form-group">
-                                        <label for="icon">{{__('Icon')}} (Font awesome class: fa-map)</label>
-                                        <input type="text" class="form-control" id="icon" name="icon"
-                                               value="{{$category->icon}}" required>
+                                        <label for="icon">{{__('Icon')}} (Font awesome class)&nbsp;&nbsp;
+                                        <span class="fa fa-list" id="icon_example"></span>
+                                        </label>
+
+                                        <select class="form-control" id="icon" name="icon" required>
+                                            @foreach($icons as $icon =>$iconValue)
+                                                <option @if ($category->icon == $icon) selected @endif value="{{$icon}}">{{$icon}}</option>
+                                            @endforeach
+                                        </select>
+
+                                        <script>
+                                            document.getElementById('icon').addEventListener('change', function() {
+                                                $("#icon_example").attr("class","fa "+this.value);
+                                            });
+                                        </script>
                                     </div>
                                     <div class="form-group">
                                         <label for="color">{{__('Color')}} (Css code: #FF0000)</label>
-                                        <input type="text" class="form-control" id="color" name="color"
-                                               value="{{$category->color}}" required>
+                                        <input type="text" class="colorpicker form-control" id="color" name="color"
+                                            value="{{$category->color}}" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="price">{{__('Number of months of historic')}}</label>
+                                        <select class="form-control" id="month" name="month">
+                                            @for($month = 0; $month <= 36; $month++)
+                                                <option @if ($category->month == $month) selected @endif value="{{$month}}">{{$month}}</option>
+                                            @endfor
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="form-check form-switch ps-0">
+                                            <input class="form-check-input ms-auto" type="checkbox" value="1"
+                                                   name="archive"
+                                                   id="flexSwitchCheckDefault2" @if ($category->archive) checked @endif>
+                                            <label class="form-check-label text-body ms-3 text-truncate w-80 mb-0"
+                                                   for="flexSwitchCheckDefault2">{{__("Archive")}}</label>
+                                        </div>
                                     </div>
                                     <br>
                                     <button type="submit" class="btn btn-primary">{{__("Save")}}</button>
@@ -76,6 +105,11 @@
                 </div>
             </div>
         </div>
+        <script>
+            window.onload = function(e) {
+                $('.colorpicker').colorpicker();
+            };
+        </script>
         <x-app.footer />
     </main>
 

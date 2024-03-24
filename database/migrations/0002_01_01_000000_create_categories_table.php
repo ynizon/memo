@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->boolean('forall')->default(0);
             $table->string('icon');
             $table->string('name');
             $table->string('color');
+            $table->integer('month')->default(12);
+            $table->boolean('archive')->default(false);
             $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

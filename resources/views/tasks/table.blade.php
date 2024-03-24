@@ -29,8 +29,6 @@
                 {{__('Date')}}
             </th>
             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">
-                {{__('Status')}}</th>
-            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">
                 {{__('Information')}}</th>
             <th
                 class="text-center text-secondary text-xs font-weight-semibold opacity-7">
@@ -53,22 +51,10 @@
                         </div>
                     </td>
                     <td>
-                        <p class="text-sm font-weight-normal mb-0">{{$task->price}} €</p>
+                        <p class="text-sm font-weight-normal mb-0">@if ($task->price > 0){{$task->price}} €@endif</p>
                     </td>
                     <td>
                         <span class="text-sm font-weight-normal">{{formatDate($task->created_at)}}</span>
-                    </td>
-                    <td>
-                        <span
-                            class="badge badge-sm border border-success text-success bg-success">
-                            <svg width="9" height="9" viewBox="0 0 10 9"
-                                 fill="none" xmlns="http://www.w3.org/2000/svg"
-                                 stroke="currentColor" class="me-1">
-                                <path d="M1 4.42857L3.28571 6.71429L9 1" stroke-width="2"
-                                      stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
-                            Paid
-                        </span>
                     </td>
                     <td>
                         <span class="text-sm font-weight-normal">{{$task->information}}</span>
@@ -95,9 +81,9 @@
             searchable: false,
             fixedHeight: true,
             bLengthChange: false,
-            paging: false,
+            paging: true,
             showNEntries: false,
-            perPage: 100,
+            perPage: 10,
         });
 
         $('#datatable-search').keyup(function () {

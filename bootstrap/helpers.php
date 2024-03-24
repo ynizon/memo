@@ -1,8 +1,20 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
+
+function getReminders() : \Illuminate\Database\Eloquent\Collection
+{
+    return Auth::user()->getReminders();
+}
+
 function formatDate($date)
 {
     return \Carbon\Carbon::parse($date)->format('d/m/Y');
+}
+
+function formatDateUK($date)
+{
+    return \Carbon\Carbon::parse($date)->format('Y-m-d');
 }
 
 function is_current_route($routeName)

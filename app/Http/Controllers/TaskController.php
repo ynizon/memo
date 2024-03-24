@@ -19,8 +19,8 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $tasks = Task::where("user_id","=",Auth::user()->getAuthIdentifier())->orderBy('created_at','desc')->get();
-        $categories = Category::getCategories();
+        $tasks = Auth::user()->tasks();
+        $categories = Auth::user()->categories();
         return view('tasks/index', compact('tasks','categories'));
     }
 
@@ -30,7 +30,8 @@ class TaskController extends Controller
     public function create()
     {
         $task = new Task();
-        $categories = Category::getCategories();
+        $task->month = 12;
+        $categories = Auth::user()->categories();
         return view('tasks/edit', compact('task', 'categories'));
     }
 
@@ -59,7 +60,10 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        $categories = Category::getCategories();
+        if ($task->user_id != Auth::user()->getAuthIdentifier()){
+            abort(403, 'Unauthorized action.');
+        }
+        $categories = Auth::user()->categories();
         return view('tasks/edit', compact('task','categories'));
     }
 
@@ -68,14 +72,13 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-        if ($task->user_id == Auth::user()->getAuthIdentifier()){
-            $task->update($this->validateFields($request));
-            return redirect()->route('tasks.index')
-                ->with('success', 'Task updated successfully.');
-        } else {
-            return redirect()->route('tasks.index')
-                ->with('error', 'Task not updated successfully.');
+        if ($task->user_id != Auth::user()->getAuthIdentifier()){
+            abort(403, 'Unauthorized action.');
         }
+
+        $task->update($this->validateFields($request));
+        return redirect()->route('tasks.index')
+            ->with('success', 'Task updated successfully.');
     }
 
     /**
@@ -83,15 +86,22 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        if ($task->user_id == Auth::user()->getAuthIdentifier()){
-            $task->delete();
-            return redirect()->route('tasks.index')
-                ->with('success', 'Task deleted successfully');
-        } else {
-            $task->delete();
-            return redirect()->route('tasks.index')
-                ->with('error', 'Task not deleted successfully');
+        if ($task->user_id != Auth::user()->getAuthIdentifier()){
+            abort(403, 'Unauthorized action.');
         }
+        $task->delete();
+        return redirect()->route('tasks.index')
+            ->with('success', 'Task deleted successfully');
+    }
+
+    public function archive(Task $task)
+    {
+        if ($task->user_id != Auth::user()->getAuthIdentifier()){
+            abort(403, 'Unauthorized action.');
+        }
+        $task->archive = !$task->archive;
+        return redirect()->route('tasks.index')
+            ->with('success', 'Task updated successfully');
     }
 
     private function validateFields(Request $request) : array
@@ -99,6 +109,9 @@ class TaskController extends Controller
         $validated = $request->validate($this->fields);
         $validated['user_id'] = Auth::user()->getAuthIdentifier();
         $validated['price'] = (float) $request->input('price');
+        $validated['reminder_date'] = formatDateUK($request->input('reminder_date'));
+        $validated['created_at'] = $request->input('created_at');
+        $validated['reminder'] = $request->input('reminder') ? 1 : 0;
 
         return $validated;
     }

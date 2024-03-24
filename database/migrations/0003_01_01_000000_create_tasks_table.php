@@ -16,11 +16,13 @@ return new class extends Migration
             $table->string('name');
             $table->text('information')->default('');
             $table->float('price')->default(0);
+            $table->boolean('reminder')->default(false);
+            $table->datetime('reminder_date')->nullable()->default(null);
             $table->timestamps();
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('user_id');
-            $table->foreign('category_id')->references('id')->on('categories');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

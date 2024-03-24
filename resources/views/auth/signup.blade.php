@@ -15,7 +15,7 @@
                         <div class="col-md-6">
                             <div class="position-absolute w-40 top-0 start-0 h-100 d-md-block d-none">
                                 <div class="oblique-image position-absolute d-flex fixed-top ms-auto h-100 z-index-0 bg-cover me-n8"
-                                    style="background-image:url('../assets/img/image-sign-up.jpg')">
+                                    style="background-image:url('/assets/img/image-sign-up.jpg')">
                                     <div class="my-auto text-start max-width-350 ms-7">
                                         <h1 class="mt-3 text-white font-weight-bolder">Start your <br> new journey.</h1>
                                         <p class="text-white text-lg mt-4 mb-4">Use these projects to remember your tasks.</p>
@@ -38,7 +38,7 @@
                                     <p class="mb-0"></p>
                                 </div>
                                 <div class="card-body">
-                                    <form role="form" method="POST" action="sign-up">
+                                    <form role="form" method="POST" action="register">
                                         @csrf
                                         <label>Name</label>
                                         <div class="mb-3">
@@ -67,9 +67,10 @@
                                                 <span class="text-danger text-sm">{{ $message }}</span>
                                             @enderror
                                         </div>
+
                                         <div class="form-check form-check-info text-left mb-0">
                                             <input class="form-check-input" type="checkbox" name="terms"
-                                                id="terms" required>
+                                                id="terms" required checked>
                                             <label class="font-weight-normal text-dark mb-0" for="terms">
                                                 I agree the <a href="javascript:;"
                                                     class="text-dark font-weight-bold">Terms and Conditions</a>.
@@ -78,7 +79,9 @@
                                                 <span class="text-danger text-sm">{{ $message }}</span>
                                             @enderror
                                         </div>
-
+                                        <div class="text-center">
+                                            <button type="submit" class="btn btn-dark w-100 mt-4 mb-3">{{__("Register")}}</button>
+                                        </div>
                                     </form>
                                 </div>
                                 <div class="card-footer text-center pt-0 px-lg-2 px-1">

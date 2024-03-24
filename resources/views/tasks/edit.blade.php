@@ -71,9 +71,27 @@
                                         <textarea class="form-control" id="information" rows="3" name="information">{{$task->information}}</textarea>
                                     </div>
                                     <div class="form-group">
+                                        <label for="created_at">{{__('Date')}}</label>
+                                        <input type="date" class="form-control" id="created_at" name="created_at"
+                                               value="@if ($task->id > 0){{formatDateUK($task->created_at)}}@else{{date("Y-m-d")}}@endif">
+                                    </div>
+                                    <div class="form-group">
                                         <label for="price">{{__('Price')}}</label>
                                         <input type="text" class="form-control" id="price" name="price"
                                                value="{{$task->price}}">
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="form-check form-switch ps-0">
+                                            <input class="form-check-input ms-auto" type="checkbox" value="1"
+                                                   name="reminder"
+                                                   id="flexSwitchCheckDefault" @if ($task->reminder) checked @endif>
+                                            <label class="form-check-label text-body ms-3 text-truncate w-80 mb-0"
+                                                   for="flexSwitchCheckDefault">{{__("Reminder")}}</label>
+                                        </div>
+
+                                        <label for="reminder_date">{{__('Reminder date')}}</label>
+                                        <input type="date" class="form-control" id="reminder_date" name="reminder_date"
+                                               value="@if ($task->id > 0){{formatDateUK($task->reminder_date)}}@else{{date("Y-m-d",strtotime("+1 year"))}}@endif">
                                     </div>
                                     <br>
                                     <button type="submit" class="btn btn-primary">{{__("Save")}}</button>

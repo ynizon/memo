@@ -26,33 +26,53 @@ class DatabaseSeeder extends Seeder
         DB::table('categories')->insert([
             'name' => "Health",
             'icon' => 'fa-notes-medical',
-            'color' => 'e10a77',
-            'forall'=>1,
-            'user_id' => 1
+            'color' => '#e10a77',
+            'user_id' => 1,
+            'month' => 12,
+            'archive' => false,
         ]);
 
         DB::table('categories')->insert([
             'name' => "Car",
             'icon' => 'fa-car',
-            'color' => 'c79710',
-            'forall'=>1,
-            'user_id' => 1
+            'color' => '#c79710',
+            'user_id' => 1,
+            'month' => 12,
+            'archive' => false,
         ]);
 
         DB::table('categories')->insert([
             'name' => "Other",
             'icon' => 'fa-list',
-            'color' => 'c02ae5',
-            'forall'=>1,
-            'user_id' => 1
+            'color' => '#c02ae5',
+            'user_id' => 1,
+            'month' => 12,
+            'archive' => false,
         ]);
 
         DB::table('categories')->insert([
             'name' => "Animal",
             'icon' => 'fa-dog',
-            'color' => '3474ab',
-            'forall'=>1,
-            'user_id' => 1
+            'color' => '#3474ab',
+            'user_id' => 1,
+            'month' => 12,
+            'archive' => false,
         ]);
+
+        $numDay = 1;
+        for ($k=1; $k<500; $k++){
+            if ($numDay>28) {$numDay = 1;}
+            $j = ($numDay<10) ? '0'.$numDay : $k;
+            DB::table('tasks')->insert([
+                'name' => "Stuff " .$k,
+                'information'=>'blablblkjbndsqb ,nds q,ndbsq,ndb,qdb ,ndb sq;,bd ,qbd,qd',
+                'category_id'=>rand(1,4),
+                'user_id' => 1,
+                'created_at' => '2024-01-'.$j,
+                'price' => rand(10,350),
+                'reminder' => false,
+                'reminder_date' => null,
+            ]);
+        }
     }
 }

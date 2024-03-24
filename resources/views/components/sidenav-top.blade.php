@@ -12,7 +12,7 @@
                 </a>
             </li>
             <li class="nav-item px-3 py-3 border-radius-sm  d-flex align-items-center">
-                <a href="{{ route('tasks') }}" class="nav-link text-white p-0">
+                <a href="{{ route('tasks.index') }}" class="nav-link text-white p-0">
                     Tasks
                 </a>
             </li>
@@ -53,7 +53,7 @@
                             <a class="dropdown-item border-radius-md" href="javascript:;">
                                 <div class="d-flex py-1">
                                     <div class="my-auto">
-                                        <img src="../assets/img/team-2.jpg" class="avatar avatar-sm  me-3 "
+                                        <img src="/assets/img/team-2.jpg" class="avatar avatar-sm  me-3 "
                                             alt="user image">
                                     </div>
                                     <div class="d-flex flex-column justify-content-center">
@@ -72,7 +72,7 @@
                             <a class="dropdown-item border-radius-md" href="javascript:;">
                                 <div class="d-flex py-1">
                                     <div class="my-auto">
-                                        <img src="../assets/img/small-logos/logo-spotify.svg"
+                                        <img src="/assets/img/small-logos/logo-spotify.svg"
                                             class="avatar avatar-sm bg-gradient-dark  me-3 " alt="logo spotify">
                                     </div>
                                     <div class="d-flex flex-column justify-content-center">

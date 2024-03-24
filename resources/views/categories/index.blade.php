@@ -46,11 +46,14 @@
                                             {{__("Name")}}</th>
                                         <th
                                             class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
+                                            {{__("Archive")}}</th>
+                                        <th
+                                            class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
                                             {{__("Action")}}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($categories as $category)
+                                    @foreach ($categories as $category)
                                         <tr>
                                             <td class="align-middle bg-transparent border-bottom">
                                                 <div class="d-flex justify-content-center align-items-center">
@@ -58,15 +61,18 @@
                                                 </div>
                                             </td>
                                             <td class="align-middle bg-transparent border-bottom">{{__($category->name)}}</td>
+                                            <td class="align-middle bg-transparent border-bottom">
+                                                <span class="badge badge-sm border @if ($category->archive)
+                                                    border-secondary text-secondary bg-secondary @else border-success text-success bg-success @endif">
+                                                    @if ($category->archive) Archive @else OK @endif</span>
+                                            </td>
                                             <td class="text-center align-middle bg-transparent border-bottom">
-                                                @if ($category->forall == 0)
-                                                    <a href="/categories/{{$category->id}}/edit"><i class="fas fa-edit" aria-hidden="true"></i></a>&nbsp;
-                                                    <form style="display:inline;" action="{{ route('categories.destroy', $category->id) }}" method="post">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="nobtn"><i class="fas fa-trash" aria-hidden="true"></i></button>
-                                                    </form>
-                                                @endif
+                                                <a href="/categories/{{$category->id}}/edit"><i class="fas fa-edit" aria-hidden="true"></i></a>&nbsp;
+                                                <form style="display:inline;" action="{{ route('categories.destroy', $category->id) }}" method="post">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="nobtn"><i class="fas fa-trash" aria-hidden="true"></i></button>
+                                                </form>
                                             </td>
                                         </tr>
                                     @endforeach

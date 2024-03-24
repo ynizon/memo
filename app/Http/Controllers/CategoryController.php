@@ -11,7 +11,8 @@ class CategoryController extends Controller
     private array $fields = [
         'name' => 'required|max:255',
         'icon' => 'required|max:25',
-        'color' => 'required|min:6|max:6',
+        'color' => 'required|min:7|max:7',
+        'month' => 'required',
     ];
 
     /**
@@ -19,7 +20,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::all();
+        $categories = Auth::user()->getAllCategories();
         return view('categories/index', compact('categories'));
     }
 
@@ -29,7 +30,9 @@ class CategoryController extends Controller
     public function create()
     {
         $category = new Category();
-        return view('categories/edit', compact('category'));
+        $category->icon = 'fa-list';
+        $icons = $this->getAwesomeIcons();
+        return view('categories/edit', compact('category', 'icons'));
     }
 
     /**
@@ -37,10 +40,7 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate($this->fields);
-        $validated['user_id'] = Auth::user()->getAuthIdentifier();
-        $validated['forall'] = 0;
-        Category::create($validated);
+        Category::create($this->validateFields($request));
 
         return redirect()->route('categories.index')
             ->with('success','Category created successfully.');
@@ -51,6 +51,9 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
+        if ($category->user_id != Auth::user()->getAuthIdentifier()){
+            abort(403, 'Unauthorized action.');
+        }
         return view('categories.edit', compact('category'));
     }
 
@@ -59,7 +62,11 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        return view('categories/edit', compact('category'));
+        if ($category->user_id != Auth::user()->getAuthIdentifier()){
+            abort(403, 'Unauthorized action.');
+        }
+        $icons = $this->getAwesomeIcons();
+        return view('categories/edit', compact('category', 'icons'));
     }
 
     /**
@@ -67,14 +74,13 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        if ($category->forall == 0){
-            $category->update($request->all());
-            return redirect()->route('categories.index')
-                ->with('success', 'Category updated successfully.');
-        } else {
-            return redirect()->route('categories.index')
-                ->with('error', 'Category not updated successfully.');
+        if ($category->user_id != Auth::user()->getAuthIdentifier()){
+            abort(403, 'Unauthorized action.');
         }
+
+        $category->update($this->validateFields($request));
+        return redirect()->route('categories.index')
+            ->with('success', 'Category updated successfully.');
     }
 
     /**
@@ -82,14 +88,28 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        if ($category->user_id == Auth::user()->getAuthIdentifier() && $category->forall == 0){
-            $category->delete();
-            return redirect()->route('categories.index')
-                ->with('success', 'Category deleted successfully');
-        } else {
-            $category->delete();
-            return redirect()->route('categories.index')
-                ->with('error', 'Category not deleted successfully');
+        if ($category->user_id != Auth::user()->getAuthIdentifier()){
+            abort(403, 'Unauthorized action.');
         }
+        $category->delete();
+        return redirect()->route('categories.index')
+            ->with('success', 'Category deleted successfully');
+    }
+
+    private function getAwesomeIcons(): array
+    {
+        $icons = new \Awps\FontAwesome();
+        $icons = $icons->getArray();
+        ksort($icons);
+        return $icons;
+    }
+
+    private function validateFields(Request $request) : array
+    {
+        $validated = $request->validate($this->fields);
+        $validated['user_id'] = Auth::user()->getAuthIdentifier();
+        $validated['archive'] = $request->input('archive') ? 1 : 0;
+
+        return $validated;
     }
 }

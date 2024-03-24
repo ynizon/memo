@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
-use App\Models\Task;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
@@ -21,8 +18,8 @@ class UserController extends Controller
      */
     public function dashboard()
     {
-        $tasks = Task::where("user_id","=",Auth::user()->getAuthIdentifier())->orderBy('created_at','desc')->get();
-        $categories = Category::getCategories();
+        $tasks = Auth::user()->tasks();;
+        $categories = Auth::user()->categories();
         $transactions = [];
         foreach ($tasks as $task){
             if (!isset($transactions[$task->category_id])){

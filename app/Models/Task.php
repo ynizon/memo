@@ -15,7 +15,10 @@ class Task extends Model
         'information',
         'price',
         'category_id',
-        'user_id'
+        'user_id',
+        'created_at',
+        'reminder',
+        'reminder_date',
     ];
 
     public function category(): BelongsTo

@@ -25,13 +25,17 @@
             </div>
             <div class="row">
                 @foreach ($transactions as $transaction)
-                    @if ($transaction['price'] > 0)
+                    @if ($transaction['price'] > 0 && !$transaction['category']->archive)
                         <div class="col-xl-3 col-sm-6 mb-xl-0">
                             <div class="card border shadow-xs mb-4">
                                 <div class="card-body text-start p-3 w-100">
                                     <div
-                                        class="icon icon-shape icon-sm bg-dark text-white text-center border-radius-sm d-flex align-items-center justify-content-center mb-3">
+                                        class="icon icon-shape icon-sm bg-dark text-white text-center border-radius-sm align-items-center justify-content-center mb-3"
+                                    style="background:{{$transaction['category']->color}} !important">
                                         <i class="fa {{$transaction['category']->icon}}"></i>
+                                    </div>
+                                    <div class="d-inline px-2" style="font-weight: bold">
+                                        {{$transaction['category']->name}}
                                     </div>
                                     <div class="row">
                                         <div class="col-12">

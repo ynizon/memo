@@ -27579,6 +27579,8 @@ button.swiper-pagination-bullet {
 /*# sourceMappingURL=dashboard-free.css.map */
 
 .nobtn{border:0;background:none;}
+.dataTable-pagination{padding-top:15px;}
+.dataTable-info, .dataTable-top{display:none;}
 
 /* Original CSS: https://demos.creative-tim.com/test/soft-ui-dashboard-pro/assets/css/soft-ui-dashboard.min.css?v=1.0.0 */
 /*!
