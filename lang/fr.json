@@ -256,5 +256,7 @@
     "Picture": "Image",
     "Category Management": "Gestion des catégories",
     "Task Management": "Gestion des tâches",
-    "Number of months of historic": "Nombre de mois de l'historique"
+    "Number of months of historic": "Nombre de mois de l'historique",
+    "Last expense": "Dernière dépense",
+    "Previous": "Précédemment"
 }

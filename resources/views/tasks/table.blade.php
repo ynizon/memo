@@ -1,9 +1,9 @@
 <div class="border-bottom py-3 px-3 d-sm-flex align-items-center">
     <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-        <input type="radio" class="btn-check" name="btnradiotable" id="btnradiotableX" autocomplete="off" checked="">
+        <input type="radio" class="btn-check" name="btnradiotable" id="btnradiotableX" autocomplete="off" @if ($categoryId > 0) checked="" @endif>
         <label class="btn btn-white px-3 mb-0 datafiltreCategory" data-category="" for="btnradiotableX">{{__("All")}}</label>
         @foreach($categories as $category)
-            <input type="radio" class="btn-check" name="btnradiotable" id="btnradiotable{{$loop->index}}" autocomplete="off">
+            <input type="radio" class="btn-check" name="btnradiotable" id="btnradiotable{{$loop->index}}" autocomplete="off"  @if ($categoryId == $category->id) checked="" @endif>
             <label class="btn btn-white px-3 mb-0 datafiltreCategory" data-category="{{$category->id}}" for="btnradiotable{{$loop->index}}"><i class="fa {{$category->icon}}"></i></label>
         @endforeach
     </div>
@@ -93,5 +93,15 @@
         $('.datafiltreCategory').click(function () {
             dataTableBasic.search('Category-' + $(this).attr('data-category')).draw();
         })
+
+        @if ($categoryId > 0)
+            try {
+                $("[data-category='{{$categoryId}}']").click();
+            } catch(Exception){
+              //Nothing
+            }
+
+
+        @endif
     };
 </script>

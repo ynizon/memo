@@ -17,11 +17,12 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $tasks = Auth::user()->tasks();
         $categories = Auth::user()->categories();
-        return view('tasks/index', compact('tasks','categories'));
+        $categoryId = (int) $request->input("category_id");
+        return view('tasks/index', compact('tasks','categories', "categoryId"));
     }
 
     /**

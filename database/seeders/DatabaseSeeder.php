@@ -60,9 +60,9 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $numDay = 1;
-        for ($k=1; $k<500; $k++){
-            if ($numDay>28) {$numDay = 1;}
-            $j = ($numDay<10) ? '0'.$numDay : $k;
+        for ($k = 1; $k < 10; $k++){
+            if ($numDay > 28) {$numDay = 1;}
+            $j = ($numDay < 10) ? '0'.$numDay : $k;
             DB::table('tasks')->insert([
                 'name' => "Stuff " .$k,
                 'information'=>'blablblkjbndsqb ,nds q,ndbsq,ndb,qdb ,ndb sq;,bd ,qbd,qd',
@@ -73,6 +73,7 @@ class DatabaseSeeder extends Seeder
                 'reminder' => false,
                 'reminder_date' => null,
             ]);
+            $numDay++;
         }
     }
 }

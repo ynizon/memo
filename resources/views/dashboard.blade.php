@@ -25,7 +25,7 @@
             </div>
             <div class="row">
                 @foreach ($transactions as $transaction)
-                    @if ($transaction['price'] > 0 && !$transaction['category']->archive)
+                    @if ($transaction['now'] > 0 && !$transaction['category']->archive)
                         <div class="col-xl-3 col-sm-6 mb-xl-0">
                             <div class="card border shadow-xs mb-4">
                                 <div class="card-body text-start p-3 w-100">
@@ -35,15 +35,21 @@
                                         <i class="fa {{$transaction['category']->icon}}"></i>
                                     </div>
                                     <div class="d-inline px-2" style="font-weight: bold">
-                                        {{$transaction['category']->name}}
+                                        <a href="/tasks?category_id={{$transaction['category']->id}}">{{$transaction['category']->name}}</a>
                                     </div>
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="w-100">
-                                                <p class="text-sm text-secondary mb-1">{{__("Total Expenses")}}</p>
-                                                <h4 class="mb-2 font-weight-bold">{{$transaction['price']}} €</h4>
-                                                <div class="d-flex align-items-center">
-                                                    <span class="text-sm ms-1">{{formatDate($transaction['latest'])}}</span>
+                                                <p class="text-sm text-secondary mb-1">{{__("Last expense")}} : {{formatDate($transaction['latest'])}}</p>
+                                                <h4 class="mb-2 font-weight-bold">{{$transaction['now']}} €</h4>
+                                                <div class="d-flexOLD align-items-center">
+                                                    <span class="text-sm ms-1">{{__("Previous")}} : {{$transaction['last']}} €</span>
+                                                    @if ($transaction['last'] > 0)
+                                                        <span class="text-sm text-success font-weight-bolder" style="float:right">
+                                                            <i class="fa fa-chevron-up text-xs me-1"></i>
+                                                            {{($transaction['now'] - $transaction['last']) / $transaction['last'] * 100 }} %
+                                                        </span>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </div>

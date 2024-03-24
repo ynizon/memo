@@ -7,7 +7,11 @@ use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    if (Auth::id()){
+        return redirect('dashboard');
+    } else {
+        return view('welcome');
+    }
 });
 
 Route::middleware('auth')->group(function () {
