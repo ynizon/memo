@@ -60,14 +60,13 @@
                                             <li>vos dépenses de santé...</li>
                                         </ul>
                                     </p>
-
+                                    <p class="mb-0">
+                                        DEMO: Vous pouvez essayer en vous connectant avec les identifiants admin@admin.com / admin
+                                    </p>
                                     <br/>
                                     <a class="btn btn-primary text-white" href="{{route('register')}}")>{{__("Register")}}</a>
                                     &nbsp;&nbsp;&nbsp;
                                     <a class="btn btn-primary text-white" href="{{route('login')}}")>{{__("Login")}}</a>
-                                    <p class="text-white text-lg mt-4 mb-4">
-                                        Vous pouvez essayer avec admin@admin.com / admin
-                                    </p>
                                 </div>
                                 <div class="card-body">
 
