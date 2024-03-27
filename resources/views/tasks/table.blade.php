@@ -28,7 +28,7 @@
             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">
                 {{__('Date')}}
             </th>
-            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">
+            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2 d-none d-md-table-cell">
                 {{__('Information')}}</th>
             <th
                 class="text-center text-secondary text-xs font-weight-semibold opacity-7">
@@ -56,17 +56,18 @@
                     <td>
                         <span class="text-sm font-weight-normal">{{formatDate($task->created_at)}}</span>
                     </td>
-                    <td>
+                    <td class="d-none d-md-table-cell">
                         <span class="text-sm font-weight-normal">{{$task->information}}</span>
                     </td>
-                    <td class="align-middle">
-                        <a href="/tasks/{{$task->id}}/edit"><i class="fas fa-edit" aria-hidden="true"></i></a>&nbsp;
-                        <form style="display:inline;" action="{{ route('tasks.destroy', $task->id) }}" method="post">
+                    <td class="">
+
+                        <form action="{{ route('tasks.destroy', $task->id) }}" method="post">
+                            <a href="/tasks/{{$task->id}}/edit"><i class="fas fa-edit" aria-hidden="true"></i></a>&nbsp;
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="nobtn"><i class="fas fa-trash" aria-hidden="true"></i></button>
+                            <span class="d-none">Category-{{$task->category->id}}</span>
                         </form>
-                        <span class="invisible">Category-{{$task->category->id}}</span>
                     </td>
                 </tr>
             @endforeach

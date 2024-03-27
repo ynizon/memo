@@ -3,24 +3,18 @@
     <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
         <x-app.navbar />
         <div class="container-fluid py-4">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="d-md-flex align-items-center mb-3 mx-2">
-                        <div class="mb-md-0 mb-3">
-                            <h3 class="font-weight-bold mb-0">Hello, {{Auth::user()->name}}</h3>
-                            <p class="mb-0"></p>
+            <div class="row justify-content-center">
+                <div class="col-md-12 px-4">
+                    @if (session('success'))
+                        <div class="alert alert-success" role="alert" id="alert">
+                            {{ session('success') }}
                         </div>
-                        <a href="{{ route('tasks.create') }}" class="btn-icon d-flex align-items-center mb-0 ms-md-auto mb-sm-0 mb-2 me-2 btn btn-dark btn-primary">
-                            <i class="fas fa-plus me-2"></i> {{__("Add Task")}}
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <hr class="my-0">
-
-            <div class="row">
-                <div class="col-lg-12 col-md-12">
-                    @include("/tasks/table", compact('categories', 'tasks'))
+                    @endif
+                    @if (session('error'))
+                        <div class="alert alert-danger" role="alert" id="alert">
+                            {{ session('error') }}
+                        </div>
+                    @endif
                 </div>
             </div>
             <div class="row">
@@ -31,11 +25,11 @@
                                 <div class="card-body text-start p-3 w-100">
                                     <div
                                         class="icon icon-shape icon-sm bg-dark text-white text-center border-radius-sm align-items-center justify-content-center mb-3"
-                                    style="background:{{$transaction['category']->color}} !important">
+                                        style="background:{{$transaction['category']->color}} !important">
                                         <i class="fa {{$transaction['category']->icon}}"></i>
                                     </div>
                                     <div class="d-inline px-2" style="font-weight: bold">
-                                        <a href="/tasks?category_id={{$transaction['category']->id}}">{{$transaction['category']->name}} ({{$transaction['now']}} €)</a>
+                                        <a href="/tasks?category_id={{$transaction['category']->id}}">{{__($transaction['category']->name)}} ({{$transaction['now']}} €)</a>
                                     </div>
                                     <div class="row">
                                         <div class="col-12">
@@ -58,6 +52,11 @@
                         </div>
                     @endif
                 @endforeach
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-md-12">
+                    @include("/tasks/table", compact('categories', 'tasks'))
+                </div>
             </div>
             <x-app.footer />
         </div>

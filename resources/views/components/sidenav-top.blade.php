@@ -143,8 +143,8 @@
                 </a>
             </li>
             <li class="nav-item border-radius-sm px-3 py-3 me-2  d-flex align-items-center">
-                <a href="{{ route('logout') }}" class="nav-link text-white p-0">
-                    {{__("Register")}}
+                <a href="{{ route('tasks.create') }}" class="btn-icon d-flex align-items-center mb-0 ms-md-auto mb-sm-0 mb-2 me-2 btn btn-dark btn-primary">
+                    <i class="fas fa-plus me-2"></i> {{__("Add Task")}}
                 </a>
             </li>
         </ul>

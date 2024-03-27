@@ -9,10 +9,28 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::all();
-        return view('laravel-examples.users-management', compact('users'));
+        if (Auth::user()->admin || Auth::user()->email == env("ADMIN_EMAIL"))
+        {
+            $users = User::all();
+            return view('users/index', compact('users'));
+        } else{
+            abort(403, __('Unauthorized action.'));
+        }
     }
 
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(User $user)
+    {
+        if (Auth::user()->admin || Auth::user()->email == env("ADMIN_EMAIL")) {
+            $user->delete();
+            return redirect()->route('users.index')
+                ->with('success', __('User deleted successfully'));
+        } else {
+            abort(403, __('Unauthorized action.'));
+        }
+    }
     /**
      * Display a listing of the resource.
      */

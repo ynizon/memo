@@ -14,8 +14,11 @@
                                     </p>
                                 </div>
                                 <div class="col-6 text-end">
-                                    <a href="{{ route('tasks.create') }}" class="btn btn-dark btn-primary">
+                                    <a href="{{ route('tasks.create') }}" class="btn btn-dark btn-primary d-none d-lg-inline-block">
                                         <i class="fas fa-plus me-2"></i> {{__("Add Task")}}
+                                    </a>
+                                    <a href="{{ route('tasks.create') }}" class="btn btn-dark btn-primary d-inline-block d-lg-none">
+                                        <i class="fas fa-plus me-2"></i>
                                     </a>
                                 </div>
                             </div>

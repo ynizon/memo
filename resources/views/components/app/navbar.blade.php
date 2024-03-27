@@ -13,14 +13,9 @@
                 </div>
             </div>
             <div class="mb-0 font-weight-bold breadcrumb-text text-white">
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-
-                    <a href="login" onclick="event.preventDefault();
-                this.closest('form').submit();">
-                        <button class="btn btn-sm  btn-white  mb-0 me-1" type="submit">{{__("Log out")}}</button>
-                    </a>
-                </form>
+                <a href="{{ route('tasks.create') }}" class="btn btn-sm btn-dark mb-0 me-1" title="{{__("Add Task")}}">
+                    <i class="fas fa-plus"></i>
+                </a>
             </div>
             <ul class="navbar-nav  justify-content-end">
                 <li class="nav-item d-xl-none ps-3 d-flex align-items-center">

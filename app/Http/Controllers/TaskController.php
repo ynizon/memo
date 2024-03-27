@@ -44,7 +44,7 @@ class TaskController extends Controller
         Task::create($this->validateFields($request));
 
         return redirect()->route('tasks.index')
-            ->with('success','Task created successfully.');
+            ->with('success',__('Task created successfully.'));
     }
 
     /**
@@ -79,7 +79,7 @@ class TaskController extends Controller
 
         $task->update($this->validateFields($request));
         return redirect()->route('tasks.index')
-            ->with('success', 'Task updated successfully.');
+            ->with('success', __('Task updated successfully.'));
     }
 
     /**
@@ -88,11 +88,11 @@ class TaskController extends Controller
     public function destroy(Task $task)
     {
         if ($task->user_id != Auth::user()->getAuthIdentifier()){
-            abort(403, 'Unauthorized action.');
+            abort(403, __('Unauthorized action.'));
         }
         $task->delete();
         return redirect()->route('tasks.index')
-            ->with('success', 'Task deleted successfully');
+            ->with('success', __('Task deleted successfully'));
     }
 
     public function archive(Task $task)
@@ -102,7 +102,7 @@ class TaskController extends Controller
         }
         $task->archive = !$task->archive;
         return redirect()->route('tasks.index')
-            ->with('success', 'Task updated successfully');
+            ->with('success', __('Task updated successfully'));
     }
 
     private function validateFields(Request $request) : array

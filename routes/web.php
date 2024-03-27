@@ -10,7 +10,8 @@ Route::get('/', function () {
     if (Auth::id()){
         return redirect('dashboard');
     } else {
-        return view('welcome');
+        $pictures = array_filter(glob(public_path('screenshots').'/*'), 'is_file');
+        return view('welcome', compact('pictures'));
     }
 });
 
@@ -18,18 +19,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::resource('/categories', CategoryController::class);
+    Route::resource('/tasks', TaskController::class);
+    Route::resource('/users', UserController::class);
 });
 
-Route::get('/profile', function () {
-    return view('auth.profile');
-})->name('profile')->middleware('auth');
-
-Route::get('/laravel-examples/user-profile', [ProfileController::class, 'index'])->name('users.profile')->middleware('auth');
-Route::put('/laravel-examples/user-profile/update', [ProfileController::class, 'update'])->name('users.update')->middleware('auth');
-Route::get('/laravel-examples/users-management', [UserController::class, 'index'])->name('users-management')->middleware('auth');
-
 Route::get('/dashboard',  [UserController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
-Route::resource('/categories', CategoryController::class)->middleware('auth');
-Route::resource('/tasks', TaskController::class)->middleware('auth');
 
 require __DIR__.'/auth.php';

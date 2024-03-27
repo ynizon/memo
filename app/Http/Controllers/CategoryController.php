@@ -43,7 +43,7 @@ class CategoryController extends Controller
         Category::create($this->validateFields($request));
 
         return redirect()->route('categories.index')
-            ->with('success','Category created successfully.');
+            ->with('success',__('Category created successfully.'));
     }
 
     /**
@@ -52,7 +52,7 @@ class CategoryController extends Controller
     public function show(Category $category)
     {
         if ($category->user_id != Auth::user()->getAuthIdentifier()){
-            abort(403, 'Unauthorized action.');
+            abort(403, __('Unauthorized action.'));
         }
         return view('categories.edit', compact('category'));
     }
@@ -63,7 +63,7 @@ class CategoryController extends Controller
     public function edit(Category $category)
     {
         if ($category->user_id != Auth::user()->getAuthIdentifier()){
-            abort(403, 'Unauthorized action.');
+            abort(403, __('Unauthorized action.'));
         }
         $icons = $this->getAwesomeIcons();
         return view('categories/edit', compact('category', 'icons'));
@@ -80,7 +80,7 @@ class CategoryController extends Controller
 
         $category->update($this->validateFields($request));
         return redirect()->route('categories.index')
-            ->with('success', 'Category updated successfully.');
+            ->with('success', __('Category updated successfully.'));
     }
 
     /**
@@ -93,7 +93,7 @@ class CategoryController extends Controller
         }
         $category->delete();
         return redirect()->route('categories.index')
-            ->with('success', 'Category deleted successfully');
+            ->with('success', __('Category deleted successfully'));
     }
 
     private function getAwesomeIcons(): array

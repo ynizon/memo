@@ -83,6 +83,29 @@
                     <span class="nav-link-text ms-1">{{__('Categories')}}</span>
                 </a>
             </li>
+            @if (Auth::User()->admin || Auth::User()->email == env("ADMIN_EMAIL"))
+                <li class="nav-item">
+                    <a class="nav-link {{ is_current_route('users.index') ? 'active' : '' }} " href="{{ route('users.index') }}">
+                        <div class="icon icon-shape icon-sm px-0 text-center d-flex align-items-center justify-content-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><title>users</title><g fill="#FFFFFF"><circle cx="5.75" cy="6.25" r="2" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></circle><path d="M9.609,15.122c.523-.175,.83-.744,.636-1.259-.685-1.818-2.436-3.112-4.494-3.112s-3.809,1.294-4.494,3.112c-.194,.516,.113,1.085,.636,1.259,.962,.321,2.281,.628,3.859,.628s2.897-.307,3.858-.628Z" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path><circle cx="12" cy="3.75" r="2" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></circle><path d="M12.749,13.227c1.248-.077,2.304-.336,3.109-.605,.523-.175,.83-.744,.636-1.259-.685-1.818-2.436-3.112-4.494-3.112-.977,0-1.885,.292-2.643,.793" fill="none" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path></g></svg>
+                        </div>
+                        <span class="nav-link-text ms-1">{{__('Users')}}</span>
+                    </a>
+                </li>
+            @endif
+            <li class="nav-item">
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <a href="login" onclick="event.preventDefault();
+                            this.closest('form').submit();" class="nav-link">
+                        <div
+                            class="icon icon-shape icon-sm px-0 text-center d-flex align-items-center justify-content-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18"><title>arrow-door-out-3</title><g fill="#FFFFFF"><path d="M11.75,11.5c-.414,0-.75,.336-.75,.75v2.5c0,.138-.112,.25-.25,.25H5.448l1.725-1.069c.518-.322,.827-.878,.827-1.487V5.557c0-.609-.31-1.166-.827-1.487l-1.725-1.069h5.302c.138,0,.25,.112,.25,.25v2.5c0,.414,.336,.75,.75,.75s.75-.336,.75-.75V3.25c0-.965-.785-1.75-1.75-1.75H4.25c-.965,0-1.75,.785-1.75,1.75V14.75c0,.965,.785,1.75,1.75,1.75h6.5c.965,0,1.75-.785,1.75-1.75v-2.5c0-.414-.336-.75-.75-.75Z" fill="#FFFFFF"></path><path d="M17.78,8.47l-2.75-2.75c-.293-.293-.768-.293-1.061,0s-.293,.768,0,1.061l1.47,1.47h-4.189c-.414,0-.75,.336-.75,.75s.336,.75,.75,.75h4.189l-1.47,1.47c-.293,.293-.293,.768,0,1.061,.146,.146,.338,.22,.53,.22s.384-.073,.53-.22l2.75-2.75c.293-.293,.293-.768,0-1.061Z" fill="#FFFFFF"></path></g></svg>
+                        </div>
+                        <span class="nav-link-text ms-1">{{__('Logout')}}</span>
+                    </a>
+                </form>
+            </li>
         </ul>
     </div>
 </aside>

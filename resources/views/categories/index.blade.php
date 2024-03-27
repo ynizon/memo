@@ -14,8 +14,11 @@
                                     </p>
                                 </div>
                                 <div class="col-6 text-end">
-                                    <a href="{{ route('categories.create') }}" class="btn btn-dark btn-primary">
+                                    <a href="{{ route('categories.create') }}" class="btn btn-dark btn-primary d-none d-lg-inline-block">
                                         <i class="fas fa-plus me-2"></i> {{__("Add Category")}}
+                                    </a>
+                                    <a href="{{ route('categories.create') }}" class="btn btn-dark btn-primary d-inline-block d-lg-none">
+                                        <i class="fas fa-plus me-2"></i>
                                     </a>
                                 </div>
                             </div>
@@ -46,7 +49,7 @@
                                             {{__("Name")}}</th>
                                         <th
                                             class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            {{__("Archive")}}</th>
+                                            {{__("Status")}}</th>
                                         <th
                                             class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
                                             {{__("Action")}}</th>
@@ -67,8 +70,8 @@
                                                     @if ($category->archive) Archive @else OK @endif</span>
                                             </td>
                                             <td class="text-center align-middle bg-transparent border-bottom">
-                                                <a href="/categories/{{$category->id}}/edit"><i class="fas fa-edit" aria-hidden="true"></i></a>&nbsp;
-                                                <form style="display:inline;" action="{{ route('categories.destroy', $category->id) }}" method="post">
+                                                <form action="{{ route('categories.destroy', $category->id) }}" method="post">
+                                                    <a href="/categories/{{$category->id}}/edit"><i class="fas fa-edit" aria-hidden="true"></i></a>&nbsp;
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="nobtn"><i class="fas fa-trash" aria-hidden="true"></i></button>
@@ -86,7 +89,6 @@
         </div>
         <x-app.footer />
     </main>
-
 </x-app-layout>
 
 <script src="/assets/js/plugins/datatables.js"></script>

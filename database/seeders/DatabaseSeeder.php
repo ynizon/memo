@@ -65,7 +65,7 @@ class DatabaseSeeder extends Seeder
             $j = ($numDay < 10) ? '0'.$numDay : $k;
             DB::table('tasks')->insert([
                 'name' => "Stuff " .$k,
-                'information'=>'blablblkjbndsqb ,nds q,ndbsq,ndb,qdb ,ndb sq;,bd ,qbd,qd',
+                'information'=>'informations additionnelles',
                 'category_id'=>rand(1,4),
                 'user_id' => 1,
                 'created_at' => '2024-01-'.$j,

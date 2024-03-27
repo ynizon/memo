@@ -259,5 +259,22 @@
     "Task Management": "Gestion des tâches",
     "Number of months of historic": "Nombre de mois de l'historique",
     "Last expense": "Dernière dépense",
-    "Previous": "Précédemment"
+    "Previous": "Précédemment",
+    "I agree the Terms and Conditions": "J'accepte les conditions d'utilisation",
+    "Already have an account": "Vous avez déjà un compte",
+    "Forgot password": "Mot de passe oublié",
+    "Don't have an account": "Vous n'avez pas encore de compte",
+    "Color code": "Code couleur",
+    "Icon": "Icone",
+    "Reminder date": "Date de rappel",
+    "Reminder": "Rappel",
+    "Unauthorized action.": "Action non autorisé",
+    "User deleted successfully": "Utilisateur supprimé",
+    "Task created successfully.": "Tâche créé avec succès.",
+    "Task updated successfully.": "Tâche modifiée avec succès.",
+    "Task deleted successfully": "Tâche supprimée avec succès",
+    "Category created successfully.": "Catégorie créée avec succès.",
+    "Category updated successfully.": "Catégorie modifiée avec succès.",
+    "Category deleted successfully": "Catégorie supprimée avec succès",
+    "Users Management": "Gestion des utilisateurs"
 }

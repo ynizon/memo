@@ -53,11 +53,11 @@
                                     @endif
                                     @csrf
                                     <div class="form-group">
-                                        <label for="title">{{__('Category')}}</label>
+                                        <label for="category_id">{{__('Category')}}</label>
                                         <select type="text" class="form-control" id="category_id" name="category_id"
                                                 required>
                                             @foreach($categories as $category)
-                                                <option value="{{$category->id}}">{{$category->name}}</option>
+                                                <option @if ($task->category_id == $category->id) selected @endif value="{{$category->id}}">{{__($category->name)}}</option>
                                             @endforeach
                                         </select>
                                     </div>

@@ -18,34 +18,33 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    @if (config('app.is_demo'))
-        <title itemprop="name">
-            {{config("app.name")}}
-        </title>
-        <meta name="twitter:card" content="summary" />
-        <meta name="twitter:card" content="summary_large_image">
-        <meta name="twitter:site" content="@enpix" />
-        <meta name="twitter:creator" content="@enpix" />
-        <meta name="twitter:title" content="{{config("app.name")}}" />
-        <meta name="twitter:description" content="Tasks Remember" />
-        <meta name="twitter:image"
-            content="https://s3.amazonaws.com/creativetim_bucket/products/737/original/corporate-ui-dashboard-laravel.jpg?1695288974" />
-        <meta name="twitter:url" content="https://www.creative-tim.com/live/corporate-ui-dashboard-laravel" />
-        <meta name="description" content="Tasks Remember">
-        <meta name="keywords" content="">
-        <meta property="og:app_id" content="655968634437471">
-        <meta property="og:type" content="product">
-        <meta property="og:title" content="{{config("app.name")}}">
-        <meta property="og:url" content="https://www.creative-tim.com/live/corporate-ui-dashboard-laravel">
-        <meta property="og:image"
-            content="https://s3.amazonaws.com/creativetim_bucket/products/737/original/corporate-ui-dashboard-laravel.jpg?1695288974">
-        <meta property="product:price:amount" content="FREE">
-        <meta property="product:price:currency" content="EUR">
-        <meta property="product:availability" content="in Stock">
-        <meta property="product:brand" content="">
-        <meta property="product:category" content="Admin &amp; Dashboards">
-        <meta name="data-turbolinks-track" content="false">
-    @endif
+    <title itemprop="name">
+        {{config("app.name")}}
+    </title>
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@enpix" />
+    <meta name="twitter:creator" content="@enpix" />
+    <meta name="twitter:title" content="{{config("app.name")}}" />
+    <meta name="twitter:description" content="Tasks Remember" />
+    <meta name="twitter:image"
+        content="https://s3.amazonaws.com/creativetim_bucket/products/737/original/corporate-ui-dashboard-laravel.jpg?1695288974" />
+    <meta name="twitter:url" content="https://www.creative-tim.com/live/corporate-ui-dashboard-laravel" />
+    <meta name="description" content="Tasks Remember">
+    <meta name="keywords" content="">
+    <meta property="og:app_id" content="655968634437471">
+    <meta property="og:type" content="product">
+    <meta property="og:title" content="{{config("app.name")}}">
+    <meta property="og:url" content="https://www.creative-tim.com/live/corporate-ui-dashboard-laravel">
+    <meta property="og:image"
+        content="https://s3.amazonaws.com/creativetim_bucket/products/737/original/corporate-ui-dashboard-laravel.jpg?1695288974">
+    <meta property="product:price:amount" content="FREE">
+    <meta property="product:price:currency" content="EUR">
+    <meta property="product:availability" content="in Stock">
+    <meta property="product:brand" content="">
+    <meta property="product:category" content="Admin &amp; Dashboards">
+    <meta name="data-turbolinks-track" content="false">
+
     <link rel="apple-touch-icon" sizes="76x76" href="/assets/img/apple-icon.png">
     <link rel="icon" type="image/png" href="/assets/img/favicon.png">
     <title>
@@ -111,8 +110,7 @@
             Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
         }
     </script>
-    <!-- Github buttons -->
-    <script async defer src="https://buttons.github.io/buttons.js"></script>
+
     <!-- Control Center for Corporate UI Dashboard: parallax effects, scripts for the example pages etc -->
     <script src="/assets/js/corporate-ui-dashboard.min.js?v=1.0.0"></script>
 </body>
