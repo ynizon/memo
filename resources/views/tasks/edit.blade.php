@@ -64,11 +64,11 @@
                                     <div class="form-group">
                                         <label for="name">{{__('Name')}}</label>
                                         <input type="text" class="form-control" id="name" name="name"
-                                               value="{{$task->name}}">
+                                               value="@if (old('name') != ''){{old('name')}}@else{{$task->name}}@endif" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="information">{{__('Information')}}</label>
-                                        <textarea class="form-control" id="information" rows="3" name="information">{{$task->information}}</textarea>
+                                        <textarea class="form-control" id="information" rows="3" name="information">@if (old('information') != ''){{old('information')}}@else{{$task->information}}@endif</textarea>
                                     </div>
                                     <div class="form-group">
                                         <label for="created_at">{{__('Date')}}</label>
@@ -78,7 +78,7 @@
                                     <div class="form-group">
                                         <label for="price">{{__('Price')}}</label>
                                         <input type="text" class="form-control" id="price" name="price"
-                                               value="{{$task->price}}">
+                                               value="@if (old('price') != ''){{old('price')}}@else{{$task->price}}@endif">
                                     </div>
                                     <div class="form-group">
                                         <div class="form-check form-switch ps-0">

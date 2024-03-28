@@ -55,7 +55,7 @@
                                     <div class="form-group">
                                         <label for="name">{{__('Name')}}</label>
                                         <input type="text" class="form-control" id="name" name="name"
-                                               value="{{$category->name}}" required>
+                                               value="@if (old('name') != ''){{old('name')}}@else{{$category->name}}@endif" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="icon">{{__('Icon')}}&nbsp;&nbsp;&nbsp;
@@ -77,7 +77,7 @@
                                     <div class="form-group">
                                         <label for="color">{{__('Color code')}}</label>
                                         <input type="text" class="colorpicker form-control" id="color" name="color"
-                                            value="{{$category->color}}" required>
+                                            value="@if (old('color') != ''){{old('color')}}@else{{$category->color}}@endif" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="price">{{__('Number of months of historic')}}</label>

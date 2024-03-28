@@ -147,6 +147,7 @@
       <path value="$PROJECT_DIR$/vendor/fidry/cpu-core-counter" />
       <path value="$PROJECT_DIR$/vendor/awps/font-awesome-php" />
       <path value="$PROJECT_DIR$/vendor/ladumor/laravel-pwa" />
+      <path value="$PROJECT_DIR$/vendor/creativeorange/gravatar" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1" />

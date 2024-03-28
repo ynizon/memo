@@ -50,12 +50,12 @@
                                     <div class="form-group">
                                         <label for="name">{{__('Name')}}</label>
                                         <input type="text" class="form-control" id="name" name="name"
-                                               value="{{Auth::user()->name}}" required>
+                                               value="@if (old('name') != ''){{old('name')}}@else{{Auth::user()->name}}@endif" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="email">{{__('Name')}}</label>
                                         <input type="text" class="form-control" id="email" name="email"
-                                               value="{{Auth::user()->email}}" required>
+                                               value="@if (old('email') != ''){{old('email')}}@else{{Auth::user()->email}}@endif" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="password">{{__('Password')}}</label>

@@ -74,22 +74,8 @@
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
-    @php
-        $topSidenavArray = ['profile'];
-        $topSidenavTransparent = ['login', 'logout'];
-        $topSidenavRTL = ['RTL'];
-    @endphp
-    @if (in_array(request()->route()->getName(),
-            $topSidenavArray))
-        <x-sidenav-top />
-    @elseif(in_array(request()->route()->getName(),
-            $topSidenavTransparent))
 
-    @elseif(in_array(request()->route()->getName(),
-            $topSidenavRTL))
-    @else
-        <x-app.sidebar />
-    @endif
+    <x-app.sidebar />
 
     {{ $slot }}
 

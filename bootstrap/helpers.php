@@ -1,7 +1,12 @@
 <?php
 
+use Creativeorange\Gravatar\Facades\Gravatar;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+
+function gravatar(string $email){
+    return Gravatar::get($email);
+}
 
 function getReminders() : \Illuminate\Database\Eloquent\Collection
 {

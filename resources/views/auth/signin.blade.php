@@ -28,13 +28,13 @@
                                         <div class="mb-3">
                                             <input type="email" id="email" name="email" class="form-control"
                                                 placeholder=""
-                                                value="{{ old('email') ? old('email') : 'admin@admin.com' }}"
+                                                value="{{ old('email') ? old('email') : '' }}"
                                                 aria-label="Email" aria-describedby="email-addon">
                                         </div>
                                         <label>{{__("Password")}}</label>
                                         <div class="mb-3">
                                             <input type="password" id="password" name="password"
-                                                value="{{ old('password') ? old('password') : 'admin' }}"
+                                                value="{{ old('password') ? old('password') : '' }}"
                                                 class="form-control" placeholder="" aria-label="Password"
                                                 aria-describedby="password-addon">
                                         </div>

@@ -29,10 +29,10 @@
                 </li>
 
                 @if (count(getReminders()) > 0)
-                <li class="px-3 nav-item dropdown pe-2 d-flex align-items-center">
+                <li class="px-3 nav-item dropdown pe-3 d-flex align-items-center">
                     <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton"
                         data-bs-toggle="dropdown" aria-expanded="false">
-                        <svg height="16" width="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                        <svg height="16" width="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" style="color:#774dd3"
                             fill="currentColor" class="cursor-pointers">
                             <path fill-rule="evenodd"
                                 d="M5.25 9a6.75 6.75 0 0113.5 0v.75c0 2.123.8 4.057 2.118 5.52a.75.75 0 01-.297 1.206c-1.544.57-3.16.99-4.831 1.243a3.75 3.75 0 11-7.48 0 24.585 24.585 0 01-4.831-1.244.75.75 0 01-.298-1.205A8.217 8.217 0 005.25 9.75V9zm4.502 8.9a2.25 2.25 0 104.496 0 25.057 25.057 0 01-4.496 0z"
@@ -46,8 +46,8 @@
                                 <a class="dropdown-item border-radius-md" href="/tasks/{{$reminder->id}}/edit">
                                     <div class="d-flex py-1">
                                         <div class="my-auto">
-                                            <img src="/assets/img/team-2.jpg"
-                                                 class="avatar avatar-sm border-radius-sm  me-3 ">
+                                            <i class="fa {{$reminder->category->icon}} avatar avatar-sm border-radius-sm  me-3 "
+                                            style="background:{{$reminder->category->color}}"></i>
                                         </div>
                                         <div class="d-flex flex-column justify-content-center">
                                             <h6 class="text-sm font-weight-normal mb-1">
@@ -67,7 +67,7 @@
                 @endif
                 <li class="nav-item ps-2 d-flex align-items-center">
                     <a href="/profile" class="nav-link text-body p-0">
-                        <img src="/assets/img/team-2.jpg" class="avatar avatar-sm" alt="avatar" />
+                        <img src="{{gravatar(Auth::user()->email)}}" class="avatar avatar-sm" alt="avatar" />
                     </a>
                 </li>
             </ul>

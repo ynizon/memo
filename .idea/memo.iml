@@ -152,6 +152,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/fidry/cpu-core-counter" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/awps/font-awesome-php" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/ladumor/laravel-pwa" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/creativeorange/gravatar" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

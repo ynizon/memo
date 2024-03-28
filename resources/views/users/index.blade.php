@@ -54,11 +54,13 @@
                                         </td>
                                         <td class="align-middle bg-transparent border-bottom">{{$user->email}}</td>
                                         <td class="text-center align-middle bg-transparent border-bottom">
-                                            <form action="{{ route('users.destroy', $user->id) }}" method="post">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="nobtn"><i class="fas fa-trash" aria-hidden="true"></i></button>
-                                            </form>
+                                            @if ($user->id != Auth::user()->id)
+                                                <form action="{{ route('users.destroy', $user->id) }}" method="post">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="nobtn"><i class="fas fa-trash" aria-hidden="true"></i></button>
+                                                </form>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach
