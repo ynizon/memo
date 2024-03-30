@@ -4,7 +4,9 @@
 
 PHP Tasks reminders (PWA).
 You can add/remove tasks for some domains (car, health, child, animal.) to avoid
-to forgot them.
+to forgot them. 
+
+Démo: https://memo.gameandme.fr/
 
 ## Installation
 - git clone git@github.com:ynizon/memo.git
