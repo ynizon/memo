@@ -29,13 +29,13 @@
     <meta name="twitter:description" content="Tasks Remember" />
     <meta name="twitter:image"
         content="https://s3.amazonaws.com/creativetim_bucket/products/737/original/corporate-ui-dashboard-laravel.jpg?1695288974" />
-    <meta name="twitter:url" content="https://www.creative-tim.com/live/corporate-ui-dashboard-laravel" />
+    <meta name="twitter:url" content="{{config("app.url")}}" />
     <meta name="description" content="Tasks Remember">
     <meta name="keywords" content="">
-    <meta property="og:app_id" content="655968634437471">
+    <meta property="og:app_id" content="">
     <meta property="og:type" content="product">
     <meta property="og:title" content="{{config("app.name")}}">
-    <meta property="og:url" content="https://www.creative-tim.com/live/corporate-ui-dashboard-laravel">
+    <meta property="og:url" content="{{config("app.url")}}">
     <meta property="og:image"
         content="https://s3.amazonaws.com/creativetim_bucket/products/737/original/corporate-ui-dashboard-laravel.jpg?1695288974">
     <meta property="product:price:amount" content="FREE">

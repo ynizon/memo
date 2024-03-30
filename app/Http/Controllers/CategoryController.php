@@ -66,6 +66,8 @@ class CategoryController extends Controller
             abort(403, __('Unauthorized action.'));
         }
         $icons = $this->getAwesomeIcons();
+        $icons['fa-dog'] = '';
+        $icons['fa-notes-medical'] = '';
         return view('categories/edit', compact('category', 'icons'));
     }
 

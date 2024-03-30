@@ -276,5 +276,8 @@
     "Category created successfully.": "Catégorie créée avec succès.",
     "Category updated successfully.": "Catégorie modifiée avec succès.",
     "Category deleted successfully": "Catégorie supprimée avec succès",
-    "Users Management": "Gestion des utilisateurs"
+    "Users Management": "Gestion des utilisateurs",
+    "Email password reset link": "Envoyer moi le lien de reset de mot de passe",
+    "Something went wrong": "Une erreur est survenue",
+
 }

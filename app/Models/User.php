@@ -79,7 +79,7 @@ class User extends Authenticatable
         $category = new Category();
         $category->name = 'Health';
         $category->icon= 'fa-notes-medical';
-        $category->color= 'e10a77';
+        $category->color= '#e10a77';
         $category->user_id= $this->id;
         $category->month = 12;
         $category->archive = false;
@@ -88,7 +88,7 @@ class User extends Authenticatable
         $category = new Category();
         $category->name = 'Car';
         $category->icon= 'fa-car';
-        $category->color= 'c79710';
+        $category->color= '#c79710';
         $category->user_id= $this->id;
         $category->month = 12;
         $category->archive = false;
@@ -97,7 +97,7 @@ class User extends Authenticatable
         $category = new Category();
         $category->name = 'Other';
         $category->icon= 'fa-list';
-        $category->color= 'c02ae5';
+        $category->color= '#c02ae5';
         $category->user_id= $this->id;
         $category->month = 12;
         $category->archive = false;
@@ -106,7 +106,7 @@ class User extends Authenticatable
         $category = new Category();
         $category->name = 'Animal';
         $category->icon= 'fa-dog';
-        $category->color= '3474ab';
+        $category->color= '#3474ab';
         $category->user_id= $this->id;
         $category->month = 12;
         $category->archive = false;

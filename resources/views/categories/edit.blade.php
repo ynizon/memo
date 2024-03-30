@@ -59,7 +59,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="icon">{{__('Icon')}}&nbsp;&nbsp;&nbsp;
-                                            <span class="fa fa-list" id="icon_example"></span>
+                                            <span class="fa {{$category->icon}}" id="icon_example"></span>
                                         </label>
 
                                         <select class="form-control" id="icon" name="icon" required>
