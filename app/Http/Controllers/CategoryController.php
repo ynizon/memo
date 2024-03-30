@@ -68,6 +68,7 @@ class CategoryController extends Controller
         $icons = $this->getAwesomeIcons();
         $icons['fa-dog'] = '';
         $icons['fa-notes-medical'] = '';
+        ksort($icons);
         return view('categories/edit', compact('category', 'icons'));
     }
 
