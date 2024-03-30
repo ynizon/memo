@@ -33,5 +33,3 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 <img src="public/screenshots/2.png">
 <img src="public/screenshots/3.png">
 
-## TODO
-Check old value forms
