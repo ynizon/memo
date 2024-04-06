@@ -4,7 +4,8 @@
 
 PHP Tasks reminders (PWA).
 You can add/remove tasks for some domains (car, health, child, animal.) to avoid
-to forgot them. You can set reminders to receive notifications on the relevant date.
+to forgot them. You can set reminders to receive notifications on the relevant date
+For this feature, you need to set Pusher.com > Beam API KEY in your .env.
 
 Démo: https://memo.gameandme.fr/
 
