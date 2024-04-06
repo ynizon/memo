@@ -1,16 +1,18 @@
 {
-    "name": "laravel/laravel",
+    "name": "Memo",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "description": "Memo est une application pour garder un suivi de différentes choses.",
+    "keywords": ["laravel", "framework", "task manager"],
     "license": "MIT",
     "require": {
         "php": "^8.2",
         "awps/font-awesome-php": "^4.7",
         "creativeorange/gravatar": "~1.0",
+        "laravel-notification-channels/pusher-push-notifications": "^4.2",
         "laravel/breeze": "^2.0",
         "laravel/framework": "^11.0",
-        "laravel/tinker": "^2.9"
+        "laravel/tinker": "^2.9",
+        "pusher/pusher-php-server": "^7.2"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

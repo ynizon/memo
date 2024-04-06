@@ -27621,3 +27621,7 @@ Github: https://github.com/fiduswriter/Simple-DataTables
     transition: opacity .6s ease;
     background-color:#212529;
 }
+
+i.pad{
+    padding-right:10px;
+}

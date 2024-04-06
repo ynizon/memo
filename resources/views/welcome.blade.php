@@ -69,7 +69,7 @@
                                     <a class="btn btn-primary text-white" href="{{route('login')}}")>{{__("Login")}}</a>
                                 </div>
                                 <div class="card-body">
-                                    <i class="fa fa-github"></i>&nbsp;&nbsp;<a href="https://github.com/ynizon/memo">https://github.com/ynizon/memo</a>
+                                    <i class="fa fa-github pad"></i><a href="https://github.com/ynizon/memo">https://github.com/ynizon/memo</a>
                                 </div>
                             </div>
                         </div>

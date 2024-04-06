@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Notification;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -59,10 +60,15 @@ class TaskController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Task $task)
+    public function edit(Task $task, Request $request)
     {
         if ($task->user_id != Auth::user()->getAuthIdentifier()){
             abort(403, 'Unauthorized action.');
+        }
+        if ($request->input("notif") != '') {
+            $notif = Auth::user()->notifications()->where('id', $request->input("notif"))->first();
+            $notif->read_at = now();
+            $notif->save();
         }
         $categories = Auth::user()->categories();
         return view('tasks/edit', compact('task','categories'));

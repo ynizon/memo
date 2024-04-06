@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\ReminderNotif;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
+use Pusher\PushNotifications\PushNotifications;
 
 class User extends Authenticatable
 {
@@ -46,14 +49,69 @@ class User extends Authenticatable
         ];
     }
 
-    public function tasks(): \Illuminate\Database\Eloquent\Collection
+    public function tasks(): Collection
     {
         return $this->hasMany(Task::class)->orderBy('created_at','desc')->get();
     }
 
-    public function categories(): \Illuminate\Database\Eloquent\Collection
+    public function reminders(): Collection
+    {
+        return $this->hasMany(Task::class)
+            ->where("reminder","=",true)
+            ->where("reminder_date","<=",date("Y-m-d"))
+            ->orderBy('created_at','desc')->get();
+    }
+
+    public function categories(): Collection
     {
         return $this->hasMany(Category::class)->orderBy('name')->get();
+    }
+
+    public function getReminderTasks(){
+        $reminders = [];
+        foreach (Auth::user()->unreadNotifications as $notification){
+            $reminders[$notification->id] = Task::find($notification->data['task_id']);
+        }
+
+        return $reminders;
+    }
+
+    public function sendReminders() {
+        $notifications = [];
+        $notificationsUnread = $this->getReminderTasks();
+        //Avoid duplicate notification
+        foreach ($notificationsUnread as $notification) {
+            $notifications[] = $notification->id;
+        }
+
+        $notifSend = false;
+        $reminders = $this->reminders();
+        foreach ($reminders as $reminder){
+            if (!in_array($reminder->id, $notifications)){
+                Notification::send($this, new ReminderNotif($reminder));
+
+                try {
+                    if (!$notifSend) {
+                        $beamsClient = new PushNotifications(array(
+                            "instanceId" => env('PUSHER_BEAM_INSTANCE_ID'),
+                            "secretKey" => env('PUSHER_BEAM_SECRET_KEY'),
+                        ));
+
+                        $publishResponse = $beamsClient->publishToInterests(
+                            array("App.User." . $reminder->user_id),
+                            array("web" => array("notification" => [
+                                "title" => __($reminder->category->name) . " > " . $reminder->name,
+                                "body" => __("Reminder") . ' ' . $reminder->description,
+                                "deep_link" => config("app.url") . "/dashboard",
+                            ])
+                            ));
+                        $notifSend = true;
+                    }
+                } catch (\Exception $e) {
+                    echo $e->getMessage();
+                }
+            }
+        }
     }
 
     public static function getAllCategories(){

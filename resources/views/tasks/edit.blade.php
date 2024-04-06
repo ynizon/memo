@@ -94,8 +94,18 @@
                                                value="@if ($task->id > 0){{formatDateUK($task->reminder_date)}}@else{{date("Y-m-d",strtotime("+1 year"))}}@endif">
                                     </div>
                                     <br>
-                                    <button type="submit" class="btn btn-primary">{{__("Save")}}</button>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="pad fas fa-save" aria-hidden="true"></i>{{__("Save")}}
+                                        </button>
                                 </form>
+                                @if ($task->id > 0)
+                                    <form action="{{ route('tasks.destroy', $task->id) }}" method="post">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger float-end"><i class="pad fas fa-trash" aria-hidden="true"></i>
+                                            {{__("Delete")}}</button>
+                                    </form>
+                                @endif
                             </div>
                         </div>
                     </div>

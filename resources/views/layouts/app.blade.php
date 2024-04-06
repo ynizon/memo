@@ -66,6 +66,9 @@
     <link rel="stylesheet" href="/assets/fonts/line-awesome.min.css">
     <link rel="stylesheet" href="/assets/fonts/fontawesome5-overrides.min.css">
 
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <!-- Font Awesome Icons -->
     <script src="https://kit.fontawesome.com/349ee9c857.js" crossorigin="anonymous"></script>
     <link href="/assets/css/nucleo-svg.css" rel="stylesheet" />
@@ -86,7 +89,18 @@
     <script src="/assets/js/plugins/smooth-scrollbar.min.js"></script>
     <script src="/assets/js/plugins/jquery-3.7.1.min.js"></script>
     <script src="/assets/js/plugins/bootstrap-colorpicker.min.js"></script>
+    <script src="/assets/js/plugins/bootstrap-colorpicker.min.js"></script>
+    <script src="https://js.pusher.com/beams/1.0/push-notifications-cdn.js"></script>
+    <script>
+        const beamsClient = new PusherPushNotifications.Client({
+            instanceId: '{{env('PUSHER_BEAM_INSTANCE_ID')}}',
+        });
 
+        beamsClient.start()
+            .then(() => beamsClient.addDeviceInterest('App.User.{{ auth()->user()->id }}'))
+            .then(() => console.log('Successfully registered and subscribed!'))
+            .catch(console.error);
+    </script>
     <script>
         var win = navigator.platform.indexOf('Win') > -1;
         if (win && document.querySelector('#sidenav-scrollbar')) {
@@ -99,6 +113,7 @@
 
     <!-- Control Center for Corporate UI Dashboard: parallax effects, scripts for the example pages etc -->
     <script src="/assets/js/corporate-ui-dashboard.min.js?v=1.0.0"></script>
+    @vite(['resources/js/app.js'])
 </body>
 
 </html>

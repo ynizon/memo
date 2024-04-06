@@ -97,8 +97,18 @@
                                         </div>
                                     </div>
                                     <br>
-                                    <button type="submit" class="btn btn-primary">{{__("Save")}}</button>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="pad fas fa-save" aria-hidden="true"></i>{{__("Save")}}
+                                    </button>
                                 </form>
+                                @if ($category->id > 0)
+                                <form action="{{ route('categories.destroy', $category->id) }}" method="post">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger float-end"><i class="pad fas fa-trash" aria-hidden="true"></i>
+                                        {{__("Delete")}}</button>
+                                </form>
+                                @endif
                             </div>
                         </div>
                     </div>

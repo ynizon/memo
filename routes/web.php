@@ -1,9 +1,11 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\UserController;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -26,5 +28,15 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/dashboard',  [UserController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('cron', function () {
+    //Same code in routes/console.php scheduler
+    $users = User::all();
+    foreach ($users as $user){
+        $user->sendReminders();
+    }
+
+    return Response()->json(["success"=>"ok"]);
+});
 
 require __DIR__.'/auth.php';

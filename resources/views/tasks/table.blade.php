@@ -30,10 +30,6 @@
             </th>
             <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2 d-none d-md-table-cell">
                 {{__('Information')}}</th>
-            <th
-                class="text-center text-secondary text-xs font-weight-semibold opacity-7">
-                {{__('Action')}}
-            </th>
         </tr>
         </thead>
         <tbody>
@@ -42,32 +38,38 @@
                     <td>
                         <div class="d-flex px-2">
                             <div class="rounded-circle bg-gray-100 me-2 my-2">
-                                <i class="fa fa-list {{$task->category->icon}}"></i>
-                                &nbsp;&nbsp;&nbsp;
+                                <a href="/tasks/{{$task->id}}/edit">
+                                    <i class="pad fa fa-list {{$task->category->icon}}"></i>
+                                </a>
+                                <span class="d-none">Category-{{$task->category->id}}</span>
                             </div>
                             <div class="my-auto">
-                                <h6 class="mb-0 text-sm">{{$task->name}}</h6>
+                                <a href="/tasks/{{$task->id}}/edit">
+                                    <h6 class="mb-0 text-sm">{{$task->name}}</h6>
+                                </a>
                             </div>
                         </div>
                     </td>
                     <td>
-                        <p class="text-sm font-weight-normal mb-0">@if ($task->price > 0){{$task->price}} €@endif</p>
+                        <p class="text-sm font-weight-normal mb-0">
+                            <a href="/tasks/{{$task->id}}/edit">
+                                @if ($task->price > 0){{$task->price}} €@endif
+                            </a>
+                        </p>
                     </td>
                     <td>
-                        <span class="text-sm font-weight-normal">{{formatDate($task->created_at)}}</span>
+                        <span class="text-sm font-weight-normal">
+                             <a href="/tasks/{{$task->id}}/edit">
+                                {{formatDate($task->created_at)}}
+                             </a>
+                        </span>
                     </td>
                     <td class="d-none d-md-table-cell">
-                        <span class="text-sm font-weight-normal">{{$task->information}}</span>
-                    </td>
-                    <td class="">
-
-                        <form action="{{ route('tasks.destroy', $task->id) }}" method="post">
-                            <a href="/tasks/{{$task->id}}/edit"><i class="fas fa-edit" aria-hidden="true"></i></a>&nbsp;
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="nobtn"><i class="fas fa-trash" aria-hidden="true"></i></button>
-                            <span class="d-none">Category-{{$task->category->id}}</span>
-                        </form>
+                        <span class="text-sm font-weight-normal">
+                             <a href="/tasks/{{$task->id}}/edit">
+                                {{$task->information}}
+                             </a>
+                        </span>
                     </td>
                 </tr>
             @endforeach

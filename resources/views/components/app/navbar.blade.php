@@ -28,7 +28,7 @@
                     </a>
                 </li>
 
-                @if (count(getReminders()) > 0)
+                @if (count(Auth::user()->getReminderTasks()) > 0)
                 <li class="px-3 nav-item dropdown pe-3 d-flex align-items-center">
                     <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton"
                         data-bs-toggle="dropdown" aria-expanded="false">
@@ -41,9 +41,9 @@
                     </a>
                     <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4"
                         aria-labelledby="dropdownMenuButton">
-                        @foreach (getReminders() as $reminder)
+                        @foreach (Auth::user()->getReminderTasks() as $notificationId => $reminder)
                             <li class="mb-2">
-                                <a class="dropdown-item border-radius-md" href="/tasks/{{$reminder->id}}/edit">
+                                <a class="dropdown-item border-radius-md" href="/tasks/{{$reminder->id}}/edit?notif={{$notificationId}}">
                                     <div class="d-flex py-1">
                                         <div class="my-auto">
                                             <i class="fa {{$reminder->category->icon}} avatar avatar-sm border-radius-sm  me-3 "
@@ -54,7 +54,7 @@
                                                 <span class="font-weight-bold">{{$reminder->name}}</span>
                                             </h6>
                                             <p class="text-xs text-secondary mb-0 d-flex align-items-center ">
-                                                <i class="fa fa-clock opacity-6 me-1"></i>
+                                                <i class="pad fa fa-clock opacity-6 me-1"></i>
                                                 {{formatDate($reminder->reminder_date)}}
                                             </p>
                                         </div>
