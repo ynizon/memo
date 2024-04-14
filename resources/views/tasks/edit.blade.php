@@ -66,7 +66,7 @@
                                         <input type="text" class="form-control" id="name" name="name"
                                                value="@if (old('name') != ''){{old('name')}}@else{{$task->name}}@endif" required>
                                     </div>
-                                    @if ($task->id == 0)
+                                    @if ($task->id == 0 && Auth::user()->isPremium())
                                         <div class="form-group">
                                             <label for="name">{{__('Attachment')}}</label>
                                             <input type="file" name="file" class="form-control"/>
@@ -138,7 +138,7 @@
                                             </a>
                                         </div>
                                     </form>
-                                    @if (count($task->attachments) > 0)
+                                    @if (count($task->attachments) > 0 && Auth::user()->isPremium())
                                         <table class="table text-secondary">
                                             <tbody>
                                                 @foreach ($task->attachments as $attachment)
