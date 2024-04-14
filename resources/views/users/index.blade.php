@@ -34,17 +34,23 @@
                         <div class="table-responsive">
                             <table class="table text-secondary text-center">
                                 <thead class="bg-gray-100">
-                                <tr>
-                                    <th
-                                        class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                        {{__("Name")}}</th>
-                                    <th
-                                        class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                        {{__("Email")}}</th>
-                                    <th
-                                        class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                        {{__("Action")}}</th>
-                                </tr>
+                                    <tr>
+                                        <th
+                                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
+                                            {{__("Name")}}</th>
+                                        <th
+                                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
+                                            {{__("Email")}}</th>
+                                        <th
+                                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
+                                            {{__("Admin")}}</th>
+                                        <th
+                                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
+                                            {{__("Premium")}}</th>
+                                        <th
+                                            class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
+                                            {{__("Action")}}</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                 @foreach ($users as $user)
@@ -53,6 +59,22 @@
                                             {{$user->name}}
                                         </td>
                                         <td class="align-middle bg-transparent border-bottom">{{$user->email}}</td>
+                                        <td class="align-middle bg-transparent border-bottom">
+                                            <div class="form-check form-switch ps-0" style="display:inline-block">
+                                                <input class="form-check-input ms-auto" type="checkbox" value="1"
+                                                       name="admin"
+                                                       onclick="toogleAdmin({{$user->id}})"
+                                                       @if ($user->admin || $user->email == env("ADMIN_EMAIL")) checked @endif>
+                                            </div>
+                                        </td>
+                                        <td class="align-middle bg-transparent border-bottom">
+                                            <div class="form-check form-switch ps-0" style="display:inline-block">
+                                                <input class="form-check-input ms-auto" type="checkbox" value="1"
+                                                       name="premium"
+                                                       onclick="tooglePremium({{$user->id}})"
+                                                       @if ($user->premium) checked @endif>
+                                            </div>
+                                        </td>
                                         <td class="text-center align-middle bg-transparent border-bottom">
                                             @if ($user->id != Auth::user()->id)
                                                 <form action="{{ route('users.destroy', $user->id) }}" method="post">
@@ -86,4 +108,12 @@
             sortable: false
         }]
     });
+
+    function tooglePremium(userId){
+        window.location = '/users/'+userId+'/togglePremium';
+    }
+
+    function toogleAdmin(userId){
+        window.location = '/users/'+userId+'/toggleAdmin';
+    }
 </script>

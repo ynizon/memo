@@ -59,4 +59,26 @@ class UserController extends Controller
         $categoryId = 0;
         return view('dashboard', compact('tasks','categories', 'transactions', 'categoryId'));
     }
+
+    public function togglePremium(int $userId){
+        if (Auth::user()->email != env("ADMIN_EMAIL") && Auth::user()->isAdmin()){
+            abort(403, 'Unauthorized action.');
+        }
+        $user = User::find($userId);
+        $user->premium = !$user->premium;
+        $user->save();
+
+        return redirect()->route('users.index');
+    }
+
+    public function toggleAdmin(int $userId){
+        if (Auth::user()->email != env("ADMIN_EMAIL") && Auth::user()->isAdmin()){
+            abort(403, 'Unauthorized action.');
+        }
+        $user = User::find($userId);
+        $user->admin = !$user->admin;
+        $user->save();
+
+        return redirect()->route('users.index');
+    }
 }
