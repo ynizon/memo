@@ -1,10 +1,10 @@
 <div class="border-bottom py-3 px-3 d-sm-flex align-items-center">
     <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
         <input type="radio" class="btn-check" name="btnradiotable" id="btnradiotableX" autocomplete="off" @if ($categoryId == 0) checked="" @endif>
-        <label class="btn btn-white px-3 mb-0 datafiltreCategory" data-category="" for="btnradiotableX">{{__("All")}}</label>
+        <label class="btn btn-white px-3 mb-0 datafiltreCategory" data-chart="*" data-category="" for="btnradiotableX">{{__("All")}}</label>
         @foreach($categories as $category)
             <input type="radio" class="btn-check" name="btnradiotable" id="btnradiotable{{$loop->index}}" autocomplete="off"  @if ($categoryId == $category->id) checked="" @endif>
-            <label class="btn btn-white px-3 mb-0 datafiltreCategory" data-category="{{$category->id}}" for="btnradiotable{{$loop->index}}"><i class="fa {{$category->icon}}"></i></label>
+            <label class="btn btn-white px-3 mb-0 datafiltreCategory" data-chart="{{$loop->index}}" data-category="{{$category->id}}" for="btnradiotable{{$loop->index}}"><i class="fa {{$category->icon}}"></i></label>
         @endforeach
     </div>
     <div class="input-group w-sm-25 ms-auto py-2 py-lg-0">
@@ -44,9 +44,19 @@
                                 <span class="d-none">Category-{{$task->category->id}}</span>
                             </div>
                             <div class="my-auto">
-                                <a href="/tasks/{{$task->id}}/edit">
+                                <a href="/tasks/{{$task->id}}/edit" class="list_task_item">
                                     <h6 class="mb-0 text-sm">{{$task->name}}</h6>
                                 </a>
+                                @if (count($task->attachments) > 0)
+                                    <ul class="docs">
+                                    @foreach ($task->attachments as $attachment)
+                                            <li><a href="/attachments/{{$attachment->id}}" target="_blank">
+                                                    <i class="fa pad fa-paperclip"></i>{{$attachment->name}}
+                                                </a>
+                                            </li>
+                                    @endforeach
+                                    </ul>
+                                @endif
                             </div>
                         </div>
                     </td>
@@ -94,7 +104,18 @@
         })
 
         $('.datafiltreCategory').click(function () {
-            dataTableBasic.search('Category-' + $(this).attr('data-category')).draw();
+            dataTableBasic.search('Category-' + $(this).attr('data-category'));
+            if (chart){
+                let chartColumn = $(this).attr('data-chart');
+                chart.data.datasets.forEach(function(ds) {
+                    ds.hidden = !(chartColumn === '*');
+                });
+                if (chartColumn !== '*'){
+                    chart.data.datasets[chartColumn].hidden = false;
+                }
+
+                chart.update();
+            }
         })
 
         @if ($categoryId > 0)

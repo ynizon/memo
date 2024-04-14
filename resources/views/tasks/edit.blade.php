@@ -47,7 +47,7 @@
                         <div class="row">
                             <div class="col-md-12 px-4">
                                 <form action="@if ($task->id > 0) {{ route('tasks.update', $task->id) }} @else {{ route('tasks.store') }} @endif"
-                                method="post">
+                                method="post" enctype="multipart/form-data">
                                     @if ($task->id > 0)
                                         @method('PUT')
                                     @endif
@@ -66,6 +66,12 @@
                                         <input type="text" class="form-control" id="name" name="name"
                                                value="@if (old('name') != ''){{old('name')}}@else{{$task->name}}@endif" required>
                                     </div>
+                                    @if ($task->id == 0)
+                                        <div class="form-group">
+                                            <label for="name">{{__('Attachment')}}</label>
+                                            <input type="file" name="file" class="form-control"/>
+                                        </div>
+                                    @endif
                                     <div class="form-group">
                                         <label for="information">{{__('Information')}}</label>
                                         <textarea class="form-control" id="information" rows="3" name="information">@if (old('information') != ''){{old('information')}}@else{{$task->information}}@endif</textarea>
@@ -105,6 +111,53 @@
                                         <button type="submit" class="btn btn-danger float-end"><i class="pad fas fa-trash" aria-hidden="true"></i>
                                             {{__("Delete")}}</button>
                                     </form>
+                                @endif
+
+                                @if ($task->id > 0 && Auth::user()->isPremium())
+                                    <br/><br/><br/>
+                                    <hr/><br/>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <h5 class="">{{__('Attachments')}}</h5>
+                                            <p class="mb-0 text-sm">
+
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <form action="{{ route('attachments.store') }}" id="attachment_form"
+                                          method="post" enctype="multipart/form-data">
+                                        @csrf
+                                        <div class="form-group">
+                                            <input type="file" required name="file" class="form-control"/>
+                                        </div>
+                                        <input type="hidden" name="task_id" value="{{$task->id}}" />
+
+                                        <div class="form-group">
+                                            <a href="#" onclick="document.getElementById('attachment_form').submit();" class="btn btn-dark btn-primary">
+                                                <i class="fas fa-plus me-2"></i> {{__("Add Attachment")}}
+                                            </a>
+                                        </div>
+                                    </form>
+                                    @if (count($task->attachments) > 0)
+                                        <table class="table text-secondary">
+                                            <tbody>
+                                                @foreach ($task->attachments as $attachment)
+                                                <tr>
+                                                    <td class="align-middle bg-transparent border-bottom">
+                                                        <a href="/attachments/{{$attachment->id}}" target="_blank"><i class="fa pad fa-paperclip"></i>{{$attachment->name}}</a></td>
+                                                    <td>
+                                                        <form action="{{ route('attachments.destroy', $attachment->id) }}" method="post">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-danger float-end"><i class="pad fas fa-trash" aria-hidden="true"></i>
+                                                                {{__("Delete")}}</button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    @endif
                                 @endif
                             </div>
                         </div>

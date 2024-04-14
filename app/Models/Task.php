@@ -25,4 +25,9 @@ class Task extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    public function attachments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Attachment::class);
+    }
 }

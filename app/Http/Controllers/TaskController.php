@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attachment;
 use App\Models\Category;
-use App\Models\Notification;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class TaskController extends Controller
 {
@@ -23,7 +24,66 @@ class TaskController extends Controller
         $tasks = Auth::user()->tasks();
         $categories = Auth::user()->categories();
         $categoryId = (int) $request->input("category_id");
-        return view('tasks/index', compact('tasks','categories', "categoryId"));
+
+        $taskDates = [];
+        $taskDatasets = [];
+        foreach ($tasks as $task){
+            $date = substr($task->created_at,0,7);
+            if (!in_array($date, $taskDates) && $task->price > 0) {
+                $taskDates[] = $date;
+            }
+        }
+
+        sort($taskDates);
+
+        $taskCategories = [];
+        foreach ($tasks as $task) {
+            if ($task->price > 0){
+                if (!isset($taskCategories[$task->category_id])){
+                    $taskCategories[$task->category_id] = [];
+                    foreach ($taskDates as $date){
+                        $taskCategories[$task->category_id][$date] = 0;
+                    }
+                }
+                $date = substr($task->created_at,0,7);
+                $taskCategories[$task->category_id][$date] = $taskCategories[$task->category_id][$date] + $task->price;
+            }
+        }
+
+        //Reorder dataset
+        $taskCategoriesTmp = $taskCategories;
+        $taskCategories = [];
+        foreach ($categories as $category) {
+            foreach ($taskCategoriesTmp as $taskCategoryId => $taskCategory) {
+                if ($taskCategoryId == $category->id) {
+                    $taskCategories[$taskCategoryId] = $taskCategory;
+                }
+            }
+        }
+
+        foreach ($taskCategories as $categoryIdTmp => $dates){
+            $datas = [];
+            foreach ($dates as $date => $total){
+                $datas[] = $total;
+            }
+            $category = Category::find($categoryIdTmp);
+            $taskDatasets[] = [
+                "label" => __($category->name),
+                "tension" => "0.4",
+                "borderWidth"=> "0",
+                "borderSkipped" => "false",
+                "backgroundColor" => $category->color,
+                "data" => $datas,
+                "maxBarThickness" => "6"
+            ];
+        }
+
+        $charts = [
+            "labels" => $taskDates,
+            "datasets" => $taskDatasets
+        ];
+
+        return view('tasks/index', compact('tasks','categories', "categoryId", "charts"));
     }
 
     /**
@@ -42,7 +102,13 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        Task::create($this->validateFields($request));
+        $task = Task::create($this->validateFields($request));
+
+        $file = $request->file('file');
+        if ($file != null && Auth::user()->isPremium()){
+            $attachment = new Attachment();
+            $attachment->store($task->id, $file);
+        }
 
         return redirect()->route('tasks.index')
             ->with('success',__('Task created successfully.'));

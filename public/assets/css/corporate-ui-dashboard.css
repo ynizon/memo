@@ -27625,3 +27625,10 @@ Github: https://github.com/fiduswriter/Simple-DataTables
 i.pad{
     padding-right:10px;
 }
+.list_task_item{text-align: left;}
+.docs{display:inline-block; margin-top:15px; margin-bottom:0;}
+.docs li{
+    float:left;
+    list-style: none;
+    padding-right:15px;
+}

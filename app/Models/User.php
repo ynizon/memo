@@ -76,6 +76,14 @@ class User extends Authenticatable
         return $reminders;
     }
 
+    public function isPremium(){
+        return $this->premium;
+    }
+
+    public function isAdmin(){
+        return $this->admin;
+    }
+
     public function sendReminders() {
         $notifications = [];
         $notificationsUnread = $this->getReminderTasks();
