@@ -27626,9 +27626,11 @@ i.pad{
     padding-right:10px;
 }
 .list_task_item{text-align: left;}
-.docs{display:inline-block; margin-top:15px; margin-bottom:0;}
+.list_task_item h6{display: inline;}
+.docs{display:inline-block; margin:0;}
 .docs li{
-    float:left;
+    display:inline;
     list-style: none;
     padding-right:15px;
+    font-size:0.875rem;
 }

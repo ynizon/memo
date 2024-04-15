@@ -40,7 +40,7 @@
                                                     @if ($transaction['last'] > 0)
                                                         <span class="text-sm text-success font-weight-bolder" style="float:right">
                                                             <i class="fa fa-chevron-up text-xs me-1"></i>
-                                                            {{($transaction['now'] - $transaction['last']) / $transaction['last'] * 100 }} %
+                                                            {{round(($transaction['now'] - $transaction['last']) / $transaction['last'] * 100) }} %
                                                         </span>
                                                     @endif
                                                 </div>
