@@ -183,6 +183,7 @@ class TaskController extends Controller
         $validated['price'] = (float) $request->input('price');
         $validated['reminder_date'] = formatDateUK($request->input('reminder_date'));
         $validated['created_at'] = $request->input('created_at');
+        $validated['information'] = $request->input('information');
         $validated['reminder'] = $request->input('reminder') ? 1 : 0;
 
         return $validated;
