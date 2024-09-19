@@ -40,10 +40,15 @@
                     <td>
                         <div class="d-flex px-2">
                             <div class="rounded-circle bg-gray-100 me-2 my-2">
+                                @if ($task->user_id == Auth::user()->id)
                                 <a href="/tasks/{{$task->id}}/edit">
                                     <i class="pad fa fa-list {{$task->category->icon}}"></i>
                                 </a>
                                 <span class="d-none">Category-{{$task->category->id}}</span>
+                                @else
+                                    <i class="pad fa fa-list {{$task->category->icon}}"></i>
+                                    <span class="d-none">Category-{{$task->category->id}}</span>
+                                @endif
                             </div>
                             <div class="my-auto">
                                 @if ($task->user_id == Auth::user()->id)
