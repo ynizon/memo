@@ -39,14 +39,29 @@ class UserController extends Controller
         $tasks = Auth::user()->tasks();;
         $categories = Auth::user()->categories();
         $transactions = [];
+        $limitDate = date("Y-m-d", strtotime("-12 month"));
+        $previousDate = date("Y-m-d", strtotime("-24 month"));
+        $groups = [];
+
+        foreach (Auth::user()->groups()->get() as $group) {
+            $groups[$group->id] = ["last" =>0, "now" =>0, "total"=>0,
+                'latest'=>'', 'name'=> $group->name, 'id'=> $group->id];
+            foreach ($group->tasks()->get() as $task) {
+                if ($task->created_at >= $limitDate) {
+                    $groups[$group->id]['now'] = $groups[$group->id]['now'] + $task->price;
+                }
+                if ($task->created_at >= $previousDate && $task->created_at < $limitDate) {
+                    $groups[$group->id]['last'] = $groups[$group->id]['last'] + $task->price;
+                }
+                $groups[$group->id]['total'] = $groups[$group->id]['total'] + $task->price;
+            }
+        }
+
         foreach ($tasks as $task){
             if (!isset($transactions[$task->category_id])){
                 $transactions[$task->category_id] = ["last" =>0, "now" =>0, "total"=>0,
                     'category' =>$task->category, 'latest'=>$task->created_at];
             }
-
-            $limitDate = date("Y-m-d", strtotime("-12 month"));
-            $previousDate = date("Y-m-d", strtotime("-24 month"));
 
             if ($task->created_at >= $limitDate) {
                 $transactions[$task->category_id]['now'] = $transactions[$task->category_id]['now'] + $task->price;
@@ -57,7 +72,9 @@ class UserController extends Controller
             $transactions[$task->category_id]['total'] = $transactions[$task->category_id]['total'] + $task->price;
         }
         $categoryId = 0;
-        return view('dashboard', compact('tasks','categories', 'transactions', 'categoryId'));
+        $groupId = 0;
+        return view('dashboard', compact('tasks','categories', 'transactions', 'categoryId',
+            'groups', 'groupId'));
     }
 
     public function togglePremium(int $userId){

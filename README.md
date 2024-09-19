@@ -21,7 +21,7 @@ Démo: https://memo.gameandme.fr/
 If you want admin@admin.com / admin user, use
 - php artisan migrate --seed
 
-If you won't
+If you don't want
 - php artisan migrate
 
 ## Theme

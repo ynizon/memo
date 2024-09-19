@@ -38,7 +38,7 @@
                             </div>
                         </div>
 
-                        @include("/tasks/table", compact('categories', 'tasks', 'categoryId'))
+                        @include("/tasks/table", compact('categories', 'tasks', 'categoryId', 'groupId'))
                     </div>
                 </div>
             </div>

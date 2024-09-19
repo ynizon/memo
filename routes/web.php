@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\GroupController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -28,6 +29,8 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('/categories', CategoryController::class);
     Route::resource('/tasks', TaskController::class);
+    Route::resource('/groups', GroupController::class);
+    Route::post('/groups/addto/{groupId}', [GroupController::class, 'addto'])->name('groups.addto');
     Route::resource('/users', UserController::class);
     Route::resource('/attachments', AttachmentController::class);
 });

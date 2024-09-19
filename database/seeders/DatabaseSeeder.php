@@ -61,6 +61,17 @@ class DatabaseSeeder extends Seeder
             'archive' => false,
         ]);
 
+        DB::table('groups')->insert([
+            'name' => "Famille",
+            'password' => "MEMO",
+            'user_id' => 1
+        ]);
+
+        DB::table('user_group')->insert([
+            'user_id' => 1,
+            'group_id' => 1,
+        ]);
+
         $numDay = 1;
         for ($k = 1; $k < 10; $k++){
             if ($numDay > 28) {$numDay = 1;}
@@ -75,6 +86,12 @@ class DatabaseSeeder extends Seeder
                 'reminder' => false,
                 'reminder_date' => null,
             ]);
+            if ($k < 3) {
+                DB::table('task_group')->insert([
+                    'task_id' => $k,
+                    'group_id' => 1,
+                ]);
+            }
             $numDay++;
         }
     }

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Notifications\ReminderNotif;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
@@ -54,6 +55,10 @@ class User extends Authenticatable
         return $this->hasMany(Task::class)->orderBy('created_at','desc')->get();
     }
 
+    public function groups(): BelongsToMany
+    {
+        return $this->belongsToMany(Group::class, 'user_group');
+    }
     public function reminders(): Collection
     {
         return $this->hasMany(Task::class)
@@ -122,18 +127,25 @@ class User extends Authenticatable
         }
     }
 
-    public static function getAllCategories(){
+    public static function getAllCategories() {
         return Category::where('user_id','=',Auth::user()->getAuthIdentifier())
             ->orderBy('name')->get();
     }
 
-    public static function getCategories(){
+    public static function getCategories() {
         return Category::where('user_id','=',Auth::user()->getAuthIdentifier())
             ->where("archive","=",false)
             ->orderBy('name')->get();
     }
 
-    public static function getReminders(){
+    public function getGroupIds() : array {
+        $myGroupIds = [];
+        foreach (self::groups()->get() as $group){
+            $myGroupIds[] = $group->id;
+        }
+        return $myGroupIds;
+    }
+    public static function getReminders() {
         return Task::where('user_id','=',Auth::user()->getAuthIdentifier())
             ->where("reminder","=","1")
             ->where("reminder_date",">=",date("Y-m-d"))

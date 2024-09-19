@@ -268,7 +268,7 @@
     "Icon": "Icone",
     "Reminder date": "Date de rappel",
     "Reminder": "Rappel",
-    "Unauthorized action.": "Action non autorisé",
+    "Unauthorized action.": "Action non autorisée",
     "User deleted successfully": "Utilisateur supprimé",
     "Task created successfully.": "Tâche créé avec succès.",
     "Task updated successfully.": "Tâche modifiée avec succès.",
@@ -285,5 +285,17 @@
     "Add Attachment": "Ajouter une pièce jointe",
     "Attachment deleted successfully": "Pièce jointe supprimée",
     "All":"Toutes",
-    "Users": "Utilisateurs"
+    "Users": "Utilisateurs",
+    "Family": "Famille",
+    "Group created successfully.": "Groupe créé avec succès.",
+    "Group updated successfully.": "Groupe modifié avec succès.",
+    "Group deleted successfully": "Groupe supprimé avec succès",
+    "Group": "Groupe",
+    "Groups": "Groupes",
+    "Add Group": "Ajout d'un groupe",
+    "Group Management": "Gestion des groupes",
+    "Add to this group": "Ajouter au groupe",
+    "Group successfully joined": "groupe rejoint avec succès",
+    "User can not be found": "L'utilisateur n'a pu être trouvé",
+    "Share with groups" : "Partagé avec les groupes"
 }

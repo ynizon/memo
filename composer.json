@@ -1,5 +1,5 @@
 {
-    "name": "Memo",
+    "name": "ynizon/memo",
     "type": "project",
     "description": "Memo est une application pour garder un suivi de différentes choses.",
     "keywords": ["laravel", "framework", "task manager"],

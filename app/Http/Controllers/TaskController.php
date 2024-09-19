@@ -20,9 +20,26 @@ class TaskController extends Controller
      */
     public function index(Request $request)
     {
-        $tasks = Auth::user()->tasks();
         $categories = Auth::user()->categories();
         $categoryId = (int) $request->input("category_id");
+        $groupId = (int) $request->input("group_id");
+
+        if ($groupId != 0) {
+            $tasks = [];
+
+            foreach (Auth::user()->groups()->get() as $group) {
+                foreach ($group->tasks()->get() as $task) {
+                    if ($groupId == $group->id) {
+                        $tasks[] = $task;
+                    }
+                }
+            }
+            usort($tasks, function($a, $b) {
+                return strtotime($b['created_at']) - strtotime($a['created_at']);
+            });
+        } else {
+            $tasks = Auth::user()->tasks();
+        }
 
         $taskDates = [];
         $taskDatasets = [];
@@ -82,7 +99,8 @@ class TaskController extends Controller
             "datasets" => $taskDatasets
         ];
 
-        return view('tasks/index', compact('tasks','categories', "categoryId", "charts"));
+        return view('tasks/index', compact('tasks','categories', "categoryId", "charts",
+            "groupId"));
     }
 
     /**
@@ -91,9 +109,9 @@ class TaskController extends Controller
     public function create()
     {
         $task = new Task();
-        $task->month = 12;
         $categories = Auth::user()->categories();
-        return view('tasks/edit', compact('task', 'categories'));
+        $groups = Auth::user()->groups()->get();
+        return view('tasks/edit', compact('task', 'categories', 'groups'));
     }
 
     /**
@@ -108,6 +126,17 @@ class TaskController extends Controller
             $attachment = new Attachment();
             $attachment->store($task->id, $file);
         }
+
+        $groups = [];
+        $groupsTmp = $request->input("groups");
+        $userGroupIds = Auth::user()->getGroupIds();
+
+        foreach ($groupsTmp as $groupId){
+            if (in_array($groupId, $userGroupIds)) {
+                $groups[] = $groupId;
+            }
+        }
+        $task->groups()->sync($groups);
 
         return redirect()->route('tasks.index')
             ->with('success',__('Task created successfully.'));
@@ -136,7 +165,8 @@ class TaskController extends Controller
             $notif->save();
         }
         $categories = Auth::user()->categories();
-        return view('tasks/edit', compact('task','categories'));
+        $groups = Auth::user()->groups()->get();
+        return view('tasks/edit', compact('task','categories', 'groups'));
     }
 
     /**
@@ -149,6 +179,18 @@ class TaskController extends Controller
         }
 
         $task->update($this->validateFields($request));
+
+        $groups = [];
+        $groupsTmp = $request->input("groups");
+        $userGroupIds = Auth::user()->getGroupIds();
+
+        foreach ($groupsTmp as $groupId){
+            if (in_array($groupId, $userGroupIds)) {
+                $groups[] = $groupId;
+            }
+        }
+        $task->groups()->sync($groups);
+
         return redirect()->route('tasks.index')
             ->with('success', __('Task updated successfully.'));
     }
@@ -183,7 +225,7 @@ class TaskController extends Controller
         $validated['price'] = (float) $request->input('price');
         $validated['reminder_date'] = formatDateUK($request->input('reminder_date'));
         $validated['created_at'] = $request->input('created_at');
-        $validated['information'] = $request->input('information');
+        $validated['information'] = $request->input('information') ? $request->input('information') : '';
         $validated['reminder'] = $request->input('reminder') ? 1 : 0;
 
         return $validated;

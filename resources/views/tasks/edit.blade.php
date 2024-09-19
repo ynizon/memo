@@ -99,6 +99,19 @@
                                         <input type="date" class="form-control" id="reminder_date" name="reminder_date"
                                                value="@if ($task->id > 0){{formatDateUK($task->reminder_date)}}@else{{date("Y-m-d",strtotime("+1 year"))}}@endif">
                                     </div>
+                                    @if (Auth::user()->groups()->count() > 0)
+                                        <div class="form-group">
+                                            <label for="groups">{{__("Share with groups")}}</label>
+                                            <select name="groups[]" multiple rows="5" class="form-control">
+                                                @foreach ($groups as $group)
+                                                    <option value="0">-</option>
+                                                    <option @if ($task->isInGroup($group->id)) selected
+                                                            @endif
+                                                            value="{{$group->id}}">{{$group->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    @endif
                                     <br>
                                         <button type="submit" class="btn btn-primary">
                                             <i class="pad fas fa-save" aria-hidden="true"></i>{{__("Save")}}
