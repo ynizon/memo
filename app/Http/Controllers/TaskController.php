@@ -131,12 +131,14 @@ class TaskController extends Controller
         $groupsTmp = $request->input("groups");
         $userGroupIds = Auth::user()->getGroupIds();
 
-        foreach ($groupsTmp as $groupId){
-            if (in_array($groupId, $userGroupIds)) {
-                $groups[] = $groupId;
+        if ($groupsTmp != null) {
+            foreach ($groupsTmp as $groupId) {
+                if (in_array($groupId, $userGroupIds)) {
+                    $groups[] = $groupId;
+                }
             }
+            $task->groups()->sync($groups);
         }
-        $task->groups()->sync($groups);
 
         return redirect()->route('tasks.index')
             ->with('success',__('Task created successfully.'));
@@ -184,12 +186,14 @@ class TaskController extends Controller
         $groupsTmp = $request->input("groups");
         $userGroupIds = Auth::user()->getGroupIds();
 
-        foreach ($groupsTmp as $groupId){
-            if (in_array($groupId, $userGroupIds)) {
-                $groups[] = $groupId;
+        if ($groupsTmp != null) {
+            foreach ($groupsTmp as $groupId) {
+                if (in_array($groupId, $userGroupIds)) {
+                    $groups[] = $groupId;
+                }
             }
+            $task->groups()->sync($groups);
         }
-        $task->groups()->sync($groups);
 
         return redirect()->route('tasks.index')
             ->with('success', __('Task updated successfully.'));
