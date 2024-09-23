@@ -196,8 +196,10 @@
       <path value="$PROJECT_DIR$/vendor/laravel-lang/routes" />
       <path value="$PROJECT_DIR$/vendor/laravel-lang/config" />
       <path value="$PROJECT_DIR$/vendor/laravel-lang/models" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php72" />
     </include_path>
   </component>
+  <component name="PhpProjectSharedConfiguration" php_language_level="8.2" />
   <component name="PhpStanOptionsConfiguration">
     <option name="transferred" value="true" />
   </component>

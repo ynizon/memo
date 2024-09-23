@@ -55,9 +55,9 @@ class User extends Authenticatable
         return $this->hasMany(Task::class)->orderBy('created_at','desc')->get();
     }
 
-    public function groups(): BelongsToMany
+    public function groups(): Collection
     {
-        return $this->belongsToMany(Group::class, 'user_group');
+        return $this->belongsToMany(Group::class, 'user_group')->get();
     }
     public function reminders(): Collection
     {
@@ -140,7 +140,7 @@ class User extends Authenticatable
 
     public function getGroupIds() : array {
         $myGroupIds = [];
-        foreach (self::groups()->get() as $group){
+        foreach (self::groups() as $group){
             $myGroupIds[] = $group->id;
         }
         return $myGroupIds;

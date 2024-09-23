@@ -38,102 +38,104 @@
                             </div>
                         </div>
 
-                        @include("/tasks/table", compact('categories', 'tasks', 'categoryId', 'groupId'))
+                        @include("/tasks/table", compact('categories', 'tasks', 'categoryId', 'groups', 'groupId'))
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-lg-12 col-md-12 mb-md-0 mb-4">
-                    <div class="card shadow-xs border h-100">
-                        <div class="card-header pb-0">
-                            <h6 class="font-weight-semibold text-lg mb-0">Evolution</h6>
-                        </div>
-                        <div class="card-body py-3">
-                            <div class="chart mb-2">
-                                <canvas id="chart-bars" class="chart-canvas"
-                                        height="240" style="display: block; box-sizing: border-box;
-                                        height: 240px; width: 474px;" width="474">
-                                </canvas>
+            @if ($groupId == 0)
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 mb-md-0 mb-4">
+                        <div class="card shadow-xs border h-100">
+                            <div class="card-header pb-0">
+                                <h6 class="font-weight-semibold text-lg mb-0">Evolution</h6>
+                            </div>
+                            <div class="card-body py-3">
+                                <div class="chart mb-2">
+                                    <canvas id="chart-bars" class="chart-canvas"
+                                            height="240" style="display: block; box-sizing: border-box;
+                                            height: 240px; width: 474px;" width="474">
+                                    </canvas>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <script src="/assets/js/plugins/chartjs.min.js"></script>
-                <script>
-                    var ctx = document.getElementById("chart-bars").getContext("2d");
+                    <script src="/assets/js/plugins/chartjs.min.js"></script>
+                    <script>
+                        var ctx = document.getElementById("chart-bars").getContext("2d");
 
-                    let chart = new Chart(ctx, {
-                        type: "bar",
-                        data: {
-                            labels: {!! json_encode($charts['labels'], JSON_PRETTY_PRINT)!!},
-                            datasets: {!! json_encode($charts['datasets'], JSON_PRETTY_PRINT)!!},
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                legend: {
-                                    display: true,
-                                    position: 'bottom',
-                                },
-                                tooltip: {
-                                    backgroundColor: '#fff',
-                                    titleColor: '#1e293b',
-                                    bodyColor: '#1e293b',
-                                    borderColor: '#e9ecef',
-                                    borderWidth: 1,
-                                    usePointStyle: true
-                                }
+                        let chart = new Chart(ctx, {
+                            type: "bar",
+                            data: {
+                                labels: {!! json_encode($charts['labels'], JSON_PRETTY_PRINT)!!},
+                                datasets: {!! json_encode($charts['datasets'], JSON_PRETTY_PRINT)!!},
                             },
-                            interaction: {
-                                intersect: false,
-                                mode: 'index',
-                            },
-                            scales: {
-                                y: {
-                                    stacked: true,
-                                    grid: {
-                                        drawBorder: false,
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: {
                                         display: true,
-                                        drawOnChartArea: true,
-                                        drawTicks: false,
-                                        borderDash: [4, 4],
+                                        position: 'bottom',
                                     },
-                                    ticks: {
-                                        beginAtZero: true,
-                                        padding: 10,
-                                        font: {
-                                            size: 12,
-                                            family: "Noto Sans",
-                                            style: 'normal',
-                                            lineHeight: 2
-                                        },
-                                        color: "#64748B"
-                                    },
+                                    tooltip: {
+                                        backgroundColor: '#fff',
+                                        titleColor: '#1e293b',
+                                        bodyColor: '#1e293b',
+                                        borderColor: '#e9ecef',
+                                        borderWidth: 1,
+                                        usePointStyle: true
+                                    }
                                 },
-                                x: {
-                                    stacked: true,
-                                    grid: {
-                                        drawBorder: false,
-                                        display: false,
-                                        drawOnChartArea: false,
-                                        drawTicks: false
-                                    },
-                                    ticks: {
-                                        font: {
-                                            size: 12,
-                                            family: "Noto Sans",
-                                            style: 'normal',
-                                            lineHeight: 2
+                                interaction: {
+                                    intersect: false,
+                                    mode: 'index',
+                                },
+                                scales: {
+                                    y: {
+                                        stacked: true,
+                                        grid: {
+                                            drawBorder: false,
+                                            display: true,
+                                            drawOnChartArea: true,
+                                            drawTicks: false,
+                                            borderDash: [4, 4],
                                         },
-                                        color: "#64748B"
+                                        ticks: {
+                                            beginAtZero: true,
+                                            padding: 10,
+                                            font: {
+                                                size: 12,
+                                                family: "Noto Sans",
+                                                style: 'normal',
+                                                lineHeight: 2
+                                            },
+                                            color: "#64748B"
+                                        },
+                                    },
+                                    x: {
+                                        stacked: true,
+                                        grid: {
+                                            drawBorder: false,
+                                            display: false,
+                                            drawOnChartArea: false,
+                                            drawTicks: false
+                                        },
+                                        ticks: {
+                                            font: {
+                                                size: 12,
+                                                family: "Noto Sans",
+                                                style: 'normal',
+                                                lineHeight: 2
+                                            },
+                                            color: "#64748B"
+                                        },
                                     },
                                 },
                             },
-                        },
-                    });
-                </script>
-            </div>
+                        });
+                    </script>
+                </div>
+            @endif
         </div>
         <x-app.footer />
     </main>

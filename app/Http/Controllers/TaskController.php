@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Managers\TaskManager;
 use App\Models\Attachment;
-use App\Models\Category;
 use App\Models\Task;
 use Illuminate\Http\Request;
+use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
@@ -22,13 +23,14 @@ class TaskController extends Controller
     {
         $categories = Auth::user()->categories();
         $categoryId = (int) $request->input("category_id");
-        $groupId = (int) $request->input("group_id");
 
+        $groups = Auth::user()->groups();
+        $groupId = (int) $request->input("group_id");
         if ($groupId != 0) {
             $tasks = [];
 
-            foreach (Auth::user()->groups()->get() as $group) {
-                foreach ($group->tasks()->get() as $task) {
+            foreach ($groups as $group) {
+                foreach ($group->tasks() as $task) {
                     if ($groupId == $group->id) {
                         $tasks[] = $task;
                     }
@@ -41,66 +43,10 @@ class TaskController extends Controller
             $tasks = Auth::user()->tasks();
         }
 
-        $taskDates = [];
-        $taskDatasets = [];
-        foreach ($tasks as $task){
-            $date = substr($task->created_at,0,7);
-            if (!in_array($date, $taskDates) && $task->price > 0) {
-                $taskDates[] = $date;
-            }
-        }
-
-        sort($taskDates);
-
-        $taskCategories = [];
-        foreach ($tasks as $task) {
-            if ($task->price > 0){
-                if (!isset($taskCategories[$task->category_id])){
-                    $taskCategories[$task->category_id] = [];
-                    foreach ($taskDates as $date){
-                        $taskCategories[$task->category_id][$date] = 0;
-                    }
-                }
-                $date = substr($task->created_at,0,7);
-                $taskCategories[$task->category_id][$date] = $taskCategories[$task->category_id][$date] + $task->price;
-            }
-        }
-
-        //Reorder dataset
-        $taskCategoriesTmp = $taskCategories;
-        $taskCategories = [];
-        foreach ($categories as $category) {
-            foreach ($taskCategoriesTmp as $taskCategoryId => $taskCategory) {
-                if ($taskCategoryId == $category->id) {
-                    $taskCategories[$taskCategoryId] = $taskCategory;
-                }
-            }
-        }
-
-        foreach ($taskCategories as $categoryIdTmp => $dates){
-            $datas = [];
-            foreach ($dates as $date => $total){
-                $datas[] = $total;
-            }
-            $category = Category::find($categoryIdTmp);
-            $taskDatasets[] = [
-                "label" => __($category->name),
-                "tension" => "0.4",
-                "borderWidth"=> "0",
-                "borderSkipped" => "false",
-                "backgroundColor" => $category->color,
-                "data" => $datas,
-                "maxBarThickness" => "6"
-            ];
-        }
-
-        $charts = [
-            "labels" => $taskDates,
-            "datasets" => $taskDatasets
-        ];
+        $charts = TaskManager::getChart($tasks, $categories);
 
         return view('tasks/index', compact('tasks','categories', "categoryId", "charts",
-            "groupId"));
+            "groups", "groupId"));
     }
 
     /**
@@ -110,7 +56,7 @@ class TaskController extends Controller
     {
         $task = new Task();
         $categories = Auth::user()->categories();
-        $groups = Auth::user()->groups()->get();
+        $groups = Auth::user()->groups();
         return view('tasks/edit', compact('task', 'categories', 'groups'));
     }
 
@@ -127,19 +73,7 @@ class TaskController extends Controller
             $attachment->store($task->id, $file);
         }
 
-        $groups = [];
-        $groupsTmp = $request->input("groups");
-        $userGroupIds = Auth::user()->getGroupIds();
-
-        if ($groupsTmp != null) {
-            foreach ($groupsTmp as $groupId) {
-                if (in_array($groupId, $userGroupIds)) {
-                    $groups[] = $groupId;
-                }
-            }
-            $task->groups()->sync($groups);
-        }
-
+        TaskManager::syncGroup(Auth::user(), $request->input("groups"), $task, true);
         return redirect()->route('tasks.index')
             ->with('success',__('Task created successfully.'));
     }
@@ -147,10 +81,34 @@ class TaskController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Task $task)
+    public function show(Task $task, Request $request)
     {
-        $categories = Category::getCategories();
-        return view('tasks/edit', compact('task','categories'));
+        $authorize = false;
+        if ($task->user_id != Auth::user()->getAuthIdentifier()){
+            foreach ($task->groups() as $group) {
+                foreach ($group->users() as $user) {
+                    if ($user->id == Auth::user()->getAuthIdentifier()){
+                        $authorize = true;
+                    }
+                }
+            }
+        } else {
+            $authorize = true;
+        }
+
+        if (!$authorize) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        if ($request->input("notif") != '') {
+            $notif = Auth::user()->notifications()->where('id', $request->input("notif"))->first();
+            $notif->read_at = now();
+            $notif->save();
+        }
+
+        $categories = Auth::user()->categories();
+        $groups = Auth::user()->groups();
+        return view('tasks/show', compact('task','categories', 'groups'));
     }
 
     /**
@@ -167,7 +125,7 @@ class TaskController extends Controller
             $notif->save();
         }
         $categories = Auth::user()->categories();
-        $groups = Auth::user()->groups()->get();
+        $groups = Auth::user()->groups();
         return view('tasks/edit', compact('task','categories', 'groups'));
     }
 
@@ -181,19 +139,7 @@ class TaskController extends Controller
         }
 
         $task->update($this->validateFields($request));
-
-        $groups = [];
-        $groupsTmp = $request->input("groups");
-        $userGroupIds = Auth::user()->getGroupIds();
-
-        if ($groupsTmp != null) {
-            foreach ($groupsTmp as $groupId) {
-                if (in_array($groupId, $userGroupIds)) {
-                    $groups[] = $groupId;
-                }
-            }
-            $task->groups()->sync($groups);
-        }
+        TaskManager::syncGroup(Auth::user(), $request->input("groups"), $task, false);
 
         return redirect()->route('tasks.index')
             ->with('success', __('Task updated successfully.'));
@@ -207,7 +153,13 @@ class TaskController extends Controller
         if ($task->user_id != Auth::user()->getAuthIdentifier()){
             abort(403, __('Unauthorized action.'));
         }
+
+        $notifs = DatabaseNotification::where('data->task_id', $task->id)->get();
+        foreach ($notifs as $notif) {
+            $notif->delete();
+        }
         $task->delete();
+
         return redirect()->route('tasks.index')
             ->with('success', __('Task deleted successfully'));
     }

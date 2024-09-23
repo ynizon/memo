@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Group;
-use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,7 +20,7 @@ class GroupController extends Controller
     {
         $groups = [];
         $groupIds = [];
-        foreach (Auth::user()->groups()->get() as $group){
+        foreach (Auth::user()->groups() as $group){
             $groupIds[] = $group->id;
             $groups[] = $group;
         }
@@ -51,7 +50,7 @@ class GroupController extends Controller
     public function store(Request $request)
     {
         $group = Group::create($this->validateFields($request));
-        $group->users()->attach(Auth::id());
+        $group->usersRelation()->attach(Auth::id());
 
         return redirect()->route('groups.index')
             ->with('success',__('Group created successfully.'));
@@ -117,17 +116,33 @@ class GroupController extends Controller
                 ->with('error', __('User can not be found'));
         }
         $groupIds = [];
-        foreach ($user->groups()->get() as $group){
+        foreach ($user->groups() as $group){
             $groupIds[] = $group->id;
         }
 
         if (!in_array($groupId, $groupIds)){
             $group = Group::where("id","=",$groupId)->first();
-            $group->users()->attach($user->id);
+            $group->usersRelation()->attach($user->id);
         }
 
         return redirect()->route('groups.index')
             ->with('success', __('Group successfully joined'));
+    }
+
+    public function leave(Request $request, int $groupId)
+    {
+        $group = User::where("id","=", $groupId)->first();
+        $user = Auth::user();
+        if (!$group) {
+            return redirect()->route('groups.index')
+                ->with('error', __('Group can not be found'));
+        }
+
+        $group = Group::where("id","=",$groupId)->first();
+        $group->usersRelation()->detach($user->id);
+
+        return redirect()->route('groups.index')
+            ->with('success', __('Group left successfully'));
     }
 
     private function validateFields(Request $request) : array
@@ -135,7 +150,6 @@ class GroupController extends Controller
         $validated = $request->validate($this->fields);
         $validated['user_id'] = Auth::user()->getAuthIdentifier();
         $validated['name'] = $request->input('name');
-        $validated['password'] = uniqid();
 
         return $validated;
     }

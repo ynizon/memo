@@ -6,6 +6,8 @@ PHP Tasks reminders (PWA).
 - You can add/remove tasks for some domains (car, health, child, animal.) to avoid
 to forgot them. 
 - You can add attachments (for premium members only).
+- You can share expenses between family members / friends.
+- You can follow expenses by category year after year.
 - You can set reminders to receive notifications on the relevant date
 For this feature, you need to set Pusher.com > Beam API KEY in your .env.
 
@@ -17,6 +19,7 @@ Démo: https://memo.gameandme.fr/
 - composer install
 - mv .env.example .env
 - php artisan key:generate
+- (if you need reminders, go to Pusher.com then set your Beam API KEY in your .env)
 
 If you want admin@admin.com / admin user, use
 - php artisan migrate --seed

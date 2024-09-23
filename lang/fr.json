@@ -297,5 +297,8 @@
     "Add to this group": "Ajouter au groupe",
     "Group successfully joined": "groupe rejoint avec succès",
     "User can not be found": "L'utilisateur n'a pu être trouvé",
-    "Share with groups" : "Partagé avec les groupes"
+    "Share with groups" : "Partagé avec les groupes",
+    "Leave this group" : "Quitter le groupe",
+    "Group left successfully" : "Groupe quitté avec succès",
+    "Confirm - It is definitive": "Confirmer, c'est définitif"
 }

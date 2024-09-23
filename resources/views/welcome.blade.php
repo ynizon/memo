@@ -57,7 +57,8 @@
                                         <ul>
                                             <li>factures de garagistes, et rappels d'entretiens pour votre voiture</li>
                                             <li>factures de vétérinaires, et rappels de vaccin de vos animaux</li>
-                                            <li>vos dépenses de santé...</li>
+                                            <li>vos dépenses de santé et informations liées</li>
+                                            <li>des dépenses partagées (avec vos proches)...</li>
                                         </ul>
                                     </p>
                                     <p class="mb-0">

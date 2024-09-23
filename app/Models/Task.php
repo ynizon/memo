@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -32,13 +33,18 @@ class Task extends Model
         return $this->hasMany(Attachment::class);
     }
 
-    public function groups(): BelongsToMany
+    public function groups(): Collection
+    {
+        return $this->groupsRelation()->get();
+    }
+
+    public function groupsRelation(): BelongsToMany
     {
         return $this->belongsToMany(Group::class, 'task_group');
     }
 
     public function isInGroup(int $groupId) : bool {
-        foreach (self::groups()->get() as $group) {
+        foreach (self::groups() as $group) {
             if ($group->id === $groupId) {
                 return true;
             }
@@ -48,7 +54,7 @@ class Task extends Model
 
     public function getGroupIds() : array {
         $groupIds = [];
-        foreach (self::groups()->get() as $group) {
+        foreach (self::groups() as $group) {
             $groupIds[] = $group->id;
         }
         return $groupIds;

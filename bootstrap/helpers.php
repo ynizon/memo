@@ -28,6 +28,7 @@ function get_title()
     $title = str_replace(".index","",$title);
     $title = str_replace(".edit","",$title);
     $title = str_replace(".create","",$title);
+    $title = str_replace(".show","",$title);
     return __(dashesToCamelCase($title,true));
 }
 

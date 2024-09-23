@@ -42,7 +42,7 @@
                         </div>
                     </td>
                     <td>
-                        @foreach ($group->users()->get() as $user)
+                        @foreach ($group->users() as $user)
                             {{ $user->email }}<br/>
                         @endforeach
                     </td>
@@ -54,6 +54,13 @@
                                 &nbsp;&nbsp;
                                 <button type="submit" class="btn btn-primary" style="margin:auto;">
                                     <i class="pad fas fa-save" aria-hidden="true"></i>{{__("Add to this group")}}
+                                </button>
+                            </form>
+                        @else
+                            <form action="{{ route('groups.leave', $group->id) }}" method="post" onsubmit="return (window.confirm('{{__('Confirm - It is definitive')}}'))">
+                                @csrf
+                                <button type="submit" class="btn btn-primary" style="margin:auto;">
+                                    <i class="pad fas fa-save" aria-hidden="true"></i>{{__("Leave this group")}}
                                 </button>
                             </form>
                         @endif

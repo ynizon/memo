@@ -103,8 +103,8 @@
                                         <div class="form-group">
                                             <label for="groups">{{__("Share with groups")}}</label>
                                             <select name="groups[]" multiple rows="5" class="form-control">
+                                                <option value="0">-</option>
                                                 @foreach ($groups as $group)
-                                                    <option value="0">-</option>
                                                     <option @if ($task->isInGroup($group->id)) selected
                                                             @endif
                                                             value="{{$group->id}}">{{$group->name}}</option>

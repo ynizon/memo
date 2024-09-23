@@ -43,10 +43,18 @@
                         aria-labelledby="dropdownMenuButton">
                         @foreach (Auth::user()->getReminderTasks() as $notificationId => $reminder)
                             <li class="mb-2">
-                                <a class="dropdown-item border-radius-md" href="/tasks/{{$reminder->id}}/edit?notif={{$notificationId}}">
+                                <a class="dropdown-item border-radius-md"
+                                    @if (Auth::user()->id == $reminder->user_id)
+                                        href="/tasks/{{$reminder->id}}/edit?notif={{$notificationId}}"
+                                    @else
+                                       href="/tasks/{{$reminder->id}}?notif={{$notificationId}}"
+                                    @endif
+                                >
                                     <div class="d-flex py-1">
                                         <div class="my-auto">
-                                            <i class="fa {{$reminder->category->icon}} avatar avatar-sm border-radius-sm  me-3 "
+                                            <i class="fa @if (Auth::user()->id == $reminder->user_id)
+                                            {{$reminder->category->icon}}
+                                             @else fa-group @endif avatar avatar-sm border-radius-sm  me-3 "
                                             style="background:{{$reminder->category->color}}"></i>
                                         </div>
                                         <div class="d-flex flex-column justify-content-center">

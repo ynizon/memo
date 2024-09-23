@@ -22,3 +22,8 @@ Homestead.yaml
 Homestead.json
 /.vagrant
 .phpunit.result.cache
+
+# My Dev
+install.bat
+public/phpliteadmin.php
+public/phpliteadmin.config.php

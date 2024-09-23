@@ -63,7 +63,6 @@ class DatabaseSeeder extends Seeder
 
         DB::table('groups')->insert([
             'name' => "Famille",
-            'password' => "MEMO",
             'user_id' => 1
         ]);
 

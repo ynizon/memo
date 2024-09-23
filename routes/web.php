@@ -31,6 +31,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('/tasks', TaskController::class);
     Route::resource('/groups', GroupController::class);
     Route::post('/groups/addto/{groupId}', [GroupController::class, 'addto'])->name('groups.addto');
+    Route::post('/groups/leave/{groupId}', [GroupController::class, 'leave'])->name('groups.leave');
     Route::resource('/users', UserController::class);
     Route::resource('/attachments', AttachmentController::class);
 });
