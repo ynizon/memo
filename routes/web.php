@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\AttachmentController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\NotifyController;
 use App\Http\Controllers\GroupController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -18,6 +19,8 @@ Route::get('/', function () {
         return view('welcome', compact('pictures'));
     }
 });
+
+Route::get('/notify', [NotifyController::class, 'index']);
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

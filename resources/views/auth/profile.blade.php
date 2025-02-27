@@ -62,6 +62,11 @@
                                         <input type="password" class="form-control" id="password" name="password"
                                                value="">
                                     </div>
+                                    <div class="form-group">
+                                        <label for="password">{{__('Token')}} - {{config("app.url")}}/notify?email={{Auth::user()->email}}&token={{Auth::user()->token}}</label>
+                                        <input type="text" class="form-control" id="token"
+                                               value="{{Auth::user()->token}}">
+                                    </div>
                                     <br>
                                     <button type="submit" class="btn btn-primary">{{__("Save")}}</button>
                                 </form>

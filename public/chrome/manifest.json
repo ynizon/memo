@@ -1,0 +1,27 @@
+{
+    "manifest_version": 3,
+    "name": "Notification Sync",
+    "version": "1.0",
+    "description": "Affiche les notifications reçues depuis le serveur",
+    "permissions": ["notifications", "background", "alarms", "storage"],
+    "host_permissions": [
+        "https://memo.gameandme.fr/*"
+    ],
+    "background": {
+        "service_worker": "background.js",
+        "type": "module"
+    },
+    "icons":{
+        "16": "tel.png",
+        "32": "tel.png",
+        "48": "tel.png",
+        "128": "tel.png"
+    },
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": "tel.png"
+    },
+    "content_security_policy": {
+        "extension_pages": "script-src 'self' ; object-src 'self'; connect-src 'self' https://memo.gameandme.fr"
+    }
+}

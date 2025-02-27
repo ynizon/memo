@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Notifications</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 10px; padding-top:0px;width: 250px; background:#dddddd;}
+        img{height:24px;padding:5px;}
+        #notifications { margin-top: 10px; }
+        .btn{text-decoration: none;color:#000000;}
+        .icon{width:12%;}
+        .text{width:80%;}
+        .info{float:left;padding:5px;padding-top:0;}
+        hr{clear:both;}
+        h3{text-align: center;}
+        .pad{
+            padding-bottom:0;
+            margin-top:-5px;
+        }
+    </style>
+</head>
+<body>
+    <h3>
+        <span id="count"></span> Notification(s)
+        <img class="pad" alt="settings" src="images/settings-svgrepo-com.svg" id="settings" />
+    </h3>
+
+    <div id="block-settings">
+        <input type="text" value="" id="SERVER_URL" placeholder="https://" />
+        &nbsp;&nbsp;
+        <img alt="save" class="pad" src="images/save-icon-svgrepo-com.svg" id="save" />
+    </div>
+
+    <hr/>
+    <div id="notifications"></div>
+    <script src="popup.js"></script>
+</body>
+</html>
