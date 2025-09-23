@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AccountController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TaskController;
@@ -30,6 +32,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/users/{id}/togglePremium', [UserController::class, 'togglePremium'])->name('profile.togglePremium');
     Route::get('/users/{id}/toggleAdmin', [UserController::class, 'toggleAdmin'])->name('profile.toggleAdmin');
 
+    Route::resource('/accounts', AccountController::class);
+    Route::post('/accounts/add_csv', [AccountController::class, 'add_csv']);
+    Route::resource('/transactions', TransactionController::class);
     Route::resource('/categories', CategoryController::class);
     Route::resource('/tasks', TaskController::class);
     Route::resource('/groups', GroupController::class);
