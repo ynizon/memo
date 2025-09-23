@@ -16,7 +16,6 @@ class AccountController extends Controller
         'name' => 'required|max:255',
         'icon' => 'required|max:25',
         'color' => 'required|min:7|max:7',
-        'month' => 'required',
     ];
 
     /**

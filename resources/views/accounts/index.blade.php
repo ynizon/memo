@@ -78,14 +78,14 @@
                                                 </div>
                                             </td>
                                             <td class="align-middle bg-transparent border-bottom">
-                                                <a href="/categories/{{$account->id}}/edit">
+                                                <a href="/accounts/{{$account->id}}/edit">
                                                     {{__($account->name)}}
                                                 </a>
                                             </td>
                                             <td class="align-middle bg-transparent border-bottom">
                                                 <span class="badge badge-sm border border-success text-success bg-success ">
                                                     <a href="/account/{{$account->id}}/edit">
-                                                        @if ($active->active) OK @endif
+                                                        @if ($account->active) OK @endif
                                                     </a>
                                                 </span>
                                             </td>
