@@ -50,6 +50,11 @@ class User extends Authenticatable
         ];
     }
 
+    public function accounts(): Collection
+    {
+        return $this->hasMany(Account::class)->orderBy('created_at','desc')->get();
+    }
+
     public function tasks(): Collection
     {
         return $this->hasMany(Task::class)->orderBy('created_at','desc')->get();
