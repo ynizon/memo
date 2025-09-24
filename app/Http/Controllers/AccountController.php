@@ -29,8 +29,14 @@ class AccountController extends Controller
         $charts = [];
         $charts['monthly'] = $this->getTransactionsCharts(30);
         $charts['yearly'] = $this->getTransactionsCharts(365);
+        $total = 0;
+        foreach ($accounts as $account){
+            $account->amount = $account->refreshAmount();
+            $account->save();
+            $total = $total + $account->lastAmount()->amount;
+        }
 
-        return view('accounts/index', compact('accounts', 'charts'));
+        return view('accounts/index', compact('accounts', 'charts', 'total'));
     }
 
     public function add_amount(Request $request){
@@ -47,9 +53,10 @@ class AccountController extends Controller
         $accountAmount->account_id = $account->id;
         $accountAmount->amount = (float) $amount;
         $accountAmount->created_at = formatDateUK($created_at);
+        $accountAmount->calculated = false;
         $accountAmount->save();
 
-        return redirect("/accounts/".$account->id."/edit");
+        return redirect("/accounts");
     }
 
     public function remove_amount(Request $request){
@@ -72,7 +79,7 @@ class AccountController extends Controller
             ->where('accounts.active', 1)
             ->where("transactions.user_id","=",Auth::user()->getAuthIdentifier())
             ->where("transactions.created_at",">=",Carbon::now()->subDays($maxDays)->toDateTimeString())
-            ->selectRaw("SUM(amount) as sum_amount, category")
+            ->selectRaw("SUM(transactions.amount) as sum_amount, category")
             ->groupBy("category")
             ->get();
 
@@ -99,6 +106,10 @@ class AccountController extends Controller
     public function add_csv(Request $request){
         $nbTransactions = 0;
         if ($request->file("linxo_csv")){
+            $user = Auth::user();
+            $user->linxo_at = date("Y-m-d H:i:s");
+            $user->save();
+
             $filename = $request->file("linxo_csv");
             $fileContent = file_get_contents($filename);
             $utf8Content = mb_convert_encoding($fileContent, 'UTF-8', 'UTF-16LE');

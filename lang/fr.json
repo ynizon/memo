@@ -291,6 +291,9 @@
     "Group created successfully.": "Groupe créé avec succès.",
     "Group updated successfully.": "Groupe modifié avec succès.",
     "Group deleted successfully": "Groupe supprimé avec succès",
+    "Account created successfully.": "Compte créé avec succès.",
+    "Account updated successfully.": "Compte modifié avec succès.",
+    "Account deleted successfully": "Compte supprimé avec succès",
     "Group": "Groupe",
     "Groups": "Groupes",
     "Add Group": "Ajout d'un groupe",
@@ -311,5 +314,6 @@
     "Add Account": "Ajouter un compte",
     "Accounts": "Comptes",
     "Active": "Actif",
-    "Add amount at date": "Ajouter le montant à date"
+    "Add amount at date": "Ajouter le montant à date",
+    "Last update": "Dernière mise à jour"
 }

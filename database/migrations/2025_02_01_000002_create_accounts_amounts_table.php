@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('account_amounts', function (Blueprint $table) {
             $table->id();
             $table->float('amount')->default(0);
+            $table->boolean("calculated")->default(true);
             $table->unsignedBigInteger('account_id');
             $table->timestamps();
 			$table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');

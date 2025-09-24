@@ -10,7 +10,9 @@
                                 <div class="col-6">
                                     <h5 class="">{{__('Account Management')}}</h5>
                                     <p class="mb-0 text-sm">
-
+                                        <b>{{__("Total")}}: {{$total}} €</b>
+                                        <br/>
+                                        {{__("Last update")}}: {{formatDate(Auth::user()->linxo_at)}}
                                     </p>
                                 </div>
                                 <div class="col-6 text-end">
@@ -63,6 +65,9 @@
                                             class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
                                             {{__("Name")}}</th>
                                         <th
+                                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
+                                            {{__("Amount")}}</th>
+                                        <th
                                             class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
                                             {{__("Status")}}</th>
                                     </tr>
@@ -80,6 +85,11 @@
                                             <td class="align-middle bg-transparent border-bottom">
                                                 <a href="/accounts/{{$account->id}}/edit">
                                                     {{__($account->name)}}
+                                                </a>
+                                            </td>
+                                            <td class="align-middle bg-transparent border-bottom">
+                                                <a href="/accounts/{{$account->id}}/edit">
+                                                    {{round($account->amount)}} €
                                                 </a>
                                             </td>
                                             <td class="align-middle bg-transparent border-bottom">
@@ -234,6 +244,7 @@
 </x-app-layout>
 
 <script src="/assets/js/plugins/datatables.js"></script>
+<script src="/assets/js/plugins/currency.js"></script>
 <script>
     window.onload = function(e){
         const dataTableBasic = new simpleDatatables.DataTable("#datatable", {
