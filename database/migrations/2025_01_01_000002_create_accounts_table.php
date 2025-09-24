@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('color');
             $table->string('rib');
 			$table->string('name');
+            $table->integer('position')->default(0);
             $table->string('ref')->index();
             $table->boolean('active')->default(true);
             $table->unsignedBigInteger('user_id');

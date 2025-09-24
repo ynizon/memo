@@ -83,9 +83,10 @@
                                                 </a>
                                             </td>
                                             <td class="align-middle bg-transparent border-bottom">
-                                                <span class="badge badge-sm border border-success text-success bg-success ">
+                                                <span class="badge badge-sm border @if (!$account->active)
+                                                    border-secondary text-secondary bg-secondary @else border-success text-success bg-success @endif">
                                                     <a href="/account/{{$account->id}}/edit">
-                                                        @if ($account->active) OK @endif
+                                                        @if ($account->active) ON @else OFF @endif
                                                     </a>
                                                 </span>
                                             </td>
@@ -93,6 +94,136 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 mb-md-0 mb-4">
+                                <div class="card shadow-xs border h-100">
+                                    <div class="card-header pb-0">
+                                        <h6 class="font-weight-semibold text-lg mb-0">{{__('Monthly Budget')}}</h6>
+                                    </div>
+                                    <div class="card-body py-3">
+                                        <div class="chart mb-2">
+                                            <canvas id="chart-monthly" class="chart-canvas"
+                                                    height="240" style="display: block; box-sizing: border-box;
+                                            height: 240px; width: 474px;" width="474">
+                                            </canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-6 mb-md-0 mb-4">
+                                <div class="card shadow-xs border h-100">
+                                    <div class="card-header pb-0">
+                                        <h6 class="font-weight-semibold text-lg mb-0">{{__('Yearly Budget')}}</h6>
+                                    </div>
+                                    <div class="card-body py-3">
+                                        <div class="chart mb-2">
+                                            <canvas id="chart-yearly" class="chart-canvas"
+                                                    height="240" style="display: block; box-sizing: border-box;
+                                            height: 240px; width: 474px;" width="474">
+                                            </canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <script src="/assets/js/plugins/chartjs.min.js"></script>
+                            <script>
+                                function generateRandomColors(numColors) {
+                                    return [
+                                        'rgb(255, 99, 132)', // Votre couleur initiale 1
+                                        'rgb(54, 162, 235)', // Votre couleur initiale 2
+                                        'rgb(255, 205, 86)', // Votre couleur initiale 3
+                                        'rgb(143, 85, 219)',
+                                        'rgb(219, 112, 147)',
+                                        'rgb(255, 127, 80)',
+                                        'rgb(0, 191, 255)',
+                                        'rgb(127, 255, 0)',
+                                        'rgb(255, 215, 0)',
+                                        'rgb(25, 25, 112)',
+                                        'rgb(220, 20, 60)',
+                                        'rgb(154, 205, 50)',
+                                        'rgb(70, 130, 180)',
+                                        'rgb(240, 230, 140)',
+                                        'rgb(139, 0, 139)',
+                                        'rgb(255, 140, 0)',
+                                        'rgb(32, 178, 170)',
+                                        'rgb(255, 182, 193)'
+                                    ];
+                                }
+
+                                let ctx = document.getElementById("chart-monthly").getContext("2d");
+                                const dynamicColors = generateRandomColors(20);
+                                let chart = new Chart(ctx, {
+                                    type: "doughnut",
+                                    data: {
+                                        labels: {!! json_encode($charts['monthly']['labels'], JSON_PRETTY_PRINT)!!},
+                                        datasets: [{
+                                            label: "Répartition des dépenses",
+                                            data: {!! json_encode($charts['monthly']['datasets'], JSON_PRETTY_PRINT)!!},
+                                            backgroundColor: dynamicColors,
+                                            hoverOffset: 4
+                                        }]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        maintainAspectRatio: false,
+                                        plugins: {
+                                            legend: {
+                                                display: true,
+                                                position: 'bottom',
+                                            },
+                                            tooltip: {
+                                                backgroundColor: '#fff',
+                                                titleColor: '#1e293b',
+                                                bodyColor: '#1e293b',
+                                                borderColor: '#e9ecef',
+                                                borderWidth: 1,
+                                                usePointStyle: true
+                                            }
+                                        },
+                                    }
+                                });
+
+                                ctx = document.getElementById("chart-yearly").getContext("2d");
+
+                                chart = new Chart(ctx, {
+                                    type: "doughnut",
+                                    data: {
+                                        labels: {!! json_encode($charts['yearly']['labels'], JSON_PRETTY_PRINT)!!},
+                                        datasets: [{
+                                            label: "Répartition des dépenses",
+                                            data: {!! json_encode($charts['yearly']['datasets'], JSON_PRETTY_PRINT)!!},
+                                            backgroundColor: dynamicColors,
+                                            hoverOffset: 4
+                                        }]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        maintainAspectRatio: false,
+                                        plugins: {
+                                            legend: {
+                                                display: true,
+                                                position: 'bottom',
+                                            },
+                                            tooltip: {
+                                                backgroundColor: '#fff',
+                                                titleColor: '#1e293b',
+                                                bodyColor: '#1e293b',
+                                                borderColor: '#e9ecef',
+                                                borderWidth: 1,
+                                                usePointStyle: true
+                                            }
+                                        },
+                                    }
+                                });
+                            </script>
+                        </div>
+
+                        <div class="row">
+                            <br/>
                         </div>
                     </div>
                 </div>

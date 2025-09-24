@@ -15,6 +15,7 @@ class Account extends Model
         'rib',
         'name',
         'icon',
+        'position',
         'color',
         'user_id',
         'active',
@@ -27,6 +28,11 @@ class Account extends Model
 
     public function transactions(): HasMany
     {
-        return $this->hasMany(Transaction::class);
+        return $this->hasMany(Transaction::class)->limit(1000);
+    }
+
+    public function amounts(): HasMany
+    {
+        return $this->hasMany(AccountAmount::class);
     }
 }

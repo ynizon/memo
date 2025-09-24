@@ -11,20 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-		Schema::create('transactions', function (Blueprint $table) {
+        Schema::create('account_amounts', function (Blueprint $table) {
             $table->id();
-            $table->string('ref')->unique()->index();
-            $table->float('amount');
-			$table->string('name');
-			$table->string('note');
-			$table->string('category');
-            $table->string('check_number');
+            $table->float('amount')->default(0);
             $table->unsignedBigInteger('account_id');
-            $table->unsignedBigInteger('user_id');
             $table->timestamps();
 			$table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
+
     }
 
     /**
@@ -32,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-		Schema::dropIfExists('transactions');
+        Schema::dropIfExists('account_amounts');
     }
 };

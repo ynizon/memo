@@ -301,5 +301,15 @@
     "Share with groups" : "Partagé avec les groupes",
     "Leave this group" : "Quitter le groupe",
     "Group left successfully" : "Groupe quitté avec succès",
-    "Confirm - It is definitive": "Confirmer, c'est définitif"
+    "Confirm - It is definitive": "Confirmer, c'est définitif",
+    "Your 1000 latest transactions":"Vos 1000 dernières transactions",
+    "Label":"Libellé",
+    "Account Management": "Gestion des comptes",
+    "Send Linxo history csv file": "Envoyer le fichier CSV historique de Linxo",
+    "Yearly Budget": "Budget annuel",
+    "Monthly Budget": "Budget mensuel",
+    "Add Account": "Ajouter un compte",
+    "Accounts": "Comptes",
+    "Active": "Actif",
+    "Add amount at date": "Ajouter le montant à date"
 }

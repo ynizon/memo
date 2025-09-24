@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Account;
+use App\Models\AccountAmount;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -15,6 +16,7 @@ class AccountController extends Controller
     private array $fields = [
         'name' => 'required|max:255',
         'icon' => 'required|max:25',
+        'position' => 'required|max:2',
         'color' => 'required|min:7|max:7',
     ];
 
@@ -24,7 +26,74 @@ class AccountController extends Controller
     public function index()
     {
         $accounts = Auth::user()->accounts();
-        return view('accounts/index', compact('accounts'));
+        $charts = [];
+        $charts['monthly'] = $this->getTransactionsCharts(30);
+        $charts['yearly'] = $this->getTransactionsCharts(365);
+
+        return view('accounts/index', compact('accounts', 'charts'));
+    }
+
+    public function add_amount(Request $request){
+        $account_id = $request->input("account_id");
+        $account = Account::where("id","=",$account_id)->first();
+
+        if (!$account && $account->user_id != Auth::user()->getAuthIdentifier()){
+            abort(403, __('Unauthorized action.'));
+        }
+        $amount  = $request->input('amount');
+        $created_at  = $request->input('created_at', date("d/m/Y"));
+
+        $accountAmount = new AccountAmount();
+        $accountAmount->account_id = $account->id;
+        $accountAmount->amount = (float) $amount;
+        $accountAmount->created_at = formatDateUK($created_at);
+        $accountAmount->save();
+
+        return redirect("/accounts/".$account->id."/edit");
+    }
+
+    public function remove_amount(Request $request){
+        $amount_id = $request->input("amount_id");
+        $accountAmount = AccountAmount::where("id","=",$amount_id)->first();
+
+        if (!$accountAmount && $accountAmount->account->user_id != Auth::user()->getAuthIdentifier()){
+            abort(403, __('Unauthorized action.'));
+        }
+        $account_id = $accountAmount->account->id;
+        $accountAmount->delete();
+
+        return redirect("/accounts/".$account_id."/edit");
+    }
+
+    private function getTransactionsCharts(int $maxDays): array
+    {
+        $transactions = DB::table('transactions')
+            ->join('accounts', 'transactions.account_id', '=', 'accounts.id')
+            ->where('accounts.active', 1)
+            ->where("transactions.user_id","=",Auth::user()->getAuthIdentifier())
+            ->where("transactions.created_at",">=",Carbon::now()->subDays($maxDays)->toDateTimeString())
+            ->selectRaw("SUM(amount) as sum_amount, category")
+            ->groupBy("category")
+            ->get();
+
+        $sum = 0;
+        foreach ($transactions as $transaction) {
+            $sum = $sum + $transaction->sum_amount;
+        }
+        if ($sum == 0){
+            $sum = 1;
+        }
+
+        $labels = [];
+        $datasets = [];
+        foreach ($transactions as $transaction) {
+            $percent = round($transaction->sum_amount * 100 / $sum,  0, PHP_ROUND_HALF_UP);
+            if ($percent >= 1) {
+                $labels[] = $transaction->category . " (".$transaction->sum_amount." €)";
+                $datasets[] = $percent;
+            }
+        }
+        return ['datasets' => $datasets, 'labels' => $labels];
     }
 
     public function add_csv(Request $request){
@@ -58,6 +127,7 @@ class AccountController extends Controller
                     $account->icon = "fa-bank";
                     $account->name = $ref;
                     $account->rib = "-";
+                    $account->position = count($accounts);
                     $account->save();
                     $accounts[$account->ref] = $account->id;
                     $num++;
@@ -68,9 +138,16 @@ class AccountController extends Controller
                 foreach ($records as $offset => $row) {
                     $ref = md5($row["Date"]."-".$row["Libellé"]."-".$row["Montant"]."-".$row["Notes"]);
                     $transaction = Transaction::where("ref","=",$ref)->first();
-                    if (!$transaction){
+                    if ($transaction) {
+                        if ($transaction->category != $row["Catégorie"]){
+                            $transaction->category = $row["Catégorie"];
+                            $transaction->save();
+                            $nbTransactions++;
+                        }
+                    }else {
                         $transaction = new Transaction();
                         $transaction->account_id = $accounts[$row["Nom de la connexion"] . "-".$row["Nom du compte"]];
+                        $transaction->user_id = Auth::user()->getAuthIdentifier();
                         $transaction->ref = $ref;
                         $transaction->name = $row["Libellé"];
                         $transaction->amount = $row["Montant"];
@@ -158,6 +235,7 @@ class AccountController extends Controller
     {
         $icons = new \Awps\FontAwesome();
         $icons = $icons->getArray();
+        $icons["fa-bank"] = "fa-bank";
         ksort($icons);
         return $icons;
     }

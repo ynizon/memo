@@ -81,6 +81,12 @@
                                     </div>
 
                                     <div class="form-group">
+                                        <label for="position">{{__('Position')}}</label>
+                                        <input type="text" class="form-control" id="position" name="position"
+                                               value="@if (old('position') != ''){{old('position')}}@else{{$account->position}}@endif" required>
+                                    </div>
+
+                                    <div class="form-group">
                                         <div class="form-check form-switch ps-0">
                                             <input class="form-check-input ms-auto" type="checkbox" value="1"
                                                    name="archive"
@@ -104,56 +110,72 @@
                                 @endif
                             </div>
                         </div>
+                        <hr/>
+                        <div class="row">
+                            <div class="col-md-6 px-4">
+                                @if ($account->id > 0)
+                                    <form action="{{ route('accounts.add_amount', ["account_id"=>$account->id]) }}"
+                                          method="post">
+                                        <h5>{{__("Add amount at date")}}</h5>
+                                        @csrf
+                                        <div class="form-group">
+                                            <label for="date">{{__('Date')}}</label>
+                                            <input type="date" class="form-control" id="created_at" name="created_at"
+                                                   value="{{date("Y-m-d")}}">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="amount">{{__('Amount')}}</label>
+                                            <input type="text" class="form-control" id="amount" name="amount"
+                                                   value="" required>
+                                        </div>
+                                        <br>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="pad fas fa-save" aria-hidden="true"></i>{{__("Save")}}
+                                        </button>
+                                    </form>
+                                @endif
+                            </div>
+
+                            <div class="col-md-6 px-4">
+                                <ul>
+                                @foreach ($account->amounts as $amount)
+                                    <li>
+                                        {{formatDate($amount->created_at)}} : {{$amount->amount}} €
+                                        <a href="{{ route('accounts.remove_amount', ["amount_id"=>$amount->id]) }}">
+                                            <i class="fa fa-delete-left"></i></a>
+                                    </li>
+                                @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                        <hr/>
+                        @include("/accounts/table", compact('account'))
                     </div>
                 </div>
             </div>
         </div>
+
+        <script src="/assets/js/plugins/datatables.js"></script>
         <script>
-            window.onload = function(e) {
+            window.onload = function(e){
                 $('.colorpicker').colorpicker();
+
+                const dataTableBasic = new simpleDatatables.DataTable("#datatable", {
+                    searchable: false,
+                    fixedHeight: true,
+                    bLengthChange: false,
+                    paging: true,
+                    showNEntries: false,
+                    perPage: 50,
+                });
+
+                $('#datatable-search').keyup(function () {
+                    dataTableBasic.search($(this).val()).draw();
+                })
             };
         </script>
 
-        <div>
-            <div class="table-responsive">
-                <table class="table text-secondary text-center" id="datatable">
-                    <thead class="bg-gray-100">
-                    <tr>
-                        <th
-                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                            {{__("Label")}}
-                        </th>
-                        <th
-                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                            {{__("Amount")}}
-                        </th>
-                        <th
-                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                            {{__("Category")}}
-                        </th>
-                        <th
-                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                            {{__("Check")}}
-                            {{__("Note")}}
-                        </th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($account->transactions as $transaction)
-                            <tr>
-                                <td>{{$transaction->name}}</td>
-                                <td>{{$transaction->amount}} €</td>
-                                <td>{{$transaction->category}}</td>
-                                <td>
-                                    {{$transaction->check_number}}
-                                    {{$transaction->note}}
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
         <x-app.footer />
     </main>
 

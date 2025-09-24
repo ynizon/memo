@@ -27634,3 +27634,7 @@ i.pad{
     padding-right:15px;
     font-size:0.875rem;
 }
+
+.table.nowhitespace td, .table.nowhitespace th{
+  white-space: normal !important;
+}
