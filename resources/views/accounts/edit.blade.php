@@ -140,14 +140,94 @@
                             <div class="col-md-6 px-4">
                                 <ul>
                                 @foreach ($account->amounts as $amount)
-                                    <li>
-                                        {{formatDate($amount->created_at)}} : {{$amount->amount}} €
-                                        <a href="{{ route('accounts.remove_amount', ["amount_id"=>$amount->id]) }}">
-                                            <i class="fa fa-delete-left"></i></a>
-                                    </li>
+                                    @if (!$amount->calculated)
+                                        <li>
+                                            {{formatDate($amount->created_at)}} : {{$amount->amount}} €
+                                            <a href="{{ route('accounts.remove_amount', ["amount_id"=>$amount->id]) }}">
+                                                <i class="fa fa-delete-left"></i></a>
+                                        </li>
+                                    @endif
                                 @endforeach
                                 </ul>
                             </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 mb-md-0 mb-4">
+                                <div class="card shadow-xs border h-100">
+                                    <div class="card-header pb-0">
+                                        <h6 class="font-weight-semibold text-lg mb-0">{{$account->name}}</h6>
+                                    </div>
+                                    <div class="card-body py-3">
+                                        <div class="chart mb-2">
+                                            <canvas id="chart" class="chart-canvas"
+                                                    height="240" style="display: block; box-sizing: border-box;
+                                            height: 240px; width: 474px;" width="474">
+                                            </canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <script src="/assets/js/plugins/chartjs.min.js"></script>
+                            <script>
+                                let ctx = document.getElementById("chart").getContext("2d");
+                                let chart = new Chart(ctx, {
+                                    type: "line",
+                                    data: {
+                                        labels: {!! json_encode($charts['labels'], JSON_PRETTY_PRINT)!!},
+                                        datasets: [
+                                            @foreach ($charts['accounts'] as $accountId => $datas)
+                                            {
+                                                label: "{{$datas['label']}}",
+                                                data: {!! json_encode($datas['data'], JSON_PRETTY_PRINT)!!},
+                                                hoverOffset: 4,
+                                                backgroundColor: '{{$datas['color']}}',
+                                                borderColor: '{{$datas['color']}}',
+                                                pointStyle: 'circle',
+                                                pointRadius: 5,
+                                                pointHoverRadius: 8
+                                            },
+                                            @endforeach
+                                        ],
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        maintainAspectRatio: false,
+                                        plugins: {
+                                            legend: {
+                                                display: false,
+                                                position: 'bottom',
+                                            },
+                                            tooltip: {
+                                                backgroundColor: '#fff',
+                                                titleColor: '#1e293b',
+                                                bodyColor: '#1e293b',
+                                                borderColor: '#e9ecef',
+                                                borderWidth: 1,
+                                                usePointStyle: true
+                                            }
+                                        },
+                                        scales: {
+                                            x: {
+                                                title: {
+                                                    display: true,
+                                                    text: "{{__("Date")}}"
+                                                },
+                                                ticks: {
+                                                    autoSkip: true,
+                                                    maxTicksLimit: 12
+                                                }
+                                            },
+                                            y: {
+                                                title: {
+                                                    display: true,
+                                                    text: "{{__("Amount")}}"
+                                                },
+                                            }
+                                        },
+                                    }
+                                });
+                            </script>
                         </div>
                         <hr/>
                         @include("/accounts/table", compact('account'))

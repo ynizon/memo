@@ -26,15 +26,25 @@ class AccountController extends Controller
     public function index()
     {
         $accounts = Auth::user()->accounts();
-        $charts = [];
-        $charts['monthly'] = $this->getTransactionsCharts(30);
-        $charts['yearly'] = $this->getTransactionsCharts(365);
         $total = 0;
+        $firstTransaction = Transaction::where("user_id","=",Auth::id())->orderBy('created_at', 'asc')->first();;
         foreach ($accounts as $account){
-            $account->amount = $account->refreshAmount();
+            $account->amount = $account->refreshAmount($firstTransaction);
             $account->save();
             $total = $total + $account->lastAmount()->amount;
         }
+
+        //Charts
+        $charts = ['all'=>["labels"=>[], "accounts"=>[]]];
+        foreach ($accounts as $account) {
+            if (count($charts['all']['labels']) == 0){
+                $charts['all']['labels'] = $this->getLabels($account);
+            }
+            $charts['all']['accounts'][$account->id] = $this->getDatasets($account);
+        }
+
+        $charts['monthly'] = $this->getTransactionsCharts(30);
+        $charts['yearly'] = $this->getTransactionsCharts(365);
 
         return view('accounts/index', compact('accounts', 'charts', 'total'));
     }
@@ -70,6 +80,45 @@ class AccountController extends Controller
         $accountAmount->delete();
 
         return redirect("/accounts/".$account_id."/edit");
+    }
+
+    private function getDatasets($account): array
+    {
+        $amounts = $account->amountsGraph;
+        $datas = [];
+        foreach ($amounts as $amount){
+            $datas[] = $amount->amount;
+        }
+        return ["label"=> $account->name, "data"=> $datas, "color"=> $this->convertColorHexa($account->color)];
+    }
+
+    private function getLabels($account): array
+    {
+        $amounts = $account->amountsGraph;
+        $labels = [];
+        foreach ($amounts as $amount) {
+            $labels[] = $amount->created_at->format('m-Y');
+        }
+        return $labels;
+    }
+
+    private function convertColorHexa($color): string
+    {
+        // Remove the '#' if it's present
+        $hex = ltrim($color, '#');
+
+        // Make sure it's a valid 6-character hex code
+        if (strlen($hex) !== 6) {
+            // You might want to handle this error more gracefully
+            return 'Invalid hex color';
+        }
+
+        // Convert hex to decimal
+        $r = hexdec(substr($hex, 0, 2));
+        $g = hexdec(substr($hex, 2, 2));
+        $b = hexdec(substr($hex, 4, 2));
+
+        return "rgb($r, $g, $b, 0.5)";
     }
 
     private function getTransactionsCharts(int $maxDays): array
@@ -119,7 +168,9 @@ class AccountController extends Controller
                 $accounts[$account->ref] = $account->id;
             }
 
-            $colors = ["#e10a77", "#c79710", "#c02ae5", "#3474ab"];
+            $colors = ["#e10a77", "#c79710", "#c02ae5", "#3474ab", "#FF6384", "#36A2EB", "#FFCD56", "#8F55DB",
+                        "#DB7093", "#FF7F50", "#00BFFF", "#7FFF00", "#FFD700", "#191970", "#DC143C",
+                        "#9ACD32", "#4682B4", "#F0E68C", "#8B008B", "#FF8C00", "#20B2AA", "#FFB6C1"];
             $reader = Reader::createFromString($utf8Content);
             $reader->setDelimiter("\t");
             $reader->setHeaderOffset(0);
@@ -212,7 +263,12 @@ class AccountController extends Controller
         $icons['fa-dog'] = '';
         $icons['fa-notes-medical'] = '';
         ksort($icons);
-        return view('accounts/edit', compact('account', 'icons'));
+
+        $charts = [];
+        $charts['accounts'][$account->id] = $this->getDatasets($account);
+        $charts['labels'] = $this->getLabels($account);
+
+        return view('accounts/edit', compact('charts','account', 'icons'));
     }
 
     /**
@@ -226,7 +282,7 @@ class AccountController extends Controller
 
         $account->update($this->validateFields($request));
         return redirect()->route('accounts.index')
-            ->with('success', __('account updated successfully.'));
+            ->with('success', __('Account updated successfully.'));
     }
 
     /**

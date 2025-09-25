@@ -143,9 +143,9 @@
                             <script>
                                 function generateRandomColors(numColors) {
                                     return [
-                                        'rgb(255, 99, 132)', // Votre couleur initiale 1
-                                        'rgb(54, 162, 235)', // Votre couleur initiale 2
-                                        'rgb(255, 205, 86)', // Votre couleur initiale 3
+                                        'rgb(255, 99, 132)',
+                                        'rgb(54, 162, 235)',
+                                        'rgb(255, 205, 86)',
                                         'rgb(143, 85, 219)',
                                         'rgb(219, 112, 147)',
                                         'rgb(255, 127, 80)',
@@ -171,7 +171,6 @@
                                     data: {
                                         labels: {!! json_encode($charts['monthly']['labels'], JSON_PRETTY_PRINT)!!},
                                         datasets: [{
-                                            label: "Répartition des dépenses",
                                             data: {!! json_encode($charts['monthly']['datasets'], JSON_PRETTY_PRINT)!!},
                                             backgroundColor: dynamicColors,
                                             hoverOffset: 4
@@ -225,6 +224,84 @@
                                                 borderColor: '#e9ecef',
                                                 borderWidth: 1,
                                                 usePointStyle: true
+                                            }
+                                        },
+                                    }
+                                });
+                            </script>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 mb-md-0 mb-4">
+                                <div class="card shadow-xs border h-100">
+                                    <div class="card-header pb-0">
+                                        <h6 class="font-weight-semibold text-lg mb-0">{{__("Evolution")}}</h6>
+                                    </div>
+                                    <div class="card-body py-3">
+                                        <div class="chart mb-2">
+                                            <canvas id="chart" class="chart-canvas"
+                                                    style="display: block; box-sizing: border-box;
+                                            height: 440px; width: 474px;">
+                                            </canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <script>
+                                ctx = document.getElementById("chart").getContext("2d");
+                                chart = new Chart(ctx, {
+                                    type: "line",
+                                    data: {
+                                        labels: {!! json_encode($charts['all']['labels'], JSON_PRETTY_PRINT)!!},
+                                        datasets: [
+                                            @foreach ($charts['all']['accounts'] as $accountId => $datas)
+                                                {
+                                                    label: "{{$datas['label']}}",
+                                                    data: {!! json_encode($datas['data'], JSON_PRETTY_PRINT)!!},
+                                                    hoverOffset: 4,
+                                                    backgroundColor: '{{$datas['color']}}',
+                                                    borderColor: '{{$datas['color']}}',
+                                                    pointStyle: 'circle',
+                                                    pointRadius: 5,
+                                                    pointHoverRadius: 8
+                                                },
+                                            @endforeach
+                                        ]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        maintainAspectRatio: false,
+                                        plugins: {
+                                            legend: {
+                                                display: true,
+                                                position: 'bottom',
+                                            },
+                                            tooltip: {
+                                                backgroundColor: '#fff',
+                                                titleColor: '#1e293b',
+                                                bodyColor: '#1e293b',
+                                                borderColor: '#e9ecef',
+                                                borderWidth: 1,
+                                                usePointStyle: true
+                                            }
+                                        },
+                                        scales: {
+                                            x: {
+                                                title: {
+                                                    display: true,
+                                                    text: "{{__("Date")}}"
+                                                },
+                                                ticks: {
+                                                    autoSkip: true,
+                                                    maxTicksLimit: 12
+                                                }
+                                            },
+                                            y: {
+                                                title: {
+                                                    display: true,
+                                                    text: "{{__("Amount")}}"
+                                                },
                                             }
                                         },
                                     }
