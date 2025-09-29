@@ -2,6 +2,11 @@
 
 namespace App\Managers;
 
+use Carbon\Carbon;
+use DateTime;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+
 class UserManager
 {
     public static function getGroups($groupsTmp, $limitDate, $previousDate) {
@@ -24,22 +29,86 @@ class UserManager
         return $groups;
     }
 
-    public static function getTransactions($tasks, $limitDate, $previousDate) {
-        $transactions = [];
+    public static function getExpenses($tasks, $limitDate, $previousDate, $groups) {
+        $expenses = [];
         foreach ($tasks as $task){
-            if (!isset($transactions[$task->category_id])){
-                $transactions[$task->category_id] = ["last" =>0, "now" =>0, "total"=>0,
-                    'category' =>$task->category, 'latest'=>$task->created_at];
+            $id = 'task'.$task->category_id;
+            $category = [
+                'label' => __("Last expense"),
+                'icon' => $task->category->icon,
+                'name' => $task->category->name,
+                'archive' => $task->category->archive,
+                'color' => $task->category->color,
+                'href' => "/tasks?category_id=".$task->category->id
+            ];
+            if (!isset($expenses[$id])){
+                $expenses[$id] = ["last" =>0, "now" =>0, "total"=>0,
+                    'category' =>$category, 'latest'=>$task->created_at];
             }
 
             if ($task->created_at >= $limitDate) {
-                $transactions[$task->category_id]['now'] = $transactions[$task->category_id]['now'] + $task->price;
+                $expenses[$id]['now'] = $expenses[$id]['now'] + $task->price;
             }
             if ($task->created_at >= $previousDate && $task->created_at < $limitDate) {
-                $transactions[$task->category_id]['last'] = $transactions[$task->category_id]['last'] + $task->price;
+                $expenses[$id]['last'] = $expenses[$id]['last'] + $task->price;
             }
-            $transactions[$task->category_id]['total'] = $transactions[$task->category_id]['total'] + $task->price;
+            $expenses[$id]['total'] = $expenses[$id]['total'] + $task->price;
         }
-        return $transactions;
+
+        foreach ($groups as $group)
+        {
+            $id = 'group'.$group['id'];
+            $category = [
+                'label' => __('Last expense'),
+                'icon' => 'fa-group',
+                'name' => $group['name'],
+                'archive' => 0,
+                'color' => '#352365',
+                'href' => "/tasks/group_id=".$group['id']
+            ];
+            $expenses[$id] = ["last" =>$group['last'], "now" =>$group['now'],
+                "total"=> $group['total'], 'category' =>$category, 'latest'=>$group['latest']];
+        }
+
+        $category = [
+            'label' => __('Last update'),
+            'icon' => 'fa-bank',
+            'name' => __("Bank"),
+            'archive' => 0,
+            'color' => "#cf78e6",
+            'href' => "/accounts"
+        ];
+
+        //Current total
+        $total = 0;
+        $accounts = DB::table('accounts')
+            ->where('active', "=",1)
+            ->where("user_id","=", Auth::user()->getAuthIdentifier())
+            ->selectRaw("SUM(amount) as sum_amount")
+            ->get();
+        foreach ($accounts as $account)
+        {
+            $total = $account->sum_amount;
+        }
+
+        //Last total
+        $oldMonth = new DateTime();
+        $oldMonth->modify('first day of this month');
+        $oldMonth->modify('-1 month');
+        $last_total = 0;
+        $accounts = DB::table('accounts')
+            ->join('account_amounts', 'account_amounts.account_id', '=', 'accounts.id')
+            ->where('accounts.active', "=",1)
+            ->where('account_amounts.created_at', "like", $oldMonth->format('Y-m-d').'%')
+            ->where("accounts.user_id","=",Auth::user()->getAuthIdentifier())
+            ->selectRaw("SUM(account_amounts.amount) as sum_amount")
+            ->get();
+        foreach ($accounts as $account)
+        {
+            $last_total = $account->sum_amount;
+        }
+        $expenses['bank'] = ["last" =>$last_total, "now" =>$total, "total"=> $total,
+                    'category' =>$category, 'latest'=>Auth::user()->linxo_at];
+        return $expenses;
     }
 }

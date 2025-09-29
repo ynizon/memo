@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('position')->default(0);
             $table->string('ref')->index();
             $table->boolean('active')->default(true);
+            $table->boolean('needrefresh')->default(false);
             $table->unsignedBigInteger('user_id');
             $table->timestamps();
 			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

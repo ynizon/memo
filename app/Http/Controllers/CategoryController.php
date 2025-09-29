@@ -31,7 +31,7 @@ class CategoryController extends Controller
     {
         $category = new Category();
         $category->icon = 'fa-list';
-        $icons = $this->getAwesomeIcons();
+        $icons = getAwesomeIcons();
         return view('categories/edit', compact('category', 'icons'));
     }
 
@@ -65,7 +65,7 @@ class CategoryController extends Controller
         if ($category->user_id != Auth::user()->getAuthIdentifier()){
             abort(403, __('Unauthorized action.'));
         }
-        $icons = $this->getAwesomeIcons();
+        $icons = getAwesomeIcons();
         $icons['fa-dog'] = '';
         $icons['fa-notes-medical'] = '';
         ksort($icons);
@@ -97,14 +97,6 @@ class CategoryController extends Controller
         $category->delete();
         return redirect()->route('categories.index')
             ->with('success', __('Category deleted successfully'));
-    }
-
-    private function getAwesomeIcons(): array
-    {
-        $icons = new \Awps\FontAwesome();
-        $icons = $icons->getArray();
-        ksort($icons);
-        return $icons;
     }
 
     private function validateFields(Request $request) : array

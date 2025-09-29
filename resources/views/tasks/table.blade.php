@@ -37,33 +37,35 @@
     <table class="table text-secondary text-center" id="datatable">
         <thead class="bg-gray-100">
         <tr>
-            <th class="text-secondary text-xs font-weight-semibold opacity-7">
-                {{__('Name')}}</th>
-            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">
-                {{__('Amount')}}</th>
-            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">
+            <th>
+                {{__('Name')}}
+            </th>
+            <th>
+                {{__('Amount')}}
+            </th>
+            <th>
                 {{__('Date')}}
             </th>
-            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2 d-none d-md-table-cell">
-                {{__('Information')}}</th>
+            <th>
+                {{__('Information')}}
+            </th>
         </tr>
         </thead>
         <tbody>
             @foreach($tasks as $task)
                 <tr>
                     <td>
-                        <div class="d-flex px-2">
-                            <div class="rounded-circle bg-gray-100 me-2 my-2">
-                                <a href="@if ($task->user_id == Auth::user()->id) /tasks/{{$task->id}}/edit @else /tasks/{{$task->id}} @endif">
-                                    @if ($task->user_id != Auth::user()->id)
-                                        <i class="pad fa fa-group"></i>
-                                    @else
-                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    @endif
-                                    <i class="pad fa fa-list {{$task->category->icon}}"></i>
-                                </a>
-                                <span class="d-none">Category-{{$task->category->id}}</span>
-                            </div>
+                        <div class="d-flex">
+                            <a href="@if ($task->user_id == Auth::user()->id) /tasks/{{$task->id}}/edit @else /tasks/{{$task->id}} @endif">
+                                @if ($task->user_id != Auth::user()->id)
+                                    <i class="pad fa fa-group"></i>
+                                @else
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                @endif
+                                <i class="pad fa fa-list {{$task->category->icon}}"></i>
+                            </a>
+                            <span class="d-none">Category-{{$task->category->id}}</span>
+
                             <div class="my-auto">
                                 <a href="@if ($task->user_id == Auth::user()->id) /tasks/{{$task->id}}/edit @else /tasks/{{$task->id}} @endif" class="list_task_item">
                                     <h6 class="mb-0 text-sm">
@@ -92,42 +94,79 @@
                         </div>
                     </td>
                     <td>
-                        <p class="text-sm font-weight-normal mb-0">
-                            <a href="@if ($task->user_id == Auth::user()->id) /tasks/{{$task->id}}/edit @else /tasks/{{$task->id}} @endif">
-                                @if ($task->price > 0){{$task->price}} €@endif
-                            </a>
-                        </p>
+                        <a href="@if ($task->user_id == Auth::user()->id) /tasks/{{$task->id}}/edit @else /tasks/{{$task->id}} @endif">
+                            @if ($task->price > 0){{currency($task->price)}}@endif
+                        </a>
                     </td>
-                    <td>
-                        <span class="text-sm font-weight-normal">
-                            <a href="@if ($task->user_id == Auth::user()->id) /tasks/{{$task->id}}/edit @else /tasks/{{$task->id}} @endif">
-                                {{formatDate($task->created_at)}}
-                             </a>
-                        </span>
+                    <td data-sort='YYYYMMDD'>
+                        <a href="@if ($task->user_id == Auth::user()->id) /tasks/{{$task->id}}/edit @else /tasks/{{$task->id}} @endif">
+                            {{formatDate($task->created_at)}}
+                        </a>
                     </td>
                     <td class="d-none d-md-table-cell">
-                        <span class="text-sm font-weight-normal">
-                            <a href="@if ($task->user_id == Auth::user()->id) /tasks/{{$task->id}}/edit @else /tasks/{{$task->id}} @endif">
-                                {{$task->information}}
-                             </a>
-                        </span>
+                        <a href="@if ($task->user_id == Auth::user()->id) /tasks/{{$task->id}}/edit @else /tasks/{{$task->id}} @endif">
+                            {{$task->information}}
+                        </a>
                     </td>
                 </tr>
             @endforeach
         </tbody>
+        <tfoot>
+            <tr>
+                <th>{{__("Total page")}}
+                    <br/>{{__("Total full")}}
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
     </table>
 </div>
 
+<br/>
 <script src="/assets/js/plugins/datatables.js"></script>
 <script>
     window.onload = function(e){
-        const dataTableBasic = new simpleDatatables.DataTable("#datatable", {
-            searchable: false,
+        const dataTableBasic = new DataTable("#datatable", {
+            "language": {
+                "url": "/assets/js/fr-FR.json"
+            },
+            searching: true,
             fixedHeight: true,
             bLengthChange: false,
             paging: true,
             showNEntries: false,
-            perPage: 10,
+            pageLength: 30,
+            footerCallback: function (row, data, start, end, display) {
+                let api = this.api();
+
+                // Remove the formatting to get integer data for summation
+                let intVal = function (i) {
+                    if (typeof i === 'string') {
+                        return i.replace(/[^\d,-]/g, '')
+                            .replace(/\./g, '')
+                            .replace(',', '.') * 1;
+                    }
+                    return typeof i === 'number' ? i : 0;
+                };
+
+                // Total over all pages
+                let total = api
+                    .column(1)
+                    .data()
+                    .reduce((a, b) => intVal(a) + intVal(b), 0);
+
+                // Total over this page
+                let pageTotal = api
+                    .column(1, { page: 'current' })
+                    .data()
+                    .reduce((a, b) => intVal(a) + intVal(b), 0);
+
+                // Update footer
+                api.column(1).footer().innerHTML =
+                    pageTotal.toFixed(2) + ' € <br/> ' + total.toFixed(2) + ' €';
+            },
         });
 
         $('#datatable-search').keyup(function () {

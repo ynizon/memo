@@ -1,5 +1,4 @@
 <div class="border-bottom py-3 px-3 d-sm-flex align-items-center">
-
     <div class="input-group w-sm-25 ms-auto py-2 py-lg-0">
         <span class="input-group-text text-body">
         <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -14,11 +13,11 @@
     <table class="table text-secondary text-center" id="datatable">
         <thead class="bg-gray-100">
         <tr>
-            <th class="text-secondary text-xs font-weight-semibold opacity-7">
+            <th>
                 {{__('Group')}}</th>
-            <th class="text-secondary text-xs font-weight-semibold opacity-7">
+            <th>
                 {{__('Users')}}</th>
-            <th class="text-secondary text-xs font-weight-semibold opacity-7">
+            <th>
                 {{__('Action')}}</th>
         </tr>
         </thead>
@@ -26,7 +25,7 @@
             @foreach($groups as $group)
                 <tr>
                     <td>
-                        <div class="d-flex px-2">
+                        <div class="d-flex">
                             <div class="rounded-circle bg-gray-100 me-2 my-2">
                                 <a href="/groups/{{$group->id}}/edit">
                                     <i class="pad fa fa-list fa-group"></i>
@@ -74,13 +73,16 @@
 <script src="/assets/js/plugins/datatables.js"></script>
 <script>
     window.onload = function(e){
-        const dataTableBasic = new simpleDatatables.DataTable("#datatable", {
-            searchable: false,
+        const dataTableBasic = new DataTable("#datatable", {
+            "language": {
+                "url": "/assets/js/fr-FR.json"
+            },
+            searching: true,
             fixedHeight: true,
             bLengthChange: false,
             paging: true,
             showNEntries: false,
-            perPage: 10,
+            pageLength: 30,
         });
 
         $('#datatable-search').keyup(function () {

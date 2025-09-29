@@ -42,11 +42,11 @@ class UserController extends Controller
         $limitDate = date("Y-m-d", strtotime("-12 month"));
         $previousDate = date("Y-m-d", strtotime("-24 month"));
         $groups = UserManager::getGroups(Auth::user()->groups(), $limitDate, $previousDate);
-        $transactions = UserManager::getTransactions($tasks, $limitDate, $previousDate);
+        $expenses = UserManager::getExpenses($tasks, $limitDate, $previousDate, $groups);
         $categoryId = 0;
         $groupId = 0;
 
-        return view('dashboard', compact('tasks','categories', 'transactions', 'categoryId',
+        return view('dashboard', compact('tasks','categories', 'expenses', 'categoryId',
             'groups', 'groupId'));
     }
 

@@ -23,6 +23,7 @@ class Account extends Model
         'color',
         'user_id',
         'active',
+        'refresh',
     ];
 
     public function user(): BelongsTo
@@ -111,7 +112,7 @@ class Account extends Model
             ->join('accounts', 'transactions.account_id', '=', 'accounts.id')
             ->where("transactions.created_at","<",$firstDay)
             ->where('accounts.id', $this->id)
-            ->selectRaw("SUM(transactions.amount) as sum_amount, 
+            ->selectRaw("SUM(transactions.amount) as sum_amount,
                 STRFTIME('%Y-%m-01', transactions.created_at) as month")
             ->groupBy("month")
             ->get();
@@ -137,7 +138,7 @@ class Account extends Model
             ->join('accounts', 'transactions.account_id', '=', 'accounts.id')
             ->where("transactions.created_at",">=",$nextFirstDay)
             ->where('accounts.id', $this->id)
-            ->selectRaw("SUM(transactions.amount) as sum_amount, 
+            ->selectRaw("SUM(transactions.amount) as sum_amount,
                 STRFTIME('%Y-%m-01', transactions.created_at) as month")
             ->groupBy("month")
             ->get();

@@ -10,7 +10,7 @@
                                 <div class="col-6">
                                     <h5 class="">{{__('Account Management')}}</h5>
                                     <p class="mb-0 text-sm">
-                                        <b>{{__("Total")}}: {{$total}} €</b>
+                                        <b>{{__("Total")}}: {{currency($total)}}</b>
                                         <br/>
                                         {{__("Last update")}}: {{formatDate(Auth::user()->linxo_at)}}
                                     </p>
@@ -58,18 +58,18 @@
                             <table class="table text-secondary text-center" id="datatable">
                                 <thead class="bg-gray-100">
                                     <tr>
-                                        <th
-                                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            {{__("Picture")}}</th>
-                                        <th
-                                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            {{__("Name")}}</th>
-                                        <th
-                                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            {{__("Amount")}}</th>
-                                        <th
-                                            class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            {{__("Status")}}</th>
+                                        <th>
+                                            {{__("Picture")}}
+                                        </th>
+                                        <th>
+                                            {{__("Name")}}
+                                        </th>
+                                        <th>
+                                            {{__("Amount")}}
+                                        </th>
+                                        <th>
+                                            {{__("Status")}}
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -88,9 +88,7 @@
                                                 </a>
                                             </td>
                                             <td class="align-middle bg-transparent border-bottom">
-                                                <a href="/accounts/{{$account->id}}/edit">
-                                                    {{round($account->amount)}} €
-                                                </a>
+                                                {{$account->amount}}
                                             </td>
                                             <td class="align-middle bg-transparent border-bottom">
                                                 <span class="badge badge-sm border @if (!$account->active)
@@ -103,8 +101,20 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th></th>
+                                        <th>{{__("Total page")}}
+                                            <br/>{{__("Total full")}}
+                                        </th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
+
+                        <br/>
 
                         <div class="row">
                             <div class="col-lg-6 col-md-6 mb-md-0 mb-4">
@@ -203,7 +213,6 @@
                                     data: {
                                         labels: {!! json_encode($charts['yearly']['labels'], JSON_PRETTY_PRINT)!!},
                                         datasets: [{
-                                            label: "Répartition des dépenses",
                                             data: {!! json_encode($charts['yearly']['datasets'], JSON_PRETTY_PRINT)!!},
                                             backgroundColor: dynamicColors,
                                             hoverOffset: 4
@@ -231,7 +240,7 @@
                             </script>
                         </div>
 
-                        <div class="row">
+                        <div class="row mt-4">
                             <div class="col-lg-12 col-md-12 mb-md-0 mb-4">
                                 <div class="card shadow-xs border h-100">
                                     <div class="card-header pb-0">
@@ -257,6 +266,7 @@
                                         datasets: [
                                             @foreach ($charts['all']['accounts'] as $accountId => $datas)
                                                 {
+                                                    hidden: {{$datas['hidden']}},
                                                     label: "{{$datas['label']}}",
                                                     data: {!! json_encode($datas['data'], JSON_PRETTY_PRINT)!!},
                                                     hoverOffset: 4,
@@ -321,16 +331,83 @@
 </x-app-layout>
 
 <script src="/assets/js/plugins/datatables.js"></script>
-<script src="/assets/js/plugins/currency.js"></script>
 <script>
     window.onload = function(e){
-        const dataTableBasic = new simpleDatatables.DataTable("#datatable", {
-            searchable: false,
+        const dataTableBasic = new DataTable("#datatable", {
+            "language": {
+                "url": "/assets/js/fr-FR.json"
+            },
+            searching: true,
             fixedHeight: true,
             bLengthChange: false,
             paging: true,
             showNEntries: false,
-            perPage: 10,
+            pageLength: 30,
+            "columnDefs": [
+                {
+                    "targets": 2,
+                    "type": "num",
+                    "render": {
+                        "sort": function (data, type, row) {
+                            let cleaned = data.toString()
+                                .replace(' €', '')
+                                .replace(/ /g, '')
+                                .replace(',', '.');
+
+                            return parseFloat(cleaned);
+                        },
+                        "display": function (data, type, row) {
+                            let numberValue;
+                            if (typeof data === 'string') {
+                                numberValue = parseFloat(data.replace(' €', '').replace(/ /g, '').replace(',', '.'));
+                            } else {
+                                numberValue = data;
+                            }
+
+                            return numberValue.toLocaleString('fr-FR', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2
+                            }) + ' €';
+                        }
+                    }
+                }
+            ],
+            footerCallback: function (row, data, start, end, display) {
+                let api = this.api();
+                let intVal = function (i) {
+                    if (typeof i === 'string') {
+                        let cleaned = i.replace(' €', '')
+                            .replace(/ /g, '');
+
+                        if (cleaned.indexOf(',') > -1 && cleaned.indexOf('.') > -1) {
+                            return cleaned.replace(/\./g, '').replace(',', '.') * 1;
+                        } else if (cleaned.indexOf(',') > -1) {
+                            return cleaned.replace(',', '.') * 1;
+                        } else {
+                            return cleaned * 1;
+                        }
+                    }
+                    return typeof i === 'number' ? i : 0;
+                };
+
+                let total = api
+                    .column(2)
+                    .data()
+                    .reduce((a, b) => intVal(a) + intVal(b), 0);
+
+                let pageTotal = api
+                    .column(2, { page: 'current' })
+                    .data()
+                    .reduce((a, b) => intVal(a) + intVal(b), 0);
+
+                let formatNumber = (num) => num.toLocaleString('fr-FR', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+
+                api.column(2).footer().innerHTML =
+                    formatNumber(pageTotal) + ' € <br/> ' + formatNumber(total) + ' €';
+            },
         });
 
         $('#datatable-search').keyup(function () {

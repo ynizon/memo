@@ -31,25 +31,38 @@
                                 @endif
                             </div>
                         </div>
+
+                        <div class="border-bottom py-3 px-3 d-sm-flex align-items-center">
+                            <div class="input-group w-sm-25 ms-auto py-2 py-lg-0">
+                                <span class="input-group-text text-body">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16px" height="16px" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z">
+                                </path>
+                                </svg>
+                                </span>
+                                <input type="text" id="datatable-search" class="form-control" placeholder="{{__("Search")}}">
+                            </div>
+                        </div>
+
                         <div class="table-responsive">
-                            <table class="table text-secondary text-center">
+                            <table class="table text-secondary text-center" id="datatable">
                                 <thead class="bg-gray-100">
                                     <tr>
-                                        <th
-                                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            {{__("Name")}}</th>
-                                        <th
-                                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            {{__("Email")}}</th>
-                                        <th
-                                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            {{__("Admin")}}</th>
-                                        <th
-                                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            {{__("Premium")}}</th>
-                                        <th
-                                            class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            {{__("Action")}}</th>
+                                        <th>
+                                            {{__("Name")}}
+                                        </th>
+                                        <th>
+                                            {{__("Email")}}
+                                        </th>
+                                        <th>
+                                            {{__("Admin")}}
+                                        </th>
+                                        <th>
+                                            {{__("Premium")}}
+                                        </th>
+                                        <th>
+                                            {{__("Action")}}
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -100,14 +113,21 @@
 
 <script src="/assets/js/plugins/datatables.js"></script>
 <script>
-    const dataTableBasic = new simpleDatatables.DataTable("#datatable-search", {
-        searchable: true,
+    const dataTableBasic = new DataTable("#datatable", {
+        "language": {
+            "url": "/assets/js/fr-FR.json"
+        },
+        searching: true,
         fixedHeight: true,
-        columns: [{
-            select: [2, 6],
-            sortable: false
-        }]
+        bLengthChange: false,
+        paging: true,
+        showNEntries: false,
+        pageLength: 30,
     });
+
+    $('#datatable-search').keyup(function () {
+        dataTableBasic.search($(this).val()).draw();
+    })
 
     function tooglePremium(userId){
         window.location = '/users/'+userId+'/togglePremium';

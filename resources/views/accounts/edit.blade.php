@@ -89,7 +89,7 @@
                                     <div class="form-group">
                                         <div class="form-check form-switch ps-0">
                                             <input class="form-check-input ms-auto" type="checkbox" value="1"
-                                                   name="archive"
+                                                   name="active"
                                                    id="flexSwitchCheckDefault2" @if ($account->active) checked @endif>
                                             <label class="form-check-label text-body ms-3 text-truncate w-80 mb-0"
                                                    for="flexSwitchCheckDefault2">{{__("Active")}}</label>
@@ -131,7 +131,7 @@
                                         </div>
                                         <br>
                                         <button type="submit" class="btn btn-primary">
-                                            <i class="pad fas fa-save" aria-hidden="true"></i>{{__("Save")}}
+                                            <i class="pad fas fa-save" aria-hidden="true"></i>{{__("Add")}}
                                         </button>
                                     </form>
                                 @endif
@@ -230,7 +230,7 @@
                             </script>
                         </div>
                         <hr/>
-                        @include("/accounts/table", compact('account'))
+                        @include("/accounts/table", compact('account', 'interval'))
                     </div>
                 </div>
             </div>
@@ -241,13 +241,81 @@
             window.onload = function(e){
                 $('.colorpicker').colorpicker();
 
-                const dataTableBasic = new simpleDatatables.DataTable("#datatable", {
-                    searchable: false,
+                const dataTableBasic = new DataTable("#datatable", {
+                    "language": {
+                        "url": "/assets/js/fr-FR.json"
+                    },
+                    searching: true,
                     fixedHeight: true,
                     bLengthChange: false,
                     paging: true,
                     showNEntries: false,
-                    perPage: 50,
+                    pageLength: 30,
+                    "columnDefs": [
+                        {
+                            "targets": 2,
+                            "type": "num",
+                            "render": {
+                                "sort": function (data, type, row) {
+                                    let cleaned = data.toString()
+                                        .replace(' €', '')
+                                        .replace(/ /g, '')
+                                        .replace(',', '.');
+
+                                    return parseFloat(cleaned);
+                                },
+                                "display": function (data, type, row) {
+                                    let numberValue;
+                                    if (typeof data === 'string') {
+                                        numberValue = parseFloat(data.replace(' €', '').replace(/ /g, '').replace(',', '.'));
+                                    } else {
+                                        numberValue = data;
+                                    }
+
+                                    return numberValue.toLocaleString('fr-FR', {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2
+                                    }) + ' €';
+                                }
+                            }
+                        }
+                    ],
+                    footerCallback: function (row, data, start, end, display) {
+                        let api = this.api();
+                        let intVal = function (i) {
+                            if (typeof i === 'string') {
+                                let cleaned = i.replace(' €', '')
+                                    .replace(/ /g, '');
+
+                                if (cleaned.indexOf(',') > -1 && cleaned.indexOf('.') > -1) {
+                                    return cleaned.replace(/\./g, '').replace(',', '.') * 1;
+                                } else if (cleaned.indexOf(',') > -1) {
+                                    return cleaned.replace(',', '.') * 1;
+                                } else {
+                                    return cleaned * 1;
+                                }
+                            }
+                            return typeof i === 'number' ? i : 0;
+                        };
+
+                        let total = api
+                            .column(2)
+                            .data()
+                            .reduce((a, b) => intVal(a) + intVal(b), 0);
+
+                        let pageTotal = api
+                            .column(2, { page: 'current' })
+                            .data()
+                            .reduce((a, b) => intVal(a) + intVal(b), 0);
+
+                        let formatNumber = (num) => num.toLocaleString('fr-FR', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        });
+
+                        api.column(2).footer().innerHTML =
+                            formatNumber(pageTotal) + ' € <br/> ' + formatNumber(total) + ' €';
+                    },
                 });
 
                 $('#datatable-search').keyup(function () {

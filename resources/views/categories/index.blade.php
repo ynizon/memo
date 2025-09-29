@@ -52,15 +52,15 @@
                             <table class="table text-secondary text-center" id="datatable">
                                 <thead class="bg-gray-100">
                                     <tr>
-                                        <th
-                                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            {{__("Picture")}}</th>
-                                        <th
-                                            class="text-left text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            {{__("Name")}}</th>
-                                        <th
-                                            class="text-center text-uppercase font-weight-bold bg-transparent border-bottom text-secondary">
-                                            {{__("Status")}}</th>
+                                        <th>
+                                            {{__("Picture")}}
+                                        </th>
+                                        <th>
+                                            {{__("Name")}}
+                                        </th>
+                                        <th>
+                                            {{__("Status")}}
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -102,13 +102,16 @@
 <script src="/assets/js/plugins/datatables.js"></script>
 <script>
     window.onload = function(e){
-        const dataTableBasic = new simpleDatatables.DataTable("#datatable", {
-            searchable: false,
+        const dataTableBasic = new DataTable("#datatable", {
+            "language": {
+                "url": "/assets/js/fr-FR.json"
+            },
+            searching: true,
             fixedHeight: true,
             bLengthChange: false,
             paging: true,
             showNEntries: false,
-            perPage: 10,
+            pageLength: 30,
         });
 
         $('#datatable-search').keyup(function () {

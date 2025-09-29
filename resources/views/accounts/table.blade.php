@@ -1,7 +1,24 @@
 <div class="border-bottom py-3 px-3 d-sm-flex align-items-center">
     <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-        {{__('Your 1000 latest transactions')}}
+        {{__('Your 1000 latest transactions')}}&nbsp;&nbsp;&nbsp;&nbsp;
     </div>
+
+    <form>
+        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+            <input type="date" class="form-control" id="from" name="from"
+                   value="@if ($interval['from'] != ''){{formatDateUK($interval['from'])}}@endif">
+        </div>
+
+        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+            <input type="date" class="form-control" id="to" name="to"
+                   value="@if ($interval['to'] != ''){{formatDateUK($interval['to'])}}@else{{date("Y-m-d")}}@endif">
+
+        </div>
+
+        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+            <input type="submit" value="{{__("Filter")}}" class="btn btn-primary mb-0">
+        </div>
+    </form>
 
     <div class="input-group w-sm-25 ms-auto py-2 py-lg-0">
         <span class="input-group-text text-body">
@@ -17,44 +34,48 @@
     <table class="table text-secondary text-center nowhitespace" id="datatable">
         <thead class="bg-gray-100">
         <tr>
-            <th class="text-secondary text-xs font-weight-semibold opacity-7">
+            <th>
                 {{__("Date")}}</th>
-            <th class="text-secondary text-xs font-weight-semibold opacity-7">
+            <th>
                 {{__("Label")}}</th>
-            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">
+            <th>
                 {{__('Amount')}}</th>
-            <th class="text-secondary text-xs font-weight-semibold opacity-7 ps-2">
+            <th>
                 {{__('Category')}}
             </th>
         </tr>
         </thead>
         <tbody>
             @foreach ($account->transactions as $transaction)
-                <tr>
-                    <td>
-                        <p class="text-sm font-weight-normal mb-0">
+                @if (($interval['from'] == '' && $interval['to'] == '') || ($interval['from'] <= $transaction->created_at && $interval['to'] >= $transaction->created_at))
+                    <tr>
+                        <td data-sort='YYYYMMDD'>
                             {{formatDate($transaction->created_at)}}
-                        </p>
-                    </td>
-                    <td>
-                        <p class="text-sm font-weight-normal mb-0">
+                        </td>
+                        <td>
                             {{$transaction->name}}<br/>
                             {{$transaction->check_number}}
                             {{$transaction->note}}
-                        </p>
-                    </td>
-                    <td class="align-middle bg-transparent border-bottom">
-                        <p class="text-sm font-weight-normal mb-0">
-                            {{$transaction->amount}}
-                        </p>
-                    </td>
-                    <td>
-                        <p class="text-sm font-weight-normal mb-0">
+                        </td>
+                        <td class="align-middle bg-transparent border-bottom">
+                                {{$transaction->amount}}
+                        </td>
+                        <td>
                             {{$transaction->category}}
-                        </p>
-                    </td>
-                </tr>
+                        </td>
+                    </tr>
+                @endif
             @endforeach
         </tbody>
+        <tfoot>
+            <tr>
+                <th></th>
+                <th>{{__("Total page")}}
+                    <br/>{{__("Total full")}}
+                </th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
     </table>
 </div>

@@ -316,5 +316,10 @@
     "Active": "Actif",
     "Add amount at date": "Ajouter le montant à date",
     "Last update": "Dernière mise à jour",
-    "new transactions": "nouvelles transactions"
+    "new transactions": "nouvelles transactions",
+    "Now": "Maintenant",
+    "Filter": "Filtrer",
+    "File error": "Fichier en erreur",
+    "Total full": "Total complet",
+    "Total page": "Total page"
 }
