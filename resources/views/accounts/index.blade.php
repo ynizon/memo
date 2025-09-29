@@ -88,7 +88,7 @@
                                                 </a>
                                             </td>
                                             <td class="align-middle bg-transparent border-bottom">
-                                                {{$account->amount}}
+                                                {{$account->lastAmount()->amount}}
                                             </td>
                                             <td class="align-middle bg-transparent border-bottom">
                                                 <span class="badge badge-sm border @if (!$account->active)
