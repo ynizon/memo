@@ -142,7 +142,7 @@
                                 @foreach ($account->amounts as $amount)
                                     @if (!$amount->calculated)
                                         <li>
-                                            {{formatDate($amount->created_at)}} : {{$amount->amount}} €
+                                            {{formatDate($amount->created_at)}} : {{currency($amount->amount)}}
                                             <a href="{{ route('accounts.remove_amount', ["amount_id"=>$amount->id]) }}">
                                                 <i class="fa fa-delete-left"></i></a>
                                         </li>

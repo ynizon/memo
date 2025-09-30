@@ -136,6 +136,22 @@ class Account extends Model
 
         $transactions = DB::table('transactions')
             ->join('accounts', 'transactions.account_id', '=', 'accounts.id')
+            ->where("transactions.created_at",">=",$lastAmount->created_at)
+            ->where("transactions.created_at","<",$nextFirstDay)
+            ->where('accounts.id', $this->id)
+            ->selectRaw("SUM(transactions.amount) as sum_amount,
+                STRFTIME('%Y-%m-01', transactions.created_at) as month")
+            ->groupBy("month")
+            ->get();
+
+        $totalAfterLastAmount = 0;
+        foreach ($transactions as $transaction)
+        {
+            $totalAfterLastAmount = $transaction->sum_amount;
+        }
+
+        $transactions = DB::table('transactions')
+            ->join('accounts', 'transactions.account_id', '=', 'accounts.id')
             ->where("transactions.created_at",">=",$nextFirstDay)
             ->where('accounts.id', $this->id)
             ->selectRaw("SUM(transactions.amount) as sum_amount,
@@ -152,7 +168,19 @@ class Account extends Model
             $accountAmount->account_id = $this->id;
             $accountAmount->save();
 
-            $months[$transaction->month] = $accountAmount;
+            if ($transaction->month == $nextFirstDay){
+                $months[$transaction->month] = $accountAmount + $totalAfterLastAmount;
+            } else {
+                $months[$transaction->month] = $accountAmount;
+            }
+        }
+        if (count($transactions) == 0)
+        {
+            $accountAmount = new AccountAmount();
+            $accountAmount->created_at = $nextFirstDay;
+            $accountAmount->account_id = $this->id;
+            $accountAmount->amount = $lastAmount->amount + $totalAfterLastAmount;
+            $accountAmount->save();
         }
 
         //Fill months without transaction

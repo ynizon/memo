@@ -57,7 +57,7 @@ class AccountController extends Controller
         $accountAmount = new AccountAmount();
         $accountAmount->account_id = $account->id;
         $accountAmount->amount = (float) $amount;
-        $accountAmount->created_at = formatDateUK($created_at);
+        $accountAmount->created_at = formatDateUK($created_at). ' ' .date("H:i:s");
         $accountAmount->calculated = false;
         $accountAmount->save();
 
@@ -129,8 +129,11 @@ class AccountController extends Controller
         $charts['labels'] = AccountManager::getLabels($account);
 
         $interval = [];
-        $interval['from'] = $request->input("from") != '' ? $request->input("from") : '';
-        $interval['to'] = $request->input("to") != '' ? $request->input("to") : '';
+        $interval['from'] = $request->input("from") != '' ? $request->input("from") :
+            date("Y-m-d", strtotime("-1 year"));
+        $interval['to'] = $request->input("to") != '' ? $request->input("to") :
+            date("Y-m-d", strtotime("+1 day"));;
+
         return view('accounts/edit', compact('charts','account', 'icons', 'interval'));
     }
 

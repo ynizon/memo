@@ -186,7 +186,7 @@ class AccountManager
                         $transaction->user_id = Auth::user()->getAuthIdentifier();
                         $transaction->ref = $ref;
                         $transaction->name = $row["Libellé"];
-                        $transaction->amount = $row["Montant"];
+                        $transaction->amount = str_replace(",",".",$row["Montant"]);
                         $transaction->check_number = $row["N° de chèque"];
                         $transaction->note = $row["Notes"];
                         $transaction->category = $row["Catégorie"];
