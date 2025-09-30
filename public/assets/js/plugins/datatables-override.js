@@ -79,7 +79,7 @@ function setColumnDefsAmount(columnIndex)
 						numberValue = data;
 					}
 
-					if (numberValue == 0){
+					if (numberValue === 0){
 						return '';
 					} else {
 						return numberValue.toLocaleString('fr-FR', {
