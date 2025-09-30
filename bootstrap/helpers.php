@@ -17,7 +17,7 @@ function formatDateUK($date)
     return \Carbon\Carbon::parse($date)->format('Y-m-d');
 }
 
-function currency($amount, $decimal = 0)
+function currency($amount, $decimal = 2)
 {
     return number_format($amount, $decimal, ',', ' '). " €";;
 }

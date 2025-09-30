@@ -32,7 +32,9 @@ class AccountController extends Controller
                 $account->needrefresh = false;
                 $account->save();
             }
-            $total = $total + $account->lastAmount()->amount;
+            if ($account->active){
+                $total = $total + $account->lastAmount()->amount;
+            }
         }
 
         $charts = AccountManager::getAllCharts($accounts);

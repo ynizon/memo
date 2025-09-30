@@ -10,7 +10,7 @@
                                 <div class="col-6">
                                     <h5 class="">{{__('Account Management')}}</h5>
                                     <p class="mb-0 text-sm">
-                                        <b>{{__("Total")}}: {{currency($total)}}</b>
+                                        <b>{{__("Total available")}}: {{currency($total)}}</b>
                                         <br/>
                                         {{__("Last update")}}: {{formatDate(Auth::user()->linxo_at)}}
                                     </p>
