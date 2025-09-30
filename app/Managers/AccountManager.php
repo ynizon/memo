@@ -33,7 +33,7 @@ class AccountManager
         foreach ($amounts as $amount){
             $datas[] = $amount->amount;
         }
-        $datas[] = $account->amount;
+        
         return [
             "hidden" => $account->active ? "false" : "true",
             "label"=> $account->name,
@@ -49,7 +49,7 @@ class AccountManager
         foreach ($amounts as $amount) {
             $labels[] = $amount->created_at->format('m-Y');
         }
-        $labels[] = __("Now");
+
         return $labels;
     }
 
