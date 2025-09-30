@@ -2426,3 +2426,6 @@ html[data-bs-theme=dark] div.dtsp-panesContainer div.dtsp-searchPane div.dataTab
 .dt-search{
     display:none !important;
 }
+.pointer{
+  cursor:pointer;
+}

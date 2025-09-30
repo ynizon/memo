@@ -100,19 +100,10 @@
 </x-app-layout>
 
 <script src="/assets/js/plugins/datatables.js"></script>
+<script src="/assets/js/plugins/datatables-override.js"></script>
 <script>
     window.onload = function(e){
-        const dataTableBasic = new DataTable("#datatable", {
-            "language": {
-                "url": "/assets/js/fr-FR.json"
-            },
-            searching: true,
-            fixedHeight: true,
-            bLengthChange: false,
-            paging: true,
-            showNEntries: false,
-            pageLength: 30,
-        });
+        const dataTableBasic = initializeDataTable("#datatable", -1, []);
 
         $('#datatable-search').keyup(function () {
             dataTableBasic.search($(this).val()).draw();

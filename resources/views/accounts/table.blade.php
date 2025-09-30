@@ -61,7 +61,8 @@
                                 {{$transaction->amount}}
                         </td>
                         <td>
-                            {{$transaction->category}}
+                            <span class="pointer" onclick="datatableSearch(this.innerText)
+                            ">{{$transaction->category}}</span>
                         </td>
                     </tr>
                 @endif

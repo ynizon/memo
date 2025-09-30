@@ -88,7 +88,11 @@
                                                 </a>
                                             </td>
                                             <td class="align-middle bg-transparent border-bottom">
-                                                {{$account->lastAmount()->amount}}
+                                                @if ($account->lastAmount()->amount != null)
+                                                    {{$account->lastAmount()->amount}}
+                                                @else
+                                                    0
+                                                @endif
                                             </td>
                                             <td class="align-middle bg-transparent border-bottom">
                                                 <span class="badge badge-sm border @if (!$account->active)
@@ -331,84 +335,11 @@
 </x-app-layout>
 
 <script src="/assets/js/plugins/datatables.js"></script>
+<script src="/assets/js/plugins/datatables-override.js"></script>
 <script>
     window.onload = function(e){
-        const dataTableBasic = new DataTable("#datatable", {
-            "language": {
-                "url": "/assets/js/fr-FR.json"
-            },
-            searching: true,
-            fixedHeight: true,
-            bLengthChange: false,
-            paging: true,
-            showNEntries: false,
-            pageLength: 30,
-            "columnDefs": [
-                {
-                    "targets": 2,
-                    "type": "num",
-                    "render": {
-                        "sort": function (data, type, row) {
-                            let cleaned = data.toString()
-                                .replace(' €', '')
-                                .replace(/ /g, '')
-                                .replace(',', '.');
-
-                            return parseFloat(cleaned);
-                        },
-                        "display": function (data, type, row) {
-                            let numberValue;
-                            if (typeof data === 'string') {
-                                numberValue = parseFloat(data.replace(' €', '').replace(/ /g, '').replace(',', '.'));
-                            } else {
-                                numberValue = data;
-                            }
-
-                            return numberValue.toLocaleString('fr-FR', {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2
-                            }) + ' €';
-                        }
-                    }
-                }
-            ],
-            footerCallback: function (row, data, start, end, display) {
-                let api = this.api();
-                let intVal = function (i) {
-                    if (typeof i === 'string') {
-                        let cleaned = i.replace(' €', '')
-                            .replace(/ /g, '');
-
-                        if (cleaned.indexOf(',') > -1 && cleaned.indexOf('.') > -1) {
-                            return cleaned.replace(/\./g, '').replace(',', '.') * 1;
-                        } else if (cleaned.indexOf(',') > -1) {
-                            return cleaned.replace(',', '.') * 1;
-                        } else {
-                            return cleaned * 1;
-                        }
-                    }
-                    return typeof i === 'number' ? i : 0;
-                };
-
-                let total = api
-                    .column(2)
-                    .data()
-                    .reduce((a, b) => intVal(a) + intVal(b), 0);
-
-                let pageTotal = api
-                    .column(2, { page: 'current' })
-                    .data()
-                    .reduce((a, b) => intVal(a) + intVal(b), 0);
-
-                let formatNumber = (num) => num.toLocaleString('fr-FR', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                });
-
-                api.column(2).footer().innerHTML =
-                    formatNumber(pageTotal) + ' € <br/> ' + formatNumber(total) + ' €';
-            },
-        });
+        let columnDefs = setColumnDefsAmount(2);
+        const dataTableBasic = initializeDataTable("#datatable", 2, columnDefs);
 
         $('#datatable-search').keyup(function () {
             dataTableBasic.search($(this).val()).draw();
