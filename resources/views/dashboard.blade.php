@@ -38,11 +38,15 @@
                                                 <div class="d-flexOLD align-items-center">
                                                     <span class="text-sm ms-0">{{__("Previous")}} : {{currency($expense['last'])}}</span>
                                                     @if ($expense['last'] > 0)
-                                                        <span class="text-sm font-weight-bolder @if (round(($expense['now'] - $expense['last']) / $expense['last'] * 100) > 0)
+                                                        <span class="text-sm font-weight-bolder @if (round(
+                                                        ($expense['now'] - $expense['last']) / $expense['last'] *
+                                                        100, 0, PHP_ROUND_HALF_UP) > 0)
                                                             text-success @else text-danger  @endif" style="float:right">
-                                                            <i class="fa fa-chevron-@if (round(($expense['now'] - $expense['last']) / $expense['last'] * 100) > 0)
+                                                            <i class="fa fa-chevron-@if (round(($expense['now'] -
+                                                            $expense['last']) / $expense['last'] * 100, 0, PHP_ROUND_HALF_UP) > 0)
                                                                 fa-chevron-up @else fa-chevron-down @endif text-xs me-1"></i>
-                                                            {{round(($expense['now'] - $expense['last']) / $expense['last'] * 100) }} %
+                                                            {{round(($expense['now'] - $expense['last']) /
+                                                            $expense['last'] * 100, 0, PHP_ROUND_HALF_UP) }} %
                                                         </span>
                                                     @endif
                                                 </div>
@@ -57,7 +61,9 @@
             </div>
             <div class="row">
                 <div class="col-lg-12 col-md-12">
-                    @include("/tasks/table", compact('categories', 'tasks'))
+                    <div class="card">
+                        @include("/tasks/table", compact('categories', 'tasks'))
+                    </div>
                 </div>
             </div>
             <x-app.footer />

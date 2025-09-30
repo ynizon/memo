@@ -33,6 +33,7 @@
         <input type="text" id="datatable-search" class="form-control" placeholder="{{__("Search")}}">
     </div>
 </div>
+
 <div class="table-responsive">
     <table class="table text-secondary text-center" id="datatable">
         <thead class="bg-gray-100">
@@ -94,9 +95,7 @@
                         </div>
                     </td>
                     <td>
-                        <a href="@if ($task->user_id == Auth::user()->id) /tasks/{{$task->id}}/edit @else /tasks/{{$task->id}} @endif">
-                            @if ($task->price > 0){{currency($task->price)}}@endif
-                        </a>
+                        @if ($task->price > 0){{$task->price}}@endif
                     </td>
                     <td data-sort='YYYYMMDD'>
                         <a href="@if ($task->user_id == Auth::user()->id) /tasks/{{$task->id}}/edit @else /tasks/{{$task->id}} @endif">
@@ -138,34 +137,70 @@
             paging: true,
             showNEntries: false,
             pageLength: 30,
+            "columnDefs": [
+                {
+                    "targets": 1,
+                    "type": "num",
+                    "render": {
+                        "sort": function (data, type, row) {
+                            let cleaned = data.toString()
+                                .replace(' €', '')
+                                .replace(/ /g, '')
+                                .replace(',', '.');
+
+                            return parseFloat(cleaned);
+                        },
+                        "display": function (data, type, row) {
+                            let numberValue;
+                            if (typeof data === 'string') {
+                                numberValue = parseFloat(data.replace(' €', '').replace(/ /g, '').replace(',', '.'));
+                            } else {
+                                numberValue = data;
+                            }
+
+                            return numberValue.toLocaleString('fr-FR', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2
+                            }) + ' €';
+                        }
+                    }
+                }
+            ],
             footerCallback: function (row, data, start, end, display) {
                 let api = this.api();
-
-                // Remove the formatting to get integer data for summation
                 let intVal = function (i) {
                     if (typeof i === 'string') {
-                        return i.replace(/[^\d,-]/g, '')
-                            .replace(/\./g, '')
-                            .replace(',', '.') * 1;
+                        let cleaned = i.replace(' €', '')
+                            .replace(/ /g, '');
+
+                        if (cleaned.indexOf(',') > -1 && cleaned.indexOf('.') > -1) {
+                            return cleaned.replace(/\./g, '').replace(',', '.') * 1;
+                        } else if (cleaned.indexOf(',') > -1) {
+                            return cleaned.replace(',', '.') * 1;
+                        } else {
+                            return cleaned * 1;
+                        }
                     }
                     return typeof i === 'number' ? i : 0;
                 };
 
-                // Total over all pages
                 let total = api
                     .column(1)
                     .data()
                     .reduce((a, b) => intVal(a) + intVal(b), 0);
 
-                // Total over this page
                 let pageTotal = api
                     .column(1, { page: 'current' })
                     .data()
                     .reduce((a, b) => intVal(a) + intVal(b), 0);
 
-                // Update footer
+                let formatNumber = (num) => num.toLocaleString('fr-FR', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+
                 api.column(1).footer().innerHTML =
-                    pageTotal.toFixed(2) + ' € <br/> ' + total.toFixed(2) + ' €';
+                    formatNumber(pageTotal) + ' € <br/> ' + formatNumber(total) + ' €';
             },
         });
 
@@ -174,7 +209,7 @@
         })
 
         $('.datafiltreCategory').click(function () {
-            dataTableBasic.search('Category-' + $(this).attr('data-category'));
+            dataTableBasic.search('Category-' + $(this).attr('data-category')).draw();
             if (chart){
                 let chartColumn = $(this).attr('data-chart');
                 chart.data.datasets.forEach(function(ds) {

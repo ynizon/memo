@@ -61,7 +61,7 @@
                                         <th>
                                             {{__("Picture")}}
                                         </th>
-                                        <th>
+                                        <th class="align-middle">
                                             {{__("Name")}}
                                         </th>
                                         <th>
