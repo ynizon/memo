@@ -95,7 +95,7 @@
                         </div>
                     </td>
                     <td>
-                        @if ($task->price > 0){{$task->price}}@endif
+                        {{$task->price}}
                     </td>
                     <td data-sort='YYYYMMDD'>
                         <a href="@if ($task->user_id == Auth::user()->id) /tasks/{{$task->id}}/edit @else /tasks/{{$task->id}} @endif">

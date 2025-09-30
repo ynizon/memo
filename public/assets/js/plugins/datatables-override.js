@@ -79,10 +79,14 @@ function setColumnDefsAmount(columnIndex)
 						numberValue = data;
 					}
 
-					return numberValue.toLocaleString('fr-FR', {
-						minimumFractionDigits: 2,
-						maximumFractionDigits: 2
-					}) + ' €';
+					if (numberValue == 0){
+						return '';
+					} else {
+						return numberValue.toLocaleString('fr-FR', {
+							minimumFractionDigits: 2,
+							maximumFractionDigits: 2
+						}) + ' €';
+					}
 				}
 			}
 		}
