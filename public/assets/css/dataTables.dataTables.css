@@ -2429,3 +2429,20 @@ html[data-bs-theme=dark] div.dtsp-panesContainer div.dtsp-searchPane div.dataTab
 .pointer{
   cursor:pointer;
 }
+
+.table-responsive::-webkit-scrollbar {
+    height: 20px; /* Set the thickness (height for a horizontal scrollbar) */
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background-color: #555; /* Dark color for contrast */
+    border-radius: 6px; /* Rounded corners for a modern look */
+    border: 3px solid #f9f9f9; /* Adds a border to separate the thumb from the track */
+}
+
+.truncate-column {
+    max-width: 200px; /* Définissez une largeur maximale, sinon l'ellipsis ne fonctionnera pas */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap; /* Empêche le texte de passer à la ligne */
+}

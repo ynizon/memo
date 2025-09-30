@@ -18,13 +18,13 @@
                                 <div class="col-6 text-end">
                                     <form method="post" action="/accounts/add_csv" enctype="multipart/form-data">
                                         {{ csrf_field() }}
-                                        <input type="file" name="linxo_csv">
-                                        <a href="#" onclick="this.parentNode.submit();" class="btn btn-dark btn-primary d-none d-lg-inline-block">
-                                            <i class="fas fa-plus me-2"></i> {{__("Send Linxo history csv file")}}
-                                        </a>
-                                        <a href="#" onclick="this.parentNode.submit();" class="btn btn-dark btn-primary d-inline-block d-lg-none">
-                                            <i class="fas fa-plus me-2"></i>
-                                        </a>
+                                        <label for="linxo" class="btn btn-dark btn-primary" >
+                                            <input id="linxo" type="file" name="linxo_csv" class="d-none"
+                                                   onchange="this.form.submit();">
+                                            <span >
+                                                <i class="fas fa-plus me-2"></i> {{__("Send Linxo history csv file")}}
+                                            </span>
+                                        </label>
                                     </form>
                                 </div>
                             </div>
@@ -58,9 +58,6 @@
                             <table class="table text-secondary text-center" id="datatable">
                                 <thead class="bg-gray-100">
                                     <tr>
-                                        <th>
-                                            {{__("Picture")}}
-                                        </th>
                                         <th class="align-middle">
                                             {{__("Name")}}
                                         </th>
@@ -76,16 +73,12 @@
                                     @foreach ($accounts as $account)
                                         <tr>
                                             <td class="align-middle bg-transparent border-bottom">
-                                                <div class="d-flex justify-content-center align-items-center">
+                                                <div class="d-flex">
                                                     <a href="/accounts/{{$account->id}}/edit">
                                                         <i class="fa {{$account->icon}}"></i>
+                                                        &nbsp;&nbsp;{{__($account->name)}}
                                                     </a>
                                                 </div>
-                                            </td>
-                                            <td class="align-middle bg-transparent border-bottom">
-                                                <a href="/accounts/{{$account->id}}/edit">
-                                                    {{__($account->name)}}
-                                                </a>
                                             </td>
                                             <td class="align-middle bg-transparent border-bottom">
                                                 @if ($account->lastAmount()->amount != null)
@@ -107,7 +100,6 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <th></th>
                                         <th>{{__("Total page")}}
                                             <br/>{{__("Total full")}}
                                         </th>
@@ -338,8 +330,8 @@
 <script src="/assets/js/plugins/datatables-override.js"></script>
 <script>
     window.onload = function(e){
-        let columnDefs = setColumnDefsAmount(2);
-        const dataTableBasic = initializeDataTable("#datatable", 2, columnDefs);
+        let columnDefs = setColumnDefsAmount(1);
+        const dataTableBasic = initializeDataTable("#datatable", 1, columnDefs);
 
         $('#datatable-search').keyup(function () {
             dataTableBasic.search($(this).val()).draw();
