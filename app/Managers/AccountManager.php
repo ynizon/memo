@@ -33,7 +33,7 @@ class AccountManager
         foreach ($amounts as $amount){
             $datas[] = $amount->amount;
         }
-        
+
         return [
             "hidden" => $account->active ? "false" : "true",
             "label"=> $account->name,
