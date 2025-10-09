@@ -34,10 +34,10 @@
     <table class="table text-secondary text-center nowhitespace" id="datatable">
         <thead class="bg-gray-100">
         <tr>
+            <th >
+                {{__("Label")}}</th>
             <th>
                 {{__("Date")}}</th>
-            <th>
-                {{__("Label")}}</th>
             <th>
                 {{__('Amount')}}</th>
             <th>
@@ -49,20 +49,21 @@
             @foreach ($account->transactions as $transaction)
                 @if (($interval['from'] == '' && $interval['to'] == '') || ($interval['from'] <= $transaction->created_at && $interval['to'] >= $transaction->created_at))
                     <tr>
-                        <td data-sort='YYYYMMDD'>
-                            {{formatDate($transaction->created_at)}}
-                        </td>
                         <td>
                             {{$transaction->name}}<br/>
                             {{$transaction->check_number}}
                             {{$transaction->note}}
                         </td>
-                        <td class="align-middle bg-transparent border-bottom">
-                                {{$transaction->amount}}
+                        <td data-sort='YYYYMMDD'>
+                            {{formatDate($transaction->created_at)}}
                         </td>
                         <td>
-                            <span class="pointer" onclick="datatableSearch(this.innerText)
-                            ">{{$transaction->category}}</span>
+                            {{$transaction->amount}}
+                        </td>
+                        <td>
+                            <span class="pointer" onclick="datatableSearch(this.innerText)">
+                                {{$transaction->category}}
+                            </span>
                         </td>
                     </tr>
                 @endif
@@ -79,4 +80,6 @@
             </tr>
         </tfoot>
     </table>
+
+    <br/><br/>
 </div>

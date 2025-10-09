@@ -239,13 +239,12 @@
         <script src="/assets/js/plugins/datatables.js"></script>
         <script src="/assets/js/plugins/datatables-override.js"></script>
         <script>
-            let dataTableBasic = '';
             window.onload = function(e){
                 $('.colorpicker').colorpicker();
 
                 let columnDefs = setColumnDefsAmount(2);
                 let dataTableBasic = initializeDataTable("#datatable", 2, columnDefs);
-window.dataTableBasic = dataTableBasic;
+
                 $('#datatable-search').keyup(function () {
                     dataTableBasic.search($(this).val()).draw();
                 })

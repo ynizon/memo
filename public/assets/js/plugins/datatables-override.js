@@ -59,6 +59,10 @@ function initializeDataTable(tableSelector, footerColumnIndex, customColumnDefs)
 function setColumnDefsAmount(columnIndex)
 {
 	return [
+        {
+            "targets": 0,
+            "className": "truncate-column"
+        },
 		{
 			"targets": columnIndex,
 			"type": "num",
