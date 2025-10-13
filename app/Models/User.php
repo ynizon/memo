@@ -55,6 +55,11 @@ class User extends Authenticatable
         return $this->hasMany(Account::class)->orderBy("position","asc")->get();
     }
 
+    public function loans(): Collection
+    {
+        return $this->hasMany(Loan::class)->get();
+    }
+
     public function transactions(): Collection
     {
         return $this->hasMany(Transaction::class)->orderBy("created_at","desc")->get();

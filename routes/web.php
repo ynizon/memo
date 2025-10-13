@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\LoanController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProfileController;
@@ -35,6 +36,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/banks', [AccountController::class, 'bank'])->name('bank');
     Route::get('/accounts/remove_amount', [AccountController::class, 'remove_amount'])->name('accounts.remove_amount');
     Route::resource('/accounts', AccountController::class);
+    Route::resource('/loans', LoanController::class);
     Route::post('/accounts/add_amount', [AccountController::class, 'add_amount'])->name('accounts.add_amount');
     Route::post('/accounts/add_csv', [AccountController::class, 'add_csv'])->name('accounts.add_csv');
     Route::resource('/categories', CategoryController::class);

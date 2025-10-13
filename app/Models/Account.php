@@ -24,7 +24,7 @@ class Account extends Model
         'color',
         'user_id',
         'active',
-        'refresh',
+        'needrefresh',
     ];
 
     public function user(): BelongsTo
@@ -35,6 +35,11 @@ class Account extends Model
     public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class)->orderBy("created_at","desc")->limit(1000);
+    }
+
+    public function loans(): HasMany
+    {
+        return $this->hasMany(Loan::class);
     }
 
     public function amounts(): HasMany
@@ -76,6 +81,11 @@ class Account extends Model
                 ->orderBy("created_at","desc")->get();
 
             $this->refreshAmountMonths($firstTransaction, $lastAmounts);
+
+            foreach ($this->loans as $loan)
+            {
+                $loan->refresh();
+            }
         }
 
         return $total;
@@ -105,8 +115,7 @@ class Account extends Model
         //Fill old months
         foreach ($lastAmounts as $lastAmount){
             $transactions = DB::table('transactions')
-                ->join('accounts', 'transactions.account_id', '=', 'accounts.id')
-                ->where('accounts.id', $this->id)
+                ->where('accounts_id', $this->id)
                 ->where("transactions.created_at","<", $lastAmount->created_at)
                 ->where("transactions.created_at",">=", $firstDay)
                 ->selectRaw("SUM(transactions.amount) as sum_amount,
@@ -137,8 +146,7 @@ class Account extends Model
             $lastAmount = $lastAmounts->first();
 
             $transactions = DB::table('transactions')
-                ->join('accounts', 'transactions.account_id', '=', 'accounts.id')
-                ->where('accounts.id', $this->id)
+                ->where('accounts_id', $this->id)
                 ->where("transactions.created_at",">=",$lastAmount->created_at)
                 ->selectRaw("SUM(transactions.amount) as sum_amount,
                 STRFTIME('%Y-%m-01', transactions.created_at) as month")

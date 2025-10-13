@@ -38,7 +38,7 @@ class AccountManager
             "hidden" => $account->active ? "false" : "true",
             "label"=> $account->name,
             "data"=> $datas,
-            "color"=> self::convertColorHexa($account->color)
+            "color"=> convertColorHexa($account->color)
         ];
     }
 
@@ -51,25 +51,6 @@ class AccountManager
         }
 
         return $labels;
-    }
-
-    private static function convertColorHexa($color): string
-    {
-        // Remove the '#' if it's present
-        $hex = ltrim($color, '#');
-
-        // Make sure it's a valid 6-character hex code
-        if (strlen($hex) !== 6) {
-            // You might want to handle this error more gracefully
-            return 'Invalid hex color';
-        }
-
-        // Convert hex to decimal
-        $r = hexdec(substr($hex, 0, 2));
-        $g = hexdec(substr($hex, 2, 2));
-        $b = hexdec(substr($hex, 4, 2));
-
-        return "rgb($r, $g, $b, 0.5)";
     }
 
     private static function getTransactionsCharts(int $maxDays): array

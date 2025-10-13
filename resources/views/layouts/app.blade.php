@@ -56,7 +56,6 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Font Awesome Icons -->
-    <script src="https://kit.fontawesome.com/349ee9c857.js" crossorigin="anonymous"></script>
     <link href="/assets/css/nucleo-svg.css" rel="stylesheet" />
     <!-- CSS Files -->
     <link id="pagestyle" href="/assets/css/corporate-ui-dashboard.css?v=1.0.0" rel="stylesheet" />

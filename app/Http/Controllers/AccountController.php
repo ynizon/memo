@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Managers\AccountManager;
+use App\Managers\LoanManager;
 use App\Models\Account;
 use App\Models\AccountAmount;
 use App\Models\Transaction;
@@ -24,6 +25,7 @@ class AccountController extends Controller
     public function index()
     {
         $accounts = Auth::user()->accounts();
+        $loans = Auth::user()->loans();
         $total = 0;
         $firstTransaction = Transaction::where("user_id","=",Auth::id())->orderBy('created_at', 'asc')->first();;
         foreach ($accounts as $account){
@@ -38,7 +40,8 @@ class AccountController extends Controller
         }
 
         $charts = AccountManager::getAllCharts($accounts);
-        return view('accounts/index', compact('accounts', 'charts', 'total'));
+        $loanCharts = LoanManager::getAllCharts($loans);
+        return view('accounts/index', compact('accounts', 'charts','loanCharts', 'total'));
     }
 
     public function add_amount(Request $request){
@@ -132,7 +135,7 @@ class AccountController extends Controller
         $interval['from'] = $request->input("from") != '' ? $request->input("from") :
             date("Y-m-d", strtotime("-1 year"));
         $interval['to'] = $request->input("to") != '' ? $request->input("to") :
-            date("Y-m-d", strtotime("+1 day"));;
+            date("Y-m-d", strtotime("+1 day"));
 
         return view('accounts/edit', compact('charts','account', 'icons', 'interval'));
     }

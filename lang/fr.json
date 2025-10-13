@@ -274,6 +274,9 @@
     "Task created successfully.": "Tâche créé avec succès.",
     "Task updated successfully.": "Tâche modifiée avec succès.",
     "Task deleted successfully": "Tâche supprimée avec succès",
+    "Loan created successfully.": "Emprunt créé avec succès.",
+    "Loan updated successfully.": "Emprunt modifié avec succès.",
+    "Loan deleted successfully": "Emprunt supprimé avec succès",
     "Category created successfully.": "Catégorie créée avec succès.",
     "Category updated successfully.": "Catégorie modifiée avec succès.",
     "Category deleted successfully": "Catégorie supprimée avec succès",
@@ -312,6 +315,7 @@
     "Yearly Budget": "Budget annuel",
     "Monthly Budget": "Budget mensuel",
     "Add Account": "Ajouter un compte",
+    "Add Loan": "Ajouter un emprunt",
     "Accounts": "Comptes",
     "Active": "Actif",
     "Add amount at date": "Ajouter le montant à date",
@@ -322,5 +326,14 @@
     "File error": "Fichier en erreur",
     "Total full": "Total complet",
     "Total page": "Total page",
-    "Total available": "Total disponible"
+    "Total available": "Total disponible",
+    "Loan Management": "Gestion des emprunts",
+    "From": "Du",
+    "To": "Au",
+    "Rate": "Taux",
+    "ref (code to look for in transactions)": "Référence (code à rechercher dans les transactions)",
+    "Already paid": "Déjà payé",
+    "Paid": "Payé",
+    "Remaining":"Restant",
+    "Loan Evolution": "Evolution des emprunts"
 }

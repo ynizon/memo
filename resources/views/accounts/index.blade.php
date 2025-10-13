@@ -26,6 +26,12 @@
                                             </span>
                                         </label>
                                     </form>
+
+                                    <label class="btn btn-dark btn-primary" >
+                                            <span >
+                                                <a style="color:#fff" href="/loans">{{__("Loan Management")}}</a>
+                                            </span>
+                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -90,7 +96,7 @@
                                             <td class="align-middle bg-transparent border-bottom">
                                                 <span class="badge badge-sm border @if (!$account->active)
                                                     border-secondary text-secondary bg-secondary @else border-success text-success bg-success @endif">
-                                                    <a href="/account/{{$account->id}}/edit">
+                                                    <a href="/accounts/{{$account->id}}/edit">
                                                         @if ($account->active) ON @else OFF @endif
                                                     </a>
                                                 </span>
@@ -308,6 +314,86 @@
                                                     display: true,
                                                     text: "{{__("Amount")}}"
                                                 },
+                                            }
+                                        },
+                                    }
+                                });
+                            </script>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-lg-12 col-md-12 mb-md-0 mb-4">
+                                <div class="card shadow-xs border h-100">
+                                    <div class="card-header pb-0">
+                                        <h6 class="font-weight-semibold text-lg mb-0">{{__("Loan Evolution")}}</h6>
+                                    </div>
+                                    <div class="card-body py-3">
+                                        <div class="chart mb-2">
+                                            <canvas id="chart-loan" class="chart-canvas"
+                                                    style="display: block; box-sizing: border-box;
+                                            height: 440px; width: 474px;">
+                                            </canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <script>
+                                ctx = document.getElementById("chart-loan").getContext("2d");
+                                chart = new Chart(ctx, {
+                                    type: "line",
+                                    data: {
+                                        labels: {!! json_encode($loanCharts['all']['labels'], JSON_PRETTY_PRINT)!!},
+                                        datasets: [
+                                                @foreach ($loanCharts['all']['loans'] as $loanId => $datas)
+                                            {
+                                                hidden: {{$datas['hidden']}},
+                                                label: "{{$datas['label']}}",
+                                                data: {!! json_encode($datas['data'], JSON_PRETTY_PRINT)!!},
+                                                hoverOffset: 4,
+                                                backgroundColor: '{{$datas['color']}}',
+                                                borderColor: '{{$datas['color']}}',
+                                                pointStyle: 'circle',
+                                                pointRadius: 5,
+                                                pointHoverRadius: 8
+                                            },
+                                            @endforeach
+                                        ]
+                                    },
+                                    options: {
+                                        responsive: true,
+                                        maintainAspectRatio: false,
+                                        plugins: {
+                                            legend: {
+                                                display: true,
+                                                position: 'bottom',
+                                            },
+                                            tooltip: {
+                                                backgroundColor: '#fff',
+                                                titleColor: '#1e293b',
+                                                bodyColor: '#1e293b',
+                                                borderColor: '#e9ecef',
+                                                borderWidth: 1,
+                                                usePointStyle: true
+                                            }
+                                        },
+                                        scales: {
+                                            x: {
+                                                title: {
+                                                    display: true,
+                                                    text: "{{__("Date")}}"
+                                                },
+                                                ticks: {
+                                                    autoSkip: true,
+                                                    maxTicksLimit: 12
+                                                }
+                                            },
+                                            y: {
+                                                title: {
+                                                    display: true,
+                                                    text: "{{__("Amount")}}"
+                                                },
+                                                beginAtZero: true,
                                             }
                                         },
                                     }
