@@ -429,5 +429,11 @@
         $('#datatable-search').keyup(function () {
             dataTableBasic.search($(this).val()).draw();
         })
+
+        //Remove name order (for fix position order)
+        dataTableBasic.on('init.dt', function() {
+            $('.dt-column-title').eq(0).trigger('click');
+            $('.dt-column-title').eq(0).trigger('click');
+        });
     };
 </script>

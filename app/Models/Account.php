@@ -115,7 +115,7 @@ class Account extends Model
         //Fill old months
         foreach ($lastAmounts as $lastAmount){
             $transactions = DB::table('transactions')
-                ->where('accounts_id', $this->id)
+                ->where('account_id', $this->id)
                 ->where("transactions.created_at","<", $lastAmount->created_at)
                 ->where("transactions.created_at",">=", $firstDay)
                 ->selectRaw("SUM(transactions.amount) as sum_amount,
@@ -146,7 +146,7 @@ class Account extends Model
             $lastAmount = $lastAmounts->first();
 
             $transactions = DB::table('transactions')
-                ->where('accounts_id', $this->id)
+                ->where('account_id', $this->id)
                 ->where("transactions.created_at",">=",$lastAmount->created_at)
                 ->selectRaw("SUM(transactions.amount) as sum_amount,
                 STRFTIME('%Y-%m-01', transactions.created_at) as month")
@@ -164,7 +164,6 @@ class Account extends Model
 
             foreach ($transactions as $transaction) {
                 if ($transaction->month == $firstDate->format('Y-m-01')) {
-                    echo $transaction->sum_amount."xx";
                     $currentAmount += $transaction->sum_amount;
                 }
             }

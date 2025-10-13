@@ -82,7 +82,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="position">{{__('ref')}}</label>
+                                        <label for="position">{{__('Position')}}</label>
                                         <input type="text" class="form-control" id="position" name="position"
                                                value="@if (old('position') != ''){{old('position')}}@else{{$account->position}}@endif" required>
                                     </div>
@@ -113,7 +113,7 @@
                             <div class="col-md-3 px-4">
                                 <ul class="text-end px-4" style="list-style: none">
                                     @foreach ($account->loans as $loan)
-                                        <li><a href="/loans/{{$loan->id}}/edit">{{$loan->name}}</li>
+                                        <li><a href="/loans/{{$loan->id}}/edit">{{$loan->name}}</a></li>
                                     @endforeach
                                 </ul>
                             </div>
@@ -256,6 +256,11 @@
                 $('#datatable-search').keyup(function () {
                     dataTableBasic.search($(this).val()).draw();
                 })
+
+                dataTableBasic.on('init.dt', function() {
+                    //Order by date
+                    $('.dt-column-title').eq(1).trigger('click');
+                });
             };
         </script>
 
