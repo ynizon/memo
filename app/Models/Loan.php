@@ -83,7 +83,7 @@ class Loan extends Model
         while ($firstDate->format("Y-m-01") <= $lastDate->format('Y-m-01')){
             $sumMonth = 0;
             foreach ($transactions as $transaction) {
-                if ($transaction->month == $lastDate->format('Y-m-01')) {
+                if ($transaction->month == $firstDate->format('Y-m-01')) {
                     $sumMonth += $transaction->sum_amount;
                     $currentAmount += $transaction->sum_amount;
                 }

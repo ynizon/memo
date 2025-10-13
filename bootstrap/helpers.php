@@ -85,6 +85,7 @@ function getAwesomeIcons(): array
     $icons["fa-bank"] = "fa-bank";
     $icons['fa-dog'] = 'fa-dog';
     $icons['fa-notes-medical'] = 'fa-notes-medical';
+    $icons['fa-map-signs'] = 'fa-map-signs';
 
     ksort($icons);
     return $icons;
@@ -95,4 +96,24 @@ function getHexaColors() : array
     return ["#e10a77", "#c79710", "#c02ae5", "#3474ab", "#FF6384", "#36A2EB", "#FFCD56", "#8F55DB",
         "#DB7093", "#FF7F50", "#00BFFF", "#7FFF00", "#FFD700", "#191970", "#DC143C",
         "#9ACD32", "#4682B4", "#F0E68C", "#8B008B", "#FF8C00", "#20B2AA", "#FFB6C1"];
+}
+
+
+function convertColorHexa($color): string
+{
+    // Remove the '#' if it's present
+    $hex = ltrim($color, '#');
+
+    // Make sure it's a valid 6-character hex code
+    if (strlen($hex) !== 6) {
+        // You might want to handle this error more gracefully
+        return 'Invalid hex color';
+    }
+
+    // Convert hex to decimal
+    $r = hexdec(substr($hex, 0, 2));
+    $g = hexdec(substr($hex, 2, 2));
+    $b = hexdec(substr($hex, 4, 2));
+
+    return "rgb($r, $g, $b, 0.5)";
 }
