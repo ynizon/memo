@@ -10,7 +10,7 @@
                                 <div class="col-6">
                                     <h5 class="">{{__('Loan Management')}}</h5>
                                     <p class="mb-0 text-sm">
-                                        <b>{{__("Already paid")}}: {{currency($totalPaid)}} / {{currency($total)}}</b>
+                                        <b>{{__("Already paid")}}: {{currency($totalPaid)}} / {{currency($totalToPaid)}}</b>
                                     </p>
                                 </div>
                             </div>

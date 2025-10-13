@@ -13,6 +13,13 @@
                                         <b>{{__("Total available")}}: {{currency($total)}}</b>
                                         <br/>
                                         {{__("Last update")}}: {{formatDate(Auth::user()->linxo_at)}}
+                                        <br/>
+                                        @if ($totalPaid != 0 && $totalToPaid != 0)
+                                            <br/>
+                                            <b>{{__("Loan Management")}}</b>
+                                            <br/>
+                                            {{__("Already paid")}}: {{currency($totalPaid)}} / {{currency($totalToPaid)}}
+                                        @endif
                                     </p>
                                 </div>
                                 <div class="col-6 text-end">

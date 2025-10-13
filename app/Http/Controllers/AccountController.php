@@ -39,9 +39,17 @@ class AccountController extends Controller
             }
         }
 
+        $totalPaid = 0;
+        $totalToPaid = 0;
+        foreach ($loans as $loan) {
+            $totalPaid += ($loan->amount - $loan->amount_now);
+            $totalToPaid += $loan->amount;
+        }
+
         $charts = AccountManager::getAllCharts($accounts);
         $loanCharts = LoanManager::getAllCharts($loans);
-        return view('accounts/index', compact('accounts', 'charts','loanCharts', 'total'));
+        return view('accounts/index', compact('accounts', 'charts','loanCharts',
+                  'total', 'totalPaid', 'totalToPaid'));
     }
 
     public function add_amount(Request $request){

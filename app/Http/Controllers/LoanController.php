@@ -30,14 +30,14 @@ class LoanController extends Controller
     {
         $loans = Auth::user()->loans();
         $totalPaid = 0;
-        $total = 0;
+        $totalToPaid = 0;
         foreach ($loans as $loan) {
             $totalPaid += ($loan->amount - $loan->amount_now);
-            $total += $loan->amount;
+            $totalToPaid += $loan->amount;
         }
 
         $charts = LoanManager::getAllCharts($loans);
-        return view('loans/index', compact('loans', 'charts', 'totalPaid', 'total'));
+        return view('loans/index', compact('loans', 'charts', 'totalPaid', 'totalToPaid'));
     }
 
     /**
