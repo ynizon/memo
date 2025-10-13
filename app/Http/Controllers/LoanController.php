@@ -161,7 +161,7 @@ class LoanController extends Controller
         $loan->update($this->validateFields($request));
         $loan->account->needRefresh = true;
         $loan->account->save();
-        return redirect()->route('accounts.edit', ["account"=>$loan->account])
+        return redirect()->route('loans.index')
             ->with('success', __('Loan updated successfully.'));
     }
 
