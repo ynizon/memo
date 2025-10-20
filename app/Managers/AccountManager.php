@@ -88,8 +88,9 @@ class AccountManager
      * @throws \League\Csv\InvalidArgument
      * @throws \League\Csv\Exception
      */
-    public static function importCsvFile(string $filename): void
+    public static function importCsvFile(string $filename): int
     {
+        $nbTransactions = 0;
         $user = Auth::user();
         $user->linxo_at = date("Y-m-d H:i:s");
         $user->save();
@@ -182,6 +183,7 @@ class AccountManager
                 }
             });
 
+            return $nbTransactions;
             //@TODO
 //                            DB::table('account_amounts')->insert([
 //                                'amount' => 1328.6,

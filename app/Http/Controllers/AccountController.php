@@ -92,7 +92,7 @@ class AccountController extends Controller
         $nbTransactions = 0;
         if ($request->file("linxo_csv")){
             try {
-                AccountManager::importCsvFile($request->file("linxo_csv"));
+                $nbTransactions = AccountManager::importCsvFile($request->file("linxo_csv"));
             }catch(\Exception $e){
                 return redirect("/accounts")->with('error', __("File error"));
             }

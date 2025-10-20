@@ -113,7 +113,8 @@
                             <div class="col-md-3 px-4">
                                 <ul class="text-end px-4" style="list-style: none">
                                     @foreach ($account->loans as $loan)
-                                        <li><a href="/loans/{{$loan->id}}/edit">{{$loan->name}}</a></li>
+                                        <li><a href="/loans/{{$loan->id}}/edit"><i
+                                                        class="fa {{$loan->icon}}"></i>&nbsp;{{$loan->name}}</a></li>
                                     @endforeach
                                 </ul>
                             </div>
