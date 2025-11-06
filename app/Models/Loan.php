@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class Loan extends Model
@@ -51,7 +52,9 @@ class Loan extends Model
     }
 
     public function refresh(){
-        $firstDay = substr($this->from,0,7)."-01";
+        //Get first date of loan
+        $from = Loan::where("user_id","=", Auth::user()->id)->min('from');
+        $firstDay = substr($from,0,7)."-01";
         $firstDate = new DateTime($firstDay);
         $lastDay = date("Y-m-01");
         $lastDate = new DateTime($lastDay);
@@ -89,7 +92,7 @@ class Loan extends Model
                 }
             }
 
-            $months[$lastDate->format('Y-m-01')] = $sumMonth;
+            $months[$firstDate->format('Y-m-01')] = $sumMonth;
             $firstDate->modify('+1 month');
         }
 

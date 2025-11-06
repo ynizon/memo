@@ -28,7 +28,7 @@ class LoanManager
     {
         $amounts = $loan->amountsGraph;
         $total = $loan->amount;
-        $datas = [$total];
+        $datas = [];
 
         foreach ($amounts as $amount) {
             $total += $amount->amount;
@@ -46,7 +46,7 @@ class LoanManager
     public static function getLabels($loan): array
     {
         $amounts = $loan->amountsGraph;
-        $labels = ["Init"];
+        $labels = [];
         foreach ($amounts as $amount) {
             $labels[] = $amount->created_at->format('m-Y');
         }
