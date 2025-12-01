@@ -39,6 +39,22 @@ class AccountController extends Controller
             }
         }
 
+        //Add missing months amounts (if no transactions during some months)
+        $lastDate = null;
+        foreach ($accounts as $account){
+            if ($lastDate == null or $account->updated_at >= $lastDate){
+                $lastDate = $account->updated_at;
+            }
+        }
+        if ($lastDate != null){
+            foreach ($accounts as $account){
+                $lastAmounts = AccountAmount::where("account_id","=",$account->id)
+                    ->where("calculated","=",false)
+                    ->orderBy("created_at","desc")->get();
+                $account->refreshAmountMonths($firstTransaction, $lastAmounts, $lastDate);
+            }
+        }
+
         $totalPaid = 0;
         $totalToPaid = 0;
         foreach ($loans as $loan) {

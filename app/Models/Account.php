@@ -91,13 +91,15 @@ class Account extends Model
         return $total;
     }
 
-    private function refreshAmountMonths(?Transaction $firstTransaction, Collection $lastAmounts): void
+    public function refreshAmountMonths(?Transaction $firstTransaction, Collection $lastAmounts, DateTime $lastDate = null): void
     {
         $firstDay = substr($firstTransaction->created_at,0,7)."-01";
         $firstDate = new DateTime($firstDay);
         $lastDay = date("Y-m-d");
-        $lastDate = new DateTime($lastDay);
-        $lastDate->modify('+1 month');
+        if ($lastDate == null){
+            $lastDate = new DateTime($lastDay);
+            $lastDate->modify('+1 month');
+        }
 
         //Delete calculated months
         DB::table('account_amounts')
