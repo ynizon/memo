@@ -64,6 +64,36 @@ class AccountController extends Controller
 
         $charts = AccountManager::getAllCharts($accounts);
         $loanCharts = LoanManager::getAllCharts($loans);
+
+        //Remove data for UI
+        $labelsToRemove = [];
+        foreach ($charts["all"]["labels"] as $labelNum => $label)
+        {
+            $labelToCheck = substr($label, -4) . "-" . substr($label, 0,2).'-01';
+            if (Auth::user()->bank_start_at != null && $labelToCheck < Auth::user()->bank_start_at)
+            {
+                $labelsToRemove[] = $labelNum;
+            } else {
+                if (Auth::user()->bank_end_at != null && $labelToCheck > Auth::user()->bank_end_at) {
+                    $labelsToRemove[] = $labelNum;
+                }
+            }
+        }
+
+        foreach ($labelsToRemove as $labelToRemove)
+        {
+            unset($charts["all"]["labels"][$labelToRemove]);
+            foreach ($charts["all"]["accounts"] as $accountId => $account)
+            {
+                unset($charts["all"]["accounts"][$accountId]["data"][$labelToRemove]);
+            }
+        }
+        $charts["all"]["labels"] = array_values($charts["all"]["labels"]);
+        foreach ($charts["all"]["accounts"] as $accountId => $account)
+        {
+            $charts["all"]["accounts"][$accountId]["data"] = array_values($charts["all"]["accounts"][$accountId]["data"]);
+        }
+
         return view('accounts/index', compact('accounts', 'charts','loanCharts',
                   'total', 'totalPaid', 'totalToPaid'));
     }

@@ -32,8 +32,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/users/{id}/togglePremium', [UserController::class, 'togglePremium'])->name('profile.togglePremium');
     Route::get('/users/{id}/toggleAdmin', [UserController::class, 'toggleAdmin'])->name('profile.toggleAdmin');
-
-    Route::get('/banks', [AccountController::class, 'bank'])->name('bank');
+    Route::post('/users/bank/{field}', [UserController::class, 'setBankDate'])->name('profile.setBankDate');
     Route::get('/accounts/remove_amount', [AccountController::class, 'remove_amount'])->name('accounts.remove_amount');
     Route::resource('/accounts', AccountController::class);
     Route::resource('/loans', LoanController::class);

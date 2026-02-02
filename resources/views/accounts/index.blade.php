@@ -255,6 +255,14 @@
                                     <div class="card-header pb-0">
                                         <h6 class="font-weight-semibold text-lg mb-0">{{__("Evolution")}}</h6>
                                     </div>
+                                    <div class="ms-auto d-flex">
+                                        <input type="date" value="{{Auth::user()->bank_start_at}}"
+                                               onchange="updateBankDate(this, 'start')"
+                                               class="btn btn-sm btn-white mb-0 me-2"/>
+                                        <input type="date" value="{{Auth::user()->bank_end_at}}"
+                                               onchange="updateBankDate(this, 'end')"
+                                               class="btn btn-sm btn-white mb-0 me-2"/>
+                                    </div>
                                     <div class="card-body py-3">
                                         <div class="chart mb-2">
                                             <canvas id="chart" class="chart-canvas"
@@ -267,6 +275,32 @@
                             </div>
 
                             <script>
+                                function updateBankDate(field, name)
+                                {
+                                    const url = `/users/bank/${name}`;
+                                    const data = {
+                                        value: field.value
+                                    };
+
+                                    fetch(url, {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                        },
+                                        body: JSON.stringify(data)
+                                    })
+                                    .then(response => {
+                                        if (!response.ok) {
+                                            throw new Error('Erreur réseau lors de la mise à jour');
+                                        }
+                                        window.location.reload();
+                                    })
+                                    .catch(error => {
+                                        console.error('Erreur :', error);
+                                    });
+                                }
+
                                 ctx = document.getElementById("chart").getContext("2d");
                                 chart = new Chart(ctx, {
                                     type: "line",

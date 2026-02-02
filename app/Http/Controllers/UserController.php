@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Managers\UserManager;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
@@ -70,5 +71,18 @@ class UserController extends Controller
         $user->save();
 
         return redirect()->route('users.index');
+    }
+
+    public function setBankDate($field, Request $request){
+        $value = $request->input("value");
+        $field == "start" ? $field = "bank_start_at" : $field = 'bank_end_at';
+        $user = Auth::user();
+        $user->$field = $value;
+        $user->save();
+
+        return response()->json([
+            'status' => 'success',
+            'field_updated' => $field
+        ], 200);
     }
 }
