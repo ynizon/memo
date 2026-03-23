@@ -7,6 +7,8 @@ use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use League\Csv\Exception;
+use League\Csv\InvalidArgument;
 use League\Csv\Reader;
 
 class AccountManager
@@ -85,16 +87,29 @@ class AccountManager
     }
 
     /**
-     * @throws \League\Csv\InvalidArgument
-     * @throws \League\Csv\Exception
+     * @throws InvalidArgument
+     * @throws Exception
      */
     public static function importCsvFile(string $filename): int
     {
         $nbTransactions = 0;
-        $user = Auth::user();
-        $user->linxo_at = date("Y-m-d H:i:s");
-        $user->save();
+        $fileContent = file_get_contents($filename);
 
+        if (stripos($fileContent, "dateOp;dateVal;label") !== false) {
+            $nbTransactions = self::importCsvBourso($filename);
+        }
+
+        $fileContent = mb_convert_encoding($fileContent, 'UTF-8', 'UTF-16LE');
+        if (stripos($fileContent, "Date\tLibellé\tCatégorie") !== false) {
+            $nbTransactions = self::importCsvLinxo($filename);
+        }
+
+        return $nbTransactions;
+    }
+
+    public static function importCsvLinxo(string $filename): int
+    {
+        $nbTransactions = 0;
         $fileContent = file_get_contents($filename);
         $utf8Content = mb_convert_encoding($fileContent, 'UTF-8', 'UTF-16LE');
 
@@ -183,81 +198,110 @@ class AccountManager
                 }
             });
 
-            return $nbTransactions;
-            //@TODO
-//                            DB::table('account_amounts')->insert([
-//                                'amount' => 1328.6,
-//                                'account_id' => 1,
-//                                'calculated'=>0,
-//                                'created_at' => '2025-09-25 00:00:00',
-//                            ]);
-//
-//                            DB::table('account_amounts')->insert([
-//                                'amount' => 668,
-//                                'account_id' => 2,
-//                                'calculated'=>0,
-//                                'created_at' => '2025-09-25 00:00:00',
-//                            ]);
-//
-//                            DB::table('account_amounts')->insert([
-//                                'amount' => 67.07,
-//                                'account_id' => 3,
-//                                'calculated'=>0,
-//                                'created_at' => '2025-09-25 00:00:00',
-//                            ]);
-//
-//                            DB::table('account_amounts')->insert([
-//                                'amount' => 2061.4,
-//                                'account_id' => 4,
-//                                'calculated'=>0,
-//                                'created_at' => '2025-09-25 00:00:00',
-//                            ]);
-//
-//                            DB::table('account_amounts')->insert([
-//                                'amount' => 1922.96,
-//                                'account_id' => 5,
-//                                'calculated'=>0,
-//                                'created_at' => '2025-09-25 00:00:00',
-//                            ]);
-//
-//                            DB::table('account_amounts')->insert([
-//                                'amount' => 11853.31,
-//                                'account_id' => 6,
-//                                'calculated'=>0,
-//                                'created_at' => '2025-09-25 00:00:00',
-//                            ]);
-//
-//                            DB::table('account_amounts')->insert([
-//                                'amount' => 2477.69,
-//                                'account_id' => 7,
-//                                'calculated'=>0,
-//                                'created_at' => '2025-09-25 00:00:00',
-//                            ]);
-//
-//                            DB::table('account_amounts')->insert([
-//                                'amount' => 25.84,
-//                                'account_id' => 8,
-//                                'calculated'=>0,
-//                                'created_at' => '2025-09-25 00:00:00',
-//                            ]);
-//
-//                            DB::table('account_amounts')->insert([
-//                                'amount' => 388.38,
-//                                'account_id' => 9,
-//                                'calculated'=>0,
-//                                'created_at' => '2025-09-25 00:00:00',
-//                            ]);
-//
-//                            DB::table('account_amounts')->insert([
-//                                'amount' => 78.85,
-//                                'account_id' => 10,
-//                                'calculated'=>0,
-//                                'created_at' => '2025-09-25 00:00:00',
-//                            ]);
+            $user = Auth::user();
+            $user->linxo_at = date("Y-m-d H:i:s");
+            $user->save();
 
-//                DB::table('accounts')
-//                                ->whereIn('account_id', [4, 7,8,10])
-//                                ->update(['active' => 0]);
+            return $nbTransactions;
+        }
+    }
+
+    public static function importCsvBourso(string $filename): int
+    {
+        $nbTransactions = 0;
+        $fileContent = file_get_contents($filename);
+
+        $accounts = [];
+        foreach (Auth::user()->accounts() as $account){
+            $accounts[$account->ref] = $account;
+        }
+
+        $colors = getHexaColors();
+        $reader = Reader::createFromString($fileContent);
+        $reader->setDelimiter(";");
+        $reader->setHeaderOffset(0);
+        $validFile = true;
+        try {
+            $headerRow = $reader->getHeader();
+            $fields = ["dateOp", "dateVal", "label", "category", "categoryParent", "supplierFound",
+                "amount", "comment", "accountNum", "accountLabel", "accountbalance"];
+            $missingFields = [];
+            foreach ($fields as $expectedField) {
+                if (!in_array($expectedField, $headerRow)) {
+                    $missingFields[] = $expectedField;
+                }
+            }
+            if (!empty($missingFields)) {
+                $validFile = false;
+            }
+        }catch(\Exception $e){
+            throw($e);
+        }
+
+        if (!$validFile) {
+            throw new \Exception();
+        } else {
+            $records = $reader->getRecords();
+            $num = 0;
+            foreach ($records as $offset => $row) {
+                $ref = $row["accountLabel"] . "-" . $row["accountNum"];
+
+                if (!isset($accounts[$ref])) {
+                    $account = new Account();
+                    $account->user_id = Auth::user()->getAuthIdentifier();
+                    $account->ref = $ref;
+                    $account->color = "#e10a77";
+                    if (isset($colors[$num])) {
+                        $account->color = $colors[$num];
+                    }
+                    $account->icon = "fa-bank";
+                    $account->name = $ref;
+                    $account->rib = "-";
+                    $account->position = count($accounts);
+                    $account->needrefresh = true;
+                    $account->save();
+                    $accounts[$account->ref] = $account;
+                    $num++;
+                }
+            }
+
+            DB::transaction(function () use ($records, $accounts, &$nbTransactions) {
+                foreach ($records as $offset => $row) {
+                    $ref = md5($row["dateOp"] . "-" . $row["label"] . "-" . $row["amount"]
+                        . "-" . $row["supplierFound"]. "-" . $row["supplierFound"]);
+                    $transaction = Transaction::where("ref", "=", $ref)->first();
+                    if ($transaction) {
+                        if ($transaction->category != $row["category"]) {
+                            $transaction->category = $row["category"];
+                            $transaction->save();
+                            $nbTransactions++;
+                        }
+                    } else {
+                        $transaction = new Transaction();
+                        $transaction->account_id = $accounts[$row["accountLabel"] . "-" . $row["accountNum"]]->id;
+                        $transaction->user_id = Auth::user()->getAuthIdentifier();
+                        $transaction->ref = $ref;
+                        $transaction->name = $row["label"];
+                        $transaction->amount = str_replace(",",".",$row["amount"]);
+                        $transaction->check_number = "-";
+                        $transaction->note = $row["supplierFound"];
+                        $transaction->category = $row["category"];
+                        $transaction->created_at = Carbon::createFromFormat('Y-m-d', $row["dateOp"]);
+                        $transaction->save();
+                        $nbTransactions++;
+
+                        $account = $accounts[$row["accountLabel"] . "-" . $row["accountNum"]];
+                        $account->needrefresh = true;
+                        $account->save();
+                    }
+                }
+            });
+
+            $user = Auth::user();
+            $user->linxo_at = date("Y-m-d H:i:s");
+            $user->save();
+
+            return $nbTransactions;
         }
     }
 }

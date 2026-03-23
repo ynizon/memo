@@ -24,6 +24,7 @@ class AccountController extends Controller
      */
     public function index()
     {
+        /** @var Account $account */
         $accounts = Auth::user()->accounts();
         $loans = Auth::user()->loans();
         $total = 0;
@@ -46,12 +47,18 @@ class AccountController extends Controller
                 $lastDate = $account->updated_at;
             }
         }
+
         if ($lastDate != null){
             foreach ($accounts as $account){
                 $lastAmounts = AccountAmount::where("account_id","=",$account->id)
                     ->where("calculated","=",false)
                     ->orderBy("created_at","desc")->get();
-                $account->refreshAmountMonths($firstTransaction, $lastAmounts, $lastDate);
+
+                if (substr($account->updated_at,0,10) != date("Y-m-d")){
+                    $account->refreshAmountMonths($firstTransaction, $lastAmounts, $lastDate);
+                    $account->updated_at = date("Y-m-d");
+                    $account->save();
+                }
             }
         }
 
